@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GusCake — Pastelería de autor</title>
+<link rel="icon" type="image/png" href="img/logo-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,500;1,9..144,600&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap topbar-inner">
+    <a href="#inicio" class="brand">
+      <img src="img/logo-icon.png" alt="GusCake" class="brand-mark">
+      <span class="brand-text">
+        <span class="brand-name">Gus Cake</span>
+        <span class="brand-sub">Pastelería de autor</span>
+      </span>
+    </a>
+    <nav class="nav">
+      <a href="#vitrina">Catálogo</a>
+      <a href="#nosotros">Historia</a>
+      <a href="#pedidos">Encargos</a>
+      <a href="#ubicacion">Ubicación</a>
+    </nav>
+    <div class="topbar-actions">
+      <button class="cart-btn" id="cartToggle" aria-label="Ver carrito">
+        🧺 <span id="cartCount">0</span>
+      </button>
+      <a href="#pedidos" class="btn btn-cta">Pedir hoy</a>
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="#vitrina">Catálogo</a>
+    <a href="#nosotros">Historia</a>
+    <a href="#pedidos">Encargos</a>
+    <a href="#ubicacion">Ubicación</a>
+    <a href="#pedidos" class="btn btn-primary mobile-nav-cta">Pedir hoy</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero" id="inicio">
+    <div class="wrap hero-grid">
+      <div class="hero-copy hero-enter">
+        <p class="eyebrow">Horneado cada mañana</p>
+        <h1>Pie de Limón<br><span class="accent">Relleno</span> Infinito</h1>
+        <p class="hero-text">Masa sableé rellena de crema de limón, cubierta de merengue suizo. ¡Frescura y sabor en cada bocado!</p>
+        <div class="hero-actions">
+          <a href="#vitrina" class="btn btn-primary">Ver catálogo</a>
+          <a href="#pedidos" class="btn btn-link">Lo de temporada →</a>
+        </div>
+        <ul class="hero-facts">
+          <li><span class="dot"></span>Entrega en 24 h</li>
+          <li><span class="dot"></span>Sin conservantes</li>
+        </ul>
+      </div>
+
+      <div class="hero-scene hero-enter hero-enter-delay">
+        <div class="scene-card">
+          <img src="img/hero-torta.jpg" alt="Estrella de la casa"
+               class="scene-photo"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+          <div class="scene-illustration">
+            <div class="scene-flame f1"></div>
+            <div class="scene-flame f2"></div>
+            <div class="scene-flame f3"></div>
+            <div class="scene-plate">
+              <div class="scene-cake">
+                <div class="scene-drip"></div>
+                <div class="scene-sugar"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="scene-caption">✨ La estrella de la casa ✨</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- VITRINA / PRODUCTOS -->
+  <section class="vitrina" id="vitrina">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <p class="eyebrow">La vitrina</p>
+        <h2>Nuestros productos</h2>
+      </div>
+
+      <div class="filters reveal" id="filters">
+        <button class="filter-chip active" data-filter="todos">Todos</button>
+        <button class="filter-chip" data-filter="tartas">Tartas</button>
+        <button class="filter-chip" data-filter="peque-dulces">Peque-Dulces</button>
+        <button class="filter-chip" data-filter="tortas">Tortas</button>
+      </div>
+
+      <div class="product-grid" id="productGrid"></div>
+    </div>
+  </section>
+
+  <!-- NOSOTROS / HISTORIA -->
+  <section class="nosotros" id="nosotros">
+    <div class="wrap nosotros-grid">
+      <div class="nosotros-copy reveal">
+        <p class="eyebrow">Desde Marzo, 2026</p>
+        <h2>Un sueño detrás de cada receta.</h2>
+        <p>GusCake nació de un sueño claro: transformar la vocación y el oficio de la pastelería en un proyecto con identidad propia. Desde nuestra fabrica ubicada en San Pedro de la Paz, creamos productos artesanales premium donde no existen los atajos. Cuidamos la técnica, la selección de ingredientes y cada detalle del acabado para que cada bocado cuente una historia. Crecemos con la misma premisa del primer día: hacer de nuestra pasión un motivo para compartir y endulzar momentos inolvidables..</p>
+        <ul class="nosotros-list">
+          <li><strong>Lunes a sábado</strong> — Estamos disponibles.</li>
+          <li><strong>Delivery</strong> — Con un costo adicional.</li>
+          <li><strong>Cada día</strong> — Fabricamos productos con cariño y mucho amor.</li>
+        </ul>
+      </div>
+      <div class="nosotros-badge reveal reveal-delay-1">
+        <div class="badge-circle">
+          <img src="img/chef.jpg" alt="Nuestro chef pastelero" class="badge-photo"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="badge-fallback">
+            <span>100%</span>
+            <small>artesanal</small>
+          </div>
+        </div>
+        <span class="badge-tag">100% artesanal</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PEDIDOS -->
+  <section class="pedidos" id="pedidos">
+    <div class="wrap pedidos-grid">
+      <div class="reveal">
+        <p class="eyebrow">Encargos</p>
+        <h2>Pide tu torta con anticipación</h2>
+        <p class="pedidos-text">Completa la boleta y te confirmamos por WhatsApp en menos de un día. Encargos con 48 horas de anticipación.</p>
+      </div>
+
+      <form class="order-form reveal reveal-delay-1" id="orderForm">
+        <label>
+          Nombre
+          <input type="text" name="nombre" required placeholder="Tu nombre">
+        </label>
+        <label>
+          Teléfono / WhatsApp
+          <input type="tel" name="telefono" required placeholder="+56 9 ...">
+        </label>
+        <label>
+          ¿Qué quieres encargar?
+          <textarea name="detalle" rows="3" required placeholder="Ej: Torta de mil hojas para 12 personas, sábado 14:00"></textarea>
+        </label>
+        <button type="submit" class="btn btn-primary">Enviar boleta de encargo</button>
+        <p class="form-note" id="formNote"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- UBICACION -->
+  <section class="ubicacion" id="ubicacion">
+    <div class="wrap ubicacion-grid">
+      <div class="reveal">
+        <p class="eyebrow">Visítanos</p>
+        <h2>San Pedro de la Paz<br>Región del Bio Bio</h2>
+        <p class="ubicacion-text">Cercano a Condominio Olas.</p>
+        <p class="ubicacion-text"><strong>Lunes a sábado:</strong> 09:00 – 19:00</p>
+      </div>
+      <div class="mapa-embed reveal reveal-delay-1">
+        <iframe
+          src="https://www.google.com/maps?q=-36.8590584,-73.1474327&z=17&output=embed"
+          width="100%"
+          height="100%"
+          style="border:0;"
+          allowfullscreen=""
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="Ubicación de Gus Cake en Google Maps">
+        </iframe>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer-inner">
+    <p>© <span id="year"></span> Gus Cake — Pastelería de autor</p>
+    <div class="footer-social">
+      <a href="https://www.instagram.com/guscake_cl/" target="_blank" rel="noopener" class="social-icon" aria-label="Síguenos en Instagram">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="17.3" cy="6.7" r="1.1" fill="currentColor"/>
+        </svg>
+      </a>
+    </div>
+    <p class="footer-note">Hecho con harina, tiempo y paciencia.</p>
+  </div>
+</footer>
+
+<!-- CARRITO LATERAL -->
+<aside class="cart-panel" id="cartPanel">
+  <div class="cart-panel-head">
+    <h3>Tu boleta</h3>
+    <button id="cartClose" aria-label="Cerrar carrito">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-total">
+    <span>Total</span>
+    <span id="cartTotal">$0</span>
+  </div>
+  <button class="btn btn-primary cart-checkout" id="cartCheckout">Confirmar por WhatsApp</button>
+</aside>
+<div class="cart-overlay" id="cartOverlay"></div>
+
+<a href="https://wa.me/56920679622" target="_blank" rel="noopener" class="whatsapp-float" aria-label="Chatea por WhatsApp">
+  <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M16.02 4C9.4 4 4 9.37 4 15.98c0 2.13.56 4.15 1.6 5.95L4 28l6.24-1.58a12.06 12.06 0 0 0 5.78 1.47h.01c6.62 0 12.02-5.37 12.02-11.98C28.05 9.37 22.65 4 16.02 4Z" fill="#25D366"/>
+    <path d="M12.05 10.4c-.24-.53-.5-.54-.73-.55-.19-.01-.4-.01-.62-.01-.21 0-.56.08-.86.4-.29.32-1.12 1.1-1.12 2.67 0 1.57 1.15 3.09 1.31 3.3.16.21 2.22 3.56 5.48 4.85 2.71 1.07 3.26.86 3.85.8.59-.05 1.9-.78 2.17-1.53.27-.75.27-1.39.19-1.53-.08-.14-.29-.22-.62-.38-.32-.16-1.9-.94-2.2-1.05-.29-.11-.5-.16-.72.16-.21.32-.83 1.05-1.02 1.26-.19.22-.37.24-.7.08-.32-.16-1.35-.5-2.58-1.6-.95-.85-1.6-1.9-1.78-2.22-.19-.32-.02-.49.14-.65.14-.15.32-.38.48-.57.16-.19.21-.32.32-.54.11-.21.05-.4-.03-.56-.08-.16-.7-1.75-.98-2.4Z" fill="#fff"/>
+  </svg>
+</a>
+
+<script src="script.js"></script>
+</body>
+</html>
