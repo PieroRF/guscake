@@ -16,6 +16,7 @@ const PRODUCTS = [
   { id: "p11", name: "Cheseecake Frambuesa", desc: "Tarta a base de queso crema de vainilla, cubierta con gel de frambuesa.", price: 28500, emoji: "🍰", img: "img/productos/cheseecakeframbuesa.jpg", category: "tartas" },
   { id: "p12", name: "Bomba chocolatosa", desc: "Cocada de bizcocho húmedo de chocolate, bañada en chocolate bitter.", price: 1200, emoji: "🍪", img: "img/productos/bombachocolatosa.jpg", category: "peque-dulces" },
   { id: "p13", name: "Cocadas", desc: "Cocadas de bizcocho de vainilla. Bañadas en coco rallado.", price: 700, emoji: "🍪", img: "img/productos/cocadas.jpg", category: "peque-dulces" },
+  { id: "p14", name: "Alfajor tradicional", desc: "Galletas de chocolate Con toques de zeste de naranja, rellenas de manjar tradicional y bañadas en chocalate bitter o blanco.", price: 2000, emoji: "🍪", img: "img/productos/alfajortradicional.jpg", category: "peque-dulces" },
 
 ];
 
