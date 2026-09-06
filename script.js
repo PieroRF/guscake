@@ -18,6 +18,7 @@ const PRODUCTS = [
   { id: "p13", name: "Cocadas", desc: "Cocadas de bizcocho de vainilla. Bañadas en coco rallado.", price: 700, emoji: "🍪", img: "img/productos/cocadas.jpg", category: "peque-dulces" },
   { id: "p14", name: "Alfajor tradicional", desc: "Galletas de chocolate Con toques de zeste de naranja, rellenas de manjar tradicional y bañadas en chocalate bitter o blanco.", price: 2000, emoji: "🍪", img: "img/productos/alfajortradicional.jpg", category: "peque-dulces" },
   { id: "p15", name: "Muffins", desc: "Bizcocho húmedo de vainilla. diferentes variedades; Chocolate, vainilla, frambuesa, arándanos, mora y frutos del bosque.", price: 2500, emoji: "🍪", img: "img/productos/muffins.jpg", category: "peque-dulces" },
+  { id: "p16", name: "Alfajor Merengue", desc: "Discos de merengues suizo rellenos de manjar artesanal.", price: 1800, emoji: "🍪", img: "img/productos/m.jpg", category: "peque-dulces" },
 
 ];
 

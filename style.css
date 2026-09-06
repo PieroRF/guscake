@@ -483,6 +483,8 @@ h2{
 }
 
 @media (max-width:600px){
+  h1 { font-size: 1.5rem; }
+  .hero-text { font-size: 0.95rem; margin-bottom: 1.5em; }
   .hero{padding:52px 0 76px;}
   .vitrina, .nosotros, .pedidos, .ubicacion{padding:64px 0;}
   .hero-actions{flex-direction:column; align-items:center;}
