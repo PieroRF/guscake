@@ -161,7 +161,7 @@ document.getElementById("cartCheckout").addEventListener("click", () => {
 document.getElementById("orderForm").addEventListener("submit", (e) => {
   e.preventDefault();
   const note = document.getElementById("formNote");
-  note.textContent = "¡Listo! Te confirmamos por WhatsApp dentro de un día.";
+  note.textContent = "¡Listo! Te confirmamos por WhatsApp dentro de 02 horas.";
   e.target.reset();
   setTimeout(() => (note.textContent = ""), 5000);
 });

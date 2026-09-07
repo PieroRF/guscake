@@ -655,6 +655,7 @@ h2{
 .nosotros-copy p{
   color:var(--espresso-soft);
   max-width:56ch;
+  text-align: justify;
 }
 .nosotros-list{
   list-style:none;
