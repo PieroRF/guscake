@@ -484,8 +484,8 @@ h2{
 
 @media (max-width:600px){
   .hero { text-align: center; }
-  h1 { font-size: 1.8rem; }
-  .hero-text { font-size: 1rem; margin-left: auto; margin-right: auto; margin-bottom: 1.5em; }
+  h1 { font-size: 1.6rem; }
+  .hero-text { font-size: 0.95rem; text-align: center; margin-left: auto; margin-right: auto; margin-bottom: 1.5em; }
   .hero-facts { justify-content: center; }
   .hero{padding:52px 0 76px;}
   .vitrina, .nosotros, .pedidos, .ubicacion{padding:64px 0;}
