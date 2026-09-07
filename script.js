@@ -168,16 +168,37 @@ document.getElementById("orderForm").addEventListener("submit", (e) => {
 
 // ---------- Carrusel de fotos del hero ----------
 const HERO_SLIDES = [
-  { img: "img/hero-torta-1.jpg", caption: "✨ La estrella de la casa ✨" },
-  { img: "img/hero-torta-2.jpg", caption: "Recién horneado cada mañana" },
-  { img: "img/hero-torta-3.jpg", caption: "Hecho con amor, sin atajos" },
+  {
+    img: "img/hero-torta-1.jpg",
+    eyebrow: "Horneado cada mañana",
+    titleHTML: `Pie de Limón<br><span class="accent">Relleno</span> Infinito`,
+    text: "Masa sableé rellena de crema de limón, cubierta de merengue suizo. ¡Frescura y sabor en cada bocado!",
+    caption: "✨ La estrella de la casa ✨",
+  },
+  {
+    img: "img/hero-torta-2.jpg",
+    eyebrow: "Nuestro clásico de siempre",
+    titleHTML: `Red Velvet<br><span class="accent">Suave</span> y Cremoso`,
+    text: "Bizcocho rojo intenso con un toque de cacao, relleno de frosting de queso crema de vainilla.",
+    caption: "Recién horneado cada mañana",
+  },
+  {
+    img: "img/hero-torta-3.jpg",
+    eyebrow: "Hecho a mano, sin atajos",
+    titleHTML: `Alfajor de Amor<br><span class="accent">Nuestro</span> Especial`,
+    text: "Finas láminas de hojarasca, rellenas de manjar tradicional, frambuesas naturales y crema chantilly de vainilla.",
+    caption: "Hecho con amor, sin atajos",
+  },
 ];
 
 function initHeroSlider() {
   const track = document.getElementById("heroSlides");
   const dotsWrap = document.getElementById("heroDots");
   const caption = document.getElementById("heroCaption");
-  if (!track || !dotsWrap || !caption) return;
+  const eyebrow = document.getElementById("heroEyebrow");
+  const title = document.getElementById("heroTitle");
+  const text = document.getElementById("heroText");
+  if (!track || !dotsWrap || !caption || !eyebrow || !title || !text) return;
 
   track.innerHTML = HERO_SLIDES.map((s, i) => `
     <div class="scene-slide${i === 0 ? " active" : ""}">
@@ -191,6 +212,7 @@ function initHeroSlider() {
 
   const slides = track.querySelectorAll(".scene-slide");
   const dots = dotsWrap.querySelectorAll(".scene-dot");
+  const textEls = [eyebrow, title, text, caption];
   let current = 0;
 
   function goTo(index) {
@@ -200,10 +222,14 @@ function initHeroSlider() {
     slides[current].classList.add("active");
     dots[current].classList.add("active");
 
-    caption.style.opacity = 0;
+    textEls.forEach(el => (el.style.opacity = 0));
     setTimeout(() => {
-      caption.textContent = HERO_SLIDES[current].caption;
-      caption.style.opacity = 1;
+      const s = HERO_SLIDES[current];
+      eyebrow.textContent = s.eyebrow;
+      title.innerHTML = s.titleHTML;
+      text.textContent = s.text;
+      caption.textContent = s.caption;
+      textEls.forEach(el => (el.style.opacity = 1));
     }, 250);
   }
 

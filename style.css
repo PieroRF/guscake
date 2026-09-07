@@ -347,6 +347,9 @@ h2{
   max-width:46ch;
   margin:0 0 2em;
 }
+#heroEyebrow, #heroTitle, #heroText{
+  transition:opacity 0.3s var(--ease);
+}
 .hero-actions{
   display:flex;
   align-items:center;
