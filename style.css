@@ -339,7 +339,7 @@ h2{
   display:grid;
   grid-template-columns:1fr 0.95fr;
   gap:64px;
-  align-items:center;
+  align-items:start;
 }
 .hero-text{
   font-size:1.08rem;
@@ -351,10 +351,10 @@ h2{
   transition:opacity 0.3s var(--ease);
 }
 #heroTitle{
-  min-height:2.3em;
+  min-height:2.6em;
 }
 #heroText{
-  min-height:3.4em;
+  min-height:4.8em;
 }
 .hero-actions{
   display:flex;
@@ -382,7 +382,7 @@ h2{
 }
 
 /* signature element: the candlelit cake scene */
-.hero-scene{position:relative;}
+.hero-scene{position:relative; align-self:start;}
 .scene-card{
   position:relative;
   aspect-ratio:4/3.1;
