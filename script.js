@@ -41,7 +41,11 @@ function renderGrid() {
         <img src="${p.img}" alt="${p.name}" class="product-photo"
              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <span class="product-emoji-fallback">${p.emoji}</span>
-        <span class="product-zoom-hint">🔍</span>
+        <span class="product-zoom-hint">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </span>
       </div>
       <div class="product-body">
         <h3 class="product-name">${p.name}</h3>
@@ -205,23 +209,23 @@ document.getElementById("orderForm").addEventListener("submit", (e) => {
 const HERO_SLIDES = [
   {
     img: "img/hero-torta-1.jpg",
-    eyebrow: "Horneado cada mañana",
+    eyebrow: "Nuestro favorito de siempre",
     titleHTML: `Pie de Limón<br><span class="accent">Relleno</span> Infinito`,
-    text: "Masa sableé rellena de crema de limón, cubierta de merengue suizo. ¡Frescura y sabor en cada bocado!",
+    text: "La perfección absoluta: base sableé, relleno de limón tan intenso y vibrante que despierta cada uno de tus sentidos!",
     caption: "✨ La estrella de la casa ✨",
   },
   {
     img: "img/hero-torta-2.jpg",
-    eyebrow: "Nuestro clásico de siempre",
-    titleHTML: `Red Velvet<br><span class="accent">Suave</span> y Cremoso`,
-    text: "Bizcocho rojo intenso con un toque de cacao, relleno de frosting de queso crema de vainilla.",
+    eyebrow: "El clásico de siempre",
+    titleHTML: `Mini pastelitos<br><span class="accent">Suaves</span> y Cremosos`,
+    text: "Mini pastelitos para todos los gustos: lo mejor de nuestra repostería en bocados de pie de limón, brownies y tarta de frambuesa.",
     caption: "Recién horneado cada mañana",
   },
   {
     img: "img/hero-torta-3.jpg",
     eyebrow: "Hecho a mano, sin atajos",
-    titleHTML: `Alfajor de Amor<br><span class="accent">Nuestro</span> Especial`,
-    text: "Finas láminas de hojarasca, rellenas de manjar tradicional, frambuesas naturales y crema chantilly de vainilla.",
+    titleHTML: `Mix de tartas<br><span class="accent">Nuestro</span> Especial`,
+    text: "El equilibrio perfecto entre dos clásicos: la frescura cítrica del pie de limón con merengue y la textura cremosa del cheesecake de frambuesa.",
     caption: "Hecho con amor, sin atajos",
   },
 ];
