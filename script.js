@@ -41,6 +41,7 @@ function renderGrid() {
         <img src="${p.img}" alt="${p.name}" class="product-photo"
              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <span class="product-emoji-fallback">${p.emoji}</span>
+        <span class="product-zoom-hint">🔍</span>
       </div>
       <div class="product-body">
         <h3 class="product-name">${p.name}</h3>
@@ -121,6 +122,40 @@ grid.addEventListener("click", (e) => {
   const btn = e.target.closest(".add-btn");
   if (!btn) return;
   addToCart(btn.dataset.id, btn);
+});
+
+// ---------- Lightbox (ampliar foto de producto) ----------
+const lightbox = document.getElementById("lightbox");
+const lightboxOverlay = document.getElementById("lightboxOverlay");
+const lightboxClose = document.getElementById("lightboxClose");
+const lightboxImg = document.getElementById("lightboxImg");
+const lightboxCaption = document.getElementById("lightboxCaption");
+
+function openLightbox(src, name) {
+  lightboxImg.src = src;
+  lightboxImg.alt = name;
+  lightboxCaption.textContent = name;
+  lightbox.classList.add("open");
+  lightboxOverlay.classList.add("open");
+  lightboxClose.classList.add("open");
+}
+
+function closeLightbox() {
+  lightbox.classList.remove("open");
+  lightboxOverlay.classList.remove("open");
+  lightboxClose.classList.remove("open");
+}
+
+grid.addEventListener("click", (e) => {
+  const photo = e.target.closest(".product-photo");
+  if (!photo || photo.style.display === "none") return;
+  openLightbox(photo.src, photo.alt);
+});
+
+lightboxOverlay.addEventListener("click", closeLightbox);
+lightboxClose.addEventListener("click", closeLightbox);
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") closeLightbox();
 });
 
 document.getElementById("cartItems").addEventListener("click", (e) => {

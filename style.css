@@ -1050,3 +1050,98 @@ h2{
 @media (prefers-reduced-motion: reduce){
   .whatsapp-float{animation:none;}
 }
+
+/* ---------- LUPA AL PASAR EL MOUSE ---------- */
+.product-media{cursor:pointer;}
+.product-zoom-hint{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:1.5rem;
+  background:rgba(18,24,42,0);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.25s var(--ease), background 0.25s var(--ease);
+}
+.product-card:hover .product-zoom-hint{
+  opacity:1;
+  background:rgba(18,24,42,0.28);
+}
+
+/* ---------- LIGHTBOX (ampliar foto) ---------- */
+.lightbox-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(18,24,42,0.8);
+  z-index:70;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.3s var(--ease);
+}
+.lightbox-overlay.open{
+  opacity:1;
+  pointer-events:auto;
+}
+.lightbox{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%) scale(0.94);
+  z-index:71;
+  max-width:90vw;
+  max-height:85vh;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.3s var(--ease), transform 0.3s var(--ease);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+.lightbox.open{
+  opacity:1;
+  pointer-events:auto;
+  transform:translate(-50%,-50%) scale(1);
+}
+.lightbox img{
+  max-width:100%;
+  max-height:75vh;
+  border-radius:var(--radius);
+  box-shadow:var(--shadow-navy);
+  display:block;
+}
+.lightbox-caption{
+  margin-top:14px;
+  color:var(--cream);
+  font-family:var(--font-mono);
+  font-size:0.9rem;
+  text-align:center;
+}
+.lightbox-close{
+  position:fixed;
+  top:20px;
+  right:24px;
+  z-index:72;
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:1.5px solid var(--line-navy);
+  background:rgba(28,36,56,0.85);
+  color:var(--cream);
+  font-size:1.1rem;
+  cursor:pointer;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.3s var(--ease), transform 0.25s var(--ease);
+}
+.lightbox-close.open{
+  opacity:1;
+  pointer-events:auto;
+}
+.lightbox-close:hover{transform:rotate(90deg);}
+
+@media (max-width:600px){
+  .lightbox{max-width:94vw;}
+  .lightbox img{max-height:65vh;}
+}
