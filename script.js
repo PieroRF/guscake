@@ -230,7 +230,7 @@ const HERO_SLIDES = [
     img: "img/hero-torta-1.jpg",
     eyebrow: "Nuestro favorito de siempre",
     titleHTML: `Pie de Limón<br><span class="accent">Relleno</span> Infinito`,
-    text: "La perfección absoluta: base sableé, relleno de limón tan intenso y vibrante que despierta cada uno de tus sentidos!",
+    text: "La perfección absoluta: base sableé, relleno de limón tan intenso y vibrante que despierta todos tus sentidos!",
     caption: "✨ La estrella de la casa ✨",
   },
   {
