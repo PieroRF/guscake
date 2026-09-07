@@ -484,9 +484,11 @@ h2{
 
 @media (max-width:600px){
   .hero { text-align: center; }
-  h1 { font-size: 1.6rem; }
-  .hero-text { font-size: 0.95rem; text-align: center; margin-left: auto; margin-right: auto; margin-bottom: 1.5em; }
-  .hero-facts { justify-content: center; }
+  .hero-grid { display: flex; flex-direction: column; align-items: center; text-align: center; }
+  h1 { font-size: 1.6rem; text-align: center; }
+  .hero-text { font-size: 0.95rem; text-align: center; margin-left: auto; margin-right: auto; margin-bottom: 1.5em; max-width: 100%; }
+  .hero-actions { justify-content: center; width: 100%; }
+  .hero-facts { justify-content: center; width: 100%; }
   .hero{padding:52px 0 76px;}
   .vitrina, .nosotros, .pedidos, .ubicacion{padding:64px 0;}
   .hero-actions{flex-direction:column; align-items:center; justify-content:center;}
