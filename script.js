@@ -166,6 +166,58 @@ document.getElementById("orderForm").addEventListener("submit", (e) => {
   setTimeout(() => (note.textContent = ""), 5000);
 });
 
+// ---------- Carrusel de fotos del hero ----------
+const HERO_SLIDES = [
+  { img: "img/hero-torta-1.jpg", caption: "✨ La estrella de la casa ✨" },
+  { img: "img/hero-torta-2.jpg", caption: "Recién horneado cada mañana" },
+  { img: "img/hero-torta-3.jpg", caption: "Hecho con amor, sin atajos" },
+];
+
+function initHeroSlider() {
+  const track = document.getElementById("heroSlides");
+  const dotsWrap = document.getElementById("heroDots");
+  const caption = document.getElementById("heroCaption");
+  if (!track || !dotsWrap || !caption) return;
+
+  track.innerHTML = HERO_SLIDES.map((s, i) => `
+    <div class="scene-slide${i === 0 ? " active" : ""}">
+      <img src="${s.img}" alt="${s.caption}" onerror="this.style.display='none';">
+    </div>
+  `).join("");
+
+  dotsWrap.innerHTML = HERO_SLIDES.map((_, i) => `
+    <button class="scene-dot${i === 0 ? " active" : ""}" aria-label="Ver foto ${i + 1}"></button>
+  `).join("");
+
+  const slides = track.querySelectorAll(".scene-slide");
+  const dots = dotsWrap.querySelectorAll(".scene-dot");
+  let current = 0;
+
+  function goTo(index) {
+    slides[current].classList.remove("active");
+    dots[current].classList.remove("active");
+    current = index;
+    slides[current].classList.add("active");
+    dots[current].classList.add("active");
+
+    caption.style.opacity = 0;
+    setTimeout(() => {
+      caption.textContent = HERO_SLIDES[current].caption;
+      caption.style.opacity = 1;
+    }, 250);
+  }
+
+  let timer = setInterval(() => goTo((current + 1) % HERO_SLIDES.length), 4500);
+
+  dots.forEach((dot, i) => {
+    dot.addEventListener("click", () => {
+      goTo(i);
+      clearInterval(timer);
+      timer = setInterval(() => goTo((current + 1) % HERO_SLIDES.length), 4500);
+    });
+  });
+}
+
 // ---------- Menú móvil ----------
 const navToggle = document.getElementById("navToggle");
 const mobileNav = document.getElementById("mobileNav");
@@ -216,3 +268,4 @@ document.getElementById("year").textContent = new Date().getFullYear();
 renderGrid();
 renderCart();
 initScrollReveal();
+initHeroSlider();
