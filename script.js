@@ -199,10 +199,29 @@ document.getElementById("cartCheckout").addEventListener("click", () => {
 // ---------- Formulario de encargos ----------
 document.getElementById("orderForm").addEventListener("submit", (e) => {
   e.preventDefault();
+  const form = e.target;
   const note = document.getElementById("formNote");
-  note.textContent = "¡Listo! Te confirmamos por WhatsApp dentro de 02 horas.";
-  e.target.reset();
-  setTimeout(() => (note.textContent = ""), 5000);
+  const formData = new FormData(form);
+
+  fetch(form.action, {
+    method: "POST",
+    body: formData,
+    headers: { Accept: "application/json" },
+  })
+    .then((response) => {
+      if (response.ok) {
+        note.textContent = "¡Listo! Te confirmamos por WhatsApp dentro de 02 horas.";
+        form.reset();
+      } else {
+        note.textContent = "No pudimos enviarlo. Escríbenos directo por WhatsApp, por favor.";
+      }
+    })
+    .catch(() => {
+      note.textContent = "No pudimos enviarlo. Escríbenos directo por WhatsApp, por favor.";
+    })
+    .finally(() => {
+      setTimeout(() => (note.textContent = ""), 5000);
+    });
 });
 
 // ---------- Carrusel de fotos del hero ----------
