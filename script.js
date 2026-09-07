@@ -219,14 +219,14 @@ const HERO_SLIDES = [
     eyebrow: "El clásico de siempre",
     titleHTML: `Mini pastelitos<br><span class="accent">Suaves</span> y Cremosos`,
     text: "Mini pastelitos para todos los gustos: lo mejor de nuestra repostería en bocados de pie de limón, brownies y tarta de frambuesa.",
-    caption: "Recién horneado cada mañana",
+    caption: "Irresistibles y perfectos para compartir",
   },
   {
     img: "img/hero-torta-3.jpg",
     eyebrow: "Hecho a mano, sin atajos",
     titleHTML: `Mix de tartas<br><span class="accent">Nuestro</span> Especial`,
     text: "El equilibrio perfecto entre dos clásicos: la frescura cítrica del pie de limón con merengue y la textura cremosa del cheesecake de frambuesa.",
-    caption: "Hecho con amor, sin atajos",
+    caption: "Si quieres de todo un poco, este es tu pedido",
   },
 ];
 
