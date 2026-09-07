@@ -487,14 +487,18 @@ h2{
   .hero-grid { display: flex; flex-direction: column; align-items: center; text-align: center; }
   h1 { font-size: 1.6rem; text-align: center; }
   .hero-text { font-size: 0.95rem; text-align: center; margin-left: auto; margin-right: auto; margin-bottom: 1.5em; max-width: 100%; }
-  .hero-scene { width: 100%; max-width: 100%; margin: 0 auto; }
-  .hero-actions { justify-content: center; width: 100%; }
+  .hero-actions { justify-content: center; width: 100%; flex-direction: column; align-items: center; }
+  .hero-actions .btn { width: auto; }
   .hero-facts { justify-content: center; width: 100%; }
-  .hero{padding:52px 0 76px;}
-  .vitrina, .nosotros, .pedidos, .ubicacion{padding:64px 0;}
-  .hero-actions{flex-direction:column; align-items:center; justify-content:center;}
-  .hero-actions .btn{width:auto;}
-  .order-form{padding:22px;}
+
+  /* Corrección de la tarjeta y la imagen hero-torta */
+  .hero-scene { width: 100%; max-width: 320px; margin: 0 auto; }
+  .scene-card { width: 100%; min-height: 0; aspect-ratio: 4/3; }
+  .scene-photo { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+
+  .hero { padding: 52px 0 76px; }
+  .vitrina, .nosotros, .pedidos, .ubicacion { padding: 64px 0; }
+  .order-form { padding: 22px; }
 }
 
 /* ---------- VITRINA ---------- */
