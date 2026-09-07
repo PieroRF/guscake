@@ -244,7 +244,7 @@ const HERO_SLIDES = [
     img: "img/hero-torta-3.jpg",
     eyebrow: "Hecho a mano, sin atajos",
     titleHTML: `Mix de tartas<br><span class="accent">Nuestro</span> Especial`,
-    text: "El equilibrio perfecto entre dos clásicos: la frescura cítrica del pie de limón con merengue y la textura cremosa del cheesecake de frambuesa.",
+    text: "El equilibrio perfecto entre dos clásicos: la frescura cítrica del pie de limón con merengue y la textura cremosa del cheesecake.",
     caption: "Si quieres de todo un poco, este es tu pedido",
   },
 ];
