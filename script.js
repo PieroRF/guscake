@@ -2,6 +2,7 @@
 // GUS CAKE — lógica de vitrina, carrito, formulario y hero
 // ==========================================================
 
+//PRODUCTOS//
 const PRODUCTS = [
   {
     id: "p1", name: "Alfajor de amor",
@@ -395,8 +396,8 @@ const HERO_SLIDES = [
   {
     img: "img/hero-torta-2.jpg",
     eyebrow: "El clásico de siempre",
-    titleHTML: `Mini pastelitos<br><span class="accent">Suaves</span> y Cremosos`,
-    text: "Mini pastelitos para todos los gustos: lo mejor de nuestra repostería en bocados de pie de limón, brownies y tarta de frambuesa.",
+    titleHTML: `Mini pastelitos<br><span class="accent">Bocados elegantes</span>`,
+    text: "Selección dulce para regalar momentos inolvidables: pie limón, suspiro limeño, cheesecake y brownie.",
     caption: "Irresistibles y perfectos para compartir",
   },
   {
