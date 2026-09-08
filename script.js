@@ -132,6 +132,30 @@ const PRODUCTS = [
     prices: [{ label: "Precio único", price: 28500 }],
     emoji: "⭐", img: "img/productos/pastelitospremium.jpg", category: "premium"
   },
+  {
+    id: "p19", name: "Box dieciochero GusCake",
+    desc: "31 bocados premium pensados para endulzar el asado familiar. Una selección irresistible que reúne alfajores de maicena, hojarasca y chocolate, merengues, barquillos con manjar artesanal y ricas cocadas tradicionales.",
+    prices: [{ label: "Precio único", price: 19990 }],
+    emoji: "🇨🇱", img: "img/productos/boxdieciochero.jpg", category: "temporada"
+  },
+  {
+    id: "p20", name: "Box de empolvados",
+    desc: "La pausa dulce ideal para tus tardes: pack de 8 unidades con delicado bizcocho de vainilla, relleno con nuestro manjar artesanal de receta propia y coronado con azúcar flor.",
+    prices: [{ label: "Precio único", price: 9600 }],
+    emoji: "🇨🇱", img: "img/productos/boxempolvados.jpg", category: "temporada"
+  },
+  {
+    id: "p21", name: "Pajaritos",
+    desc: "Tradición y dulzura en cada bocado. Panecillo dulce, suave y muy esponjoso, cubierto con un delicado toque de merengue suizo. El infaltable de este Dieciocho.",
+    prices: [{ label: "Precio único", price: 2000 }],
+    emoji: "🇨🇱", img: "img/productos/pajaritos.jpg", category: "temporada"
+  },
+  {
+    id: "p22", name: "Empanada tradicional",
+    desc: "El sabor más tradicional de nuestras Fiestas Patrias directo a tu mesa. Nuestra clásica empanada chilena está preparada con un sabroso pino de carne picada y cebolla en su punto justo, acompañado de aceituna y huevo cocido.",
+    prices: [{ label: "Precio único", price: 2800 }],
+    emoji: "🇨🇱", img: "img/productos/empanadatradicional.jpg", category: "temporada"
+  },
 ];
 
 const CATEGORY_LABELS = {
@@ -139,7 +163,7 @@ const CATEGORY_LABELS = {
   tartas: "Tartas 🍰",
   "peque-dulces": "Peque-Dulces 🍪",
   premium: "Premium",
-  temporada: "Fiestas Patrias 🇨🇱",
+  temporada: "Fiestas Patrias",
 };
 const CATEGORY_ORDER = ["premium", "temporada", "tortas", "tartas", "peque-dulces"];
 
@@ -184,80 +208,162 @@ function cardHTML(p) {
   `;
 }
 
+// Pinta un título letra por letra con los colores de la bandera chilena
+// (azul, blanco y rojo) para la columna de Fiestas Patrias.
+function tricolorChileno(texto) {
+  const colores = ["cl-azul", "cl-blanco", "cl-rojo"];
+  let i = 0;
+  return [...texto]
+    .map(ch => {
+      if (ch === " ") return " ";
+      const clase = colores[i % colores.length];
+      i++;
+      return `<span class="${clase}">${ch}</span>`;
+    })
+    .join("");
+}
+
 function renderGrid() {
   grid.innerHTML = "";
-  CATEGORY_ORDER.forEach(cat => {
-    const items = PRODUCTS.filter(p => p.category === cat);
-    const isPremium = cat === "premium";
-    const section = document.createElement("div");
-    section.className = "product-section";
-    section.innerHTML = `
-      <h3 class="product-section-title${isPremium ? " product-section-title--premium" : ""}">
-        ${isPremium ? "💎 Premium 💎" : (CATEGORY_LABELS[cat] || cat)}
-      </h3>
-      <div class="product-grid">
-        ${items.length
-          ? items.map(cardHTML).join("")
-          : `<p class="product-empty">Muy pronto vamos a<br>sumar productos acá.</p>`}
-      </div>
-    `;
-    grid.appendChild(section);
-  });
+  // Se dibuja el set de columnas dos veces: el segundo es una copia (is-clone)
+  // que permite que el deslizamiento automático sea infinito y sin cortes.
+  const buildSet = (isClone) => {
+    CATEGORY_ORDER.forEach(cat => {
+      const items = PRODUCTS.filter(p => p.category === cat);
+      const isPremium = cat === "premium";
+      const isTemporada = cat === "temporada";
+      const section = document.createElement("div");
+      section.className = "product-section" + (isClone ? " is-clone" : "");
+      if (isClone) section.setAttribute("aria-hidden", "true");
+      let titleClass = "product-section-title";
+      if (isPremium) titleClass += " product-section-title--premium";
+      if (isTemporada) titleClass += " product-section-title--chile";
+      let titleContent;
+      if (isPremium) {
+        titleContent = "💎 Premium 💎";
+      } else if (isTemporada) {
+        titleContent = tricolorChileno(CATEGORY_LABELS[cat]);
+      } else {
+        titleContent = CATEGORY_LABELS[cat] || cat;
+      }
+      section.innerHTML = `
+        <h3 class="${titleClass}">
+          ${titleContent}
+        </h3>
+        <div class="product-grid">
+          ${items.length
+            ? items.map(cardHTML).join("")
+            : `<p class="product-empty">Muy pronto vamos a<br>sumar productos acá.</p>`}
+        </div>
+      `;
+      grid.appendChild(section);
+    });
+  };
+  buildSet(false);
+  buildSet(true);
 }
 
 // ---------- Carrusel automático de columnas de productos ----------
+// Avance por pasos: la vitrina descansa mostrando 4 columnas y cada cierto
+// rato desliza suavemente hasta la siguiente, en bucle infinito (el set de
+// columnas está duplicado, así que el salto de retorno es invisible).
+// Las flechas laterales fuerzan ese mismo deslizamiento al instante.
 function initProductCarousel() {
   const btnLeft = document.getElementById("scrollLeft");
   const btnRight = document.getElementById("scrollRight");
   if (!grid || !btnLeft || !btnRight) return;
 
-  let autoTimer;
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const COLS = CATEGORY_ORDER.length;  // columnas reales por set
+  const DWELL = 2800;                  // ms quieto entre avances automáticos
+  const GLIDE = reduceMotion ? 0 : 820; // ms que dura pasar de una columna a la siguiente
 
-  function pageWidth() {
+  const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+  // Ancho de una columna incluyendo el gap.
+  function columnWidth() {
     const section = grid.querySelector(".product-section");
-    if (!section) return grid.clientWidth;
+    if (!section) return grid.clientWidth || 1;
     const gap = parseFloat(getComputedStyle(grid).columnGap) || 32;
     return section.getBoundingClientRect().width + gap;
   }
 
-  function atEnd() {
-    return grid.scrollLeft >= grid.scrollWidth - grid.clientWidth - 4;
+  // Posición de scroll para un índice de columna dado, ya envuelta al primer set.
+  function xForIndex(i) {
+    const cw = columnWidth();
+    const span = COLS * cw;
+    return (((i * cw) % span) + span) % span;
   }
 
-  function scrollNext() {
-    if (atEnd()) {
-      grid.scrollTo({ left: 0, behavior: "smooth" });
-    } else {
-      grid.scrollBy({ left: pageWidth(), behavior: "smooth" });
+  let index = 0;        // columna asentada (entero)
+  let curIndex = 0;     // posición actual (fraccionaria mientras desliza)
+  let from = 0, to = 0, glideStart = 0;
+  let dwellUntil = 0;
+  let paused = false;
+  let rafId = null;
+
+  function beginGlide(target, now) {
+    from = curIndex;
+    to = target;
+    glideStart = now || performance.now();
+  }
+
+  function frame(now) {
+    rafId = requestAnimationFrame(frame);
+
+    if (glideStart) {
+      const p = GLIDE ? Math.min(1, (now - glideStart) / GLIDE) : 1;
+      curIndex = from + (to - from) * easeInOut(p);
+      grid.scrollLeft = xForIndex(curIndex);
+      if (p >= 1) {
+        glideStart = 0;
+        index = ((Math.round(to) % COLS) + COLS) % COLS;
+        curIndex = index;
+        grid.scrollLeft = xForIndex(curIndex);
+        dwellUntil = now + DWELL;
+      }
+    } else if (!paused && !reduceMotion && now >= dwellUntil) {
+      beginGlide(index + 1, now);
     }
   }
 
-  function scrollPrev() {
-    if (grid.scrollLeft <= 4) {
-      grid.scrollTo({ left: grid.scrollWidth, behavior: "smooth" });
-    } else {
-      grid.scrollBy({ left: -pageWidth(), behavior: "smooth" });
+  // Avance manual: responde siempre, aunque el auto esté en pausa o a mitad de camino.
+  function nudge(dir) {
+    const base = glideStart ? Math.round(curIndex) : index;
+    beginGlide(base + dir, performance.now());
+  }
+  btnLeft.addEventListener("click", () => nudge(-1));
+  btnRight.addEventListener("click", () => nudge(1));
+
+  // El usuario arrastra / usa la rueda: seguimos su posición y aplazamos el auto.
+  grid.addEventListener("scroll", () => {
+    if (glideStart) return;
+    if (Math.abs(grid.scrollLeft - xForIndex(curIndex)) > 2) {
+      const raw = ((grid.scrollLeft / columnWidth()) % COLS + COLS) % COLS;
+      curIndex = raw;
+      index = Math.round(raw) % COLS;
+      dwellUntil = performance.now() + DWELL * 2;
     }
+  }, { passive: true });
+
+  const pause = () => { paused = true; };
+  const resume = (delay) => { paused = false; dwellUntil = performance.now() + (delay || 0); };
+  grid.addEventListener("mouseenter", pause);
+  grid.addEventListener("mouseleave", () => resume(500));
+  grid.addEventListener("touchstart", pause, { passive: true });
+  grid.addEventListener("touchend", () => resume(DWELL), { passive: true });
+
+  function play() {
+    if (rafId === null) { dwellUntil = performance.now() + DWELL; rafId = requestAnimationFrame(frame); }
   }
-
-  function startAuto() {
-    autoTimer = setInterval(scrollNext, 5000);
+  function halt() {
+    if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
   }
-  function resetAuto() {
-    clearInterval(autoTimer);
-    startAuto();
-  }
+  document.addEventListener("visibilitychange", () => (document.hidden ? halt() : play()));
+  window.addEventListener("resize", () => { if (!glideStart) grid.scrollLeft = xForIndex(curIndex); });
 
-  btnLeft.addEventListener("click", () => { scrollPrev(); resetAuto(); });
-  btnRight.addEventListener("click", () => { scrollNext(); resetAuto(); });
-
-  // pausa el avance automático mientras el usuario mira/toca la vitrina
-  grid.addEventListener("mouseenter", () => clearInterval(autoTimer));
-  grid.addEventListener("mouseleave", startAuto);
-  grid.addEventListener("touchstart", () => clearInterval(autoTimer), { passive: true });
-  grid.addEventListener("touchend", startAuto);
-
-  startAuto();
+  grid.scrollLeft = 0;
+  play();
 }
 
 // ---------- Selección de tamaño/precio ----------

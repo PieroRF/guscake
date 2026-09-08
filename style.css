@@ -591,22 +591,32 @@ h2{
 .scroll-arrow:active{
   transform:scale(0.95);
 }
-/* ---------- COLUMNAS DE CATEGORÍAS (carrusel horizontal) ---------- */
+/* ---------- COLUMNAS DE CATEGORÍAS (carrusel horizontal con deslizamiento automático) ---------- */
 .product-columns{
   display:flex;
   gap:32px;
   overflow-x:auto;
-  scroll-snap-type:x mandatory;
-  scroll-behavior:smooth;
-  padding-bottom:10px;
+  padding:4px 0 10px;
   scrollbar-width:none;
+  /* el deslizamiento lo anima el JS por pasos; nada de scroll-behavior:smooth
+     para que no se duplique la animación al fijar scrollLeft cada frame */
+  /* Suavizado tenue de los bordes: solo quita el corte seco, sin comerse la columna.
+     Un pelo más ancho a la derecha, que es por donde asoma la columna nueva. */
+  --fade: linear-gradient(to right,
+    transparent 0,
+    #000 22px,
+    #000 calc(100% - 56px),
+    rgba(0,0,0,0.15) calc(100% - 20px),
+    transparent 100%);
+  -webkit-mask-image:var(--fade);
+          mask-image:var(--fade);
 }
 .product-columns::-webkit-scrollbar{
   display:none;
 }
+/* 4 columnas visibles de inmediato + una 5ª asomando que va cambiando en la transición. */
 .product-section{
-  flex:0 0 calc((100% - 64px) / 3);
-  scroll-snap-align:start;
+  flex:0 0 calc((100% - 4 * 32px) / 4.2);
   min-width:0;
 }
 .product-grid{
@@ -616,10 +626,15 @@ h2{
 }
 
 @media (max-width:1000px){
-  .product-section{flex-basis:calc((100% - 32px) / 2);}
+  .product-section{flex-basis:calc((100% - 2 * 32px) / 2.3);}
 }
 @media (max-width:600px){
-  .product-section{flex-basis:100%;}
+  .product-section{flex-basis:calc((100% - 32px) / 1.15);}
+  /* en móvil la vitrina es angosta: se estrecha la disolución para no comerse la columna */
+  .product-columns{
+    --fade: linear-gradient(to right,
+      transparent 0, #000 7%, #000 93%, transparent 100%);
+  }
 }
 
 /* ---------- SECCIONES AGRUPADAS DE PRODUCTOS ---------- */
@@ -654,6 +669,16 @@ h2{
   background:var(--gold);
   box-shadow:0 0 10px 2px rgba(217,169,79,0.6);
   animation:premiumGlow 2s ease-in-out infinite;
+}
+/* Título de Fiestas Patrias con los colores de la bandera chilena */
+.product-section-title--chile{
+  border-bottom-color:#0039a6;
+}
+.product-section-title--chile .cl-azul{ color:#0039a6; }
+.product-section-title--chile .cl-rojo{ color:#d52b1e; }
+.product-section-title--chile .cl-blanco{
+  color:#ffffff;
+  text-shadow:0 1px 2px rgba(46,29,20,0.55);
 }
 @keyframes premiumShimmer{
   to{background-position:250% center;}
@@ -770,26 +795,34 @@ h2{
   padding:18px 18px 20px;
   display:flex;
   flex-direction:column;
+  align-items:center;
   gap:6px;
   flex:1;
+  text-align:center;
 }
 .product-name{
   font-family:var(--font-display);
   font-weight:700;
   font-size:1.05rem;
   margin:0;
+  text-align:center;
 }
 .product-desc{
   font-size:0.85rem;
   color:var(--espresso-soft);
   margin:0 0 8px;
   flex:1;
+  width:100%;
+  text-align:justify;
+  text-align-last:center;
+  hyphens:none;
 }
 .product-footer{
   display:flex;
   align-items:center;
   justify-content:space-between;
   margin-top:auto;
+  width:100%;
 }
 .product-price{
   font-family:var(--font-mono);
