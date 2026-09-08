@@ -84,43 +84,49 @@ const PRODUCTS = [
     emoji: "🍰", img: "img/productos/cheseecakeframbuesa.jpg", category: "tartas"
   },
   {
-    id: "p11", name: "Alfajor tradicional",
+    id: "p11", name: "Barquillos (06 uds.)",
+    desc: "Galleta fina, ligera y crujiente. Rellena de manjar artesanal.",
+    prices: [{ label: "Precio único", price: 5500 }],
+    emoji: "🍪", img: "img/productos/barquillos.jpg", category: "peque-dulces"
+  },
+  {
+    id: "p12", name: "Alfajor tradicional",
     desc: "Galletas de chocolate Con toques de zeste de naranja, rellenas de manjar tradicional y bañadas en chocalate bitter o blanco.",
     prices: [{ label: "Precio único", price: 2000 }],
     emoji: "🍪", img: "img/productos/alfajortradicional.jpg", category: "peque-dulces"
   },
   {
-    id: "p12", name: "Alfajor Maicena",
+    id: "p13", name: "Alfajor Maicena",
     desc: "Galletas de maicenas rellenas de manjar Artesanal, cubiertas de coco rallado y espolvoreadas con azúcar flor.",
     prices: [{ label: "Precio único", price: 1900 }],
     emoji: "🍪", img: "img/productos/alfajormaicena.jpg", category: "peque-dulces"
   },
   {
-    id: "p13", name: "Alfajor Hojarasca",
+    id: "p14", name: "Alfajor Hojarasca",
     desc: "Discos de hojarascas rellenas de manjar artesanal, cubiertas con coco rallado y espolvoreadas con azúcar flor.",
     prices: [{ label: "Precio único", price: 1700 }],
     emoji: "🍪", img: "img/productos/alfajorhojarasca.jpg", category: "peque-dulces"
   },
   {
-    id: "p14", name: "Chocolate premium",
+    id: "p15", name: "Chocolate premium",
     desc: "Bizcocho húmedo de chocolate, relleno de manjar artesanal y chocolate real. Un box ideal para regalar.",
     prices: [{ label: "Precio único", price: 16500 }],
     emoji: "⭐", img: "img/productos/chocolatepremium.jpg", category: "premium"
   },
   {
-    id: "p15", name: "Frambuesa premium",
+    id: "p16", name: "Frambuesa premium",
     desc: "Fina selección de hojarascas, rellenas de manjar artesanal, crema batida y frambuesas naturales. Un box ideal para regalar.",
     prices: [{ label: "Precio único", price: 15500 }],
     emoji: "⭐", img: "img/productos/frambuesapremium.jpg", category: "premium"
   },
   {
-    id: "p16", name: "Carrot premium",
+    id: "p17", name: "Carrot premium",
     desc: "Bizcocho húmedo de zanahorias de la huerta, relleno de un exquisito frosting de queso crema y manjar artesanal. Un box ideal para regalar.",
     prices: [{ label: "Precio único", price: 16500 }],
     emoji: "⭐", img: "img/productos/carrotpremium.jpg", category: "premium"
   },
   {
-    id: "p17", name: "Pastelitos premium",
+    id: "p18", name: "Pastelitos premium",
     desc: "La combinación ideal para compartir: intensos brownies con manjar artesanal, suaves cheesecakes de vainilla y frambuesa, clásicos pies de limón natural y tradicionales suspiros limeños. Pastelería artesanal lista para regalar y disfrutar.",
     prices: [{ label: "Precio único", price: 28500 }],
     emoji: "⭐", img: "img/productos/pastelitospremium.jpg", category: "premium"
