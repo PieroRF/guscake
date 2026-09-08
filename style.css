@@ -784,7 +784,11 @@ h2{
 }
 .pedidos .eyebrow{color:var(--gold);}
 .pedidos h2{color:var(--white);}
-.pedidos-text{color:rgba(246,241,231,0.72); max-width:44ch;}
+.pedidos-text{
+  color:rgba(246,241,231,0.72);
+  max-width:44ch;
+  text-align: justify;
+}
 .pedidos-grid{
   display:grid;
   grid-template-columns:0.9fr 1.1fr;
