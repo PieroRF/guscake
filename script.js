@@ -1,38 +1,145 @@
 // ==========================================================
-// DULCE ESPERA — lógica de vitrina, carrito y formulario
+// GUS CAKE — lógica de vitrina, carrito, formulario y hero
 // ==========================================================
 
 const PRODUCTS = [
-  { id: "p1", name: "Alfajor de amor", desc: "Finas laminasde hojarasca, rellenas de manjar tradicional, frambuesas naturales y crema chantilly de vainilla.", price: 35500, emoji: "🎂", img: "img/productos/alfajordeamor.jpg", category: "tortas", tag: "Especial del día" },
-  { id: "p2", name: "Choco Ganache", desc: "Bizcocho húmedo de chocolate, relleno de manjar tradicional y ganache bitter.", price: 36500, emoji: "🎂", img: "img/productos/chocoganache.jpg", category: "tortas" },
-  { id: "p3", name: "Manjar nuez", desc: "Finas laminas de hojarascas, rellenas de manjar artesanal y nueces molidas.", price: 35500, emoji: "🎂", img: "img/productos/manjarnuez.jpg", category: "tortas" },
-  { id: "p4", name: "Carrot cake", desc: "Bizcocho húmedo de zanahoria, relleno de frosting de queso crema de vainilla.", price: 36500, emoji: "🎂", img: "img/productos/carrotcake.jpg", category: "tortas" },
-  { id: "p5", name: "Red velvet", desc: "Bizcocho rojo intenso con un toque de cacao, relleno de frosting de queso crema de vainilla.", price: 36500, emoji: "🎂", img: "img/productos/redvelvet.jpg", category: "tortas" },
-  { id: "p6", name: "Pie de limón", desc: "Masa sableé rellena de crema de limón, cubierta de merengue suizo.", price: 22500, emoji: "🍰", img: "img/productos/piedelimon.jpg", category: "tartas" },
-  { id: "p7", name: "Kuchen sureño", desc: "Masa sableé rellena de cremoso kuchen de frutos rojos con toques de limón sutil.", price: 20500, emoji: "🍰", img: "img/productos/kuchensureño.jpg", category: "tartas" },
-  { id: "p8", name: "Choco Brownie", desc: "Bizcocho húmedo de chocolate, cubierto de ganache bitter.", price: 21500, emoji: "🍰", img: "img/productos/chocobrownie.jpg", category: "tartas" },
-  { id: "p9", name: "Cheseecake Maracuya", desc: "Tarta a base de queso crema de vainilla, cubierta con gel de maracuya.", price: 28500, emoji: "🍰", img: "img/productos/cheseecakemaracuya.jpg", category: "tartas" },
-  { id: "p10", name: "Cheseecake Frambuesa", desc: "Tarta a base de queso crema de vainilla, cubierta con gel de frambuesa.", price: 28500, emoji: "🍰", img: "img/productos/cheseecakeframbuesa.jpg", category: "tartas" },
-  { id: "p11", name: "Alfajor tradicional", desc: "Galletas de chocolate Con toques de zeste de naranja, rellenas de manjar tradicional y bañadas en chocalate bitter o blanco.", price: 2000, emoji: "🍪", img: "img/productos/alfajortradicional.jpg", category: "peque-dulces" },
-  { id: "p12", name: "Alfajor Maicena", desc: "Galletas de maicenas rellenas de manjar Artesanal, cubiertas de coco rallado y espolvoreadas con azúcar flor.", price: 1900, emoji: "🍪", img: "img/productos/alfajormaicena.jpg", category: "peque-dulces" },
-  { id: "p13", name: "Alfajor Hojarasca", desc: "Discos de hojarascas rellenas de manjar artesanal, cubiertas con coco rallado y espolvoreadas con azúcar flor.", price: 1700, emoji: "🍪", img: "img/productos/alfajorhojarasca.jpg", category: "peque-dulces" },
-
+  {
+    id: "p1", name: "Alfajor de amor",
+    desc: "Finas laminasde hojarasca, rellenas de manjar tradicional, frambuesas naturales y crema chantilly de vainilla.",
+    prices: [
+      { label: "Torta 04 porciones", price: 15500 },
+      { label: "Torta 10 porciones", price: 25500 },
+      { label: "Torta 20 porciones", price: 35500 },
+    ],
+    emoji: "🎂", img: "img/productos/alfajordeamor.jpg", category: "tortas", tag: "Especial del día"
+  },
+  {
+    id: "p2", name: "Choco Ganache",
+    desc: "Bizcocho húmedo de chocolate, relleno de manjar tradicional y ganache bitter.",
+    prices: [
+      { label: "Torta 04 porciones", price: 16500 },
+      { label: "Torta 10 porciones", price: 26500 },
+      { label: "Torta 20 porciones", price: 36500 },
+    ],
+    emoji: "🎂", img: "img/productos/chocoganache.jpg", category: "tortas"
+  },
+  {
+    id: "p3", name: "Manjar nuez",
+    desc: "Finas laminas de hojarascas, rellenas de manjar artesanal y nueces molidas.",
+    prices: [
+      { label: "Torta 04 porciones", price: 15500 },
+      { label: "Torta 10 porciones", price: 25500 },
+      { label: "Torta 20 porciones", price: 35500 },
+    ],
+    emoji: "🎂", img: "img/productos/manjarnuez.jpg", category: "tortas"
+  },
+  {
+    id: "p4", name: "Carrot cake",
+    desc: "Bizcocho húmedo de zanahoria, relleno de frosting de queso crema de vainilla.",
+    prices: [
+      { label: "Torta 04 porciones", price: 16500 },
+      { label: "Torta 10 porciones", price: 26500 },
+      { label: "Torta 20 porciones", price: 36500 },
+    ],
+    emoji: "🎂", img: "img/productos/carrotcake.jpg", category: "tortas"
+  },
+  {
+    id: "p5", name: "Red velvet",
+    desc: "Bizcocho rojo intenso con un toque de cacao, relleno de frosting de queso crema de vainilla.",
+    prices: [
+      { label: "Torta 04 porciones", price: 16500 },
+      { label: "Torta 10 porciones", price: 26500 },
+      { label: "Torta 20 porciones", price: 36500 },
+    ],
+    emoji: "🎂", img: "img/productos/redvelvet.jpg", category: "tortas"
+  },
+  {
+    id: "p6", name: "Pie de limón",
+    desc: "Masa sableé rellena de crema de limón, cubierta de merengue suizo.",
+    prices: [{ label: "Precio único", price: 22500 }],
+    emoji: "🍰", img: "img/productos/piedelimon.jpg", category: "tartas"
+  },
+  {
+    id: "p7", name: "Kuchen sureño",
+    desc: "Masa sableé rellena de cremoso kuchen de frutos rojos con toques de limón sutil.",
+    prices: [{ label: "Precio único", price: 20500 }],
+    emoji: "🍰", img: "img/productos/kuchensureño.jpg", category: "tartas"
+  },
+  {
+    id: "p8", name: "Choco Brownie",
+    desc: "Bizcocho húmedo de chocolate, cubierto de ganache bitter.",
+    prices: [{ label: "Precio único", price: 21500 }],
+    emoji: "🍰", img: "img/productos/chocobrownie.jpg", category: "tartas"
+  },
+  {
+    id: "p9", name: "Cheseecake Maracuya",
+    desc: "Tarta a base de queso crema de vainilla, cubierta con gel de maracuya.",
+    prices: [{ label: "Precio único", price: 28500 }],
+    emoji: "🍰", img: "img/productos/cheseecakemaracuya.jpg", category: "tartas"
+  },
+  {
+    id: "p10", name: "Cheseecake Frambuesa",
+    desc: "Tarta a base de queso crema de vainilla, cubierta con gel de frambuesa.",
+    prices: [{ label: "Precio único", price: 28500 }],
+    emoji: "🍰", img: "img/productos/cheseecakeframbuesa.jpg", category: "tartas"
+  },
+  {
+    id: "p11", name: "Alfajor tradicional",
+    desc: "Galletas de chocolate Con toques de zeste de naranja, rellenas de manjar tradicional y bañadas en chocalate bitter o blanco.",
+    prices: [{ label: "Precio único", price: 2000 }],
+    emoji: "🍪", img: "img/productos/alfajortradicional.jpg", category: "peque-dulces"
+  },
+  {
+    id: "p12", name: "Alfajor Maicena",
+    desc: "Galletas de maicenas rellenas de manjar Artesanal, cubiertas de coco rallado y espolvoreadas con azúcar flor.",
+    prices: [{ label: "Precio único", price: 1900 }],
+    emoji: "🍪", img: "img/productos/alfajormaicena.jpg", category: "peque-dulces"
+  },
+  {
+    id: "p13", name: "Alfajor Hojarasca",
+    desc: "Discos de hojarascas rellenas de manjar artesanal, cubiertas con coco rallado y espolvoreadas con azúcar flor.",
+    prices: [{ label: "Precio único", price: 1700 }],
+    emoji: "🍪", img: "img/productos/alfajorhojarasca.jpg", category: "peque-dulces"
+  },
+  {
+    id: "p14", name: "Chocolate premium",
+    desc: "HAY QUE AGREGAR LA DESCRIPCION.",
+    prices: [{ label: "Precio único", price: 1700 }],
+    emoji: "🍪", img: "img/productos/chocolatepremium.jpg", category: "premium"
+  },
+  {
+    id: "p15", name: "Frambuesa premium",
+    desc: "HAY QUE AGREGAR LA DESCRIPCION.",
+    prices: [{ label: "Precio único", price: 1700 }],
+    emoji: "🍪", img: "img/productos/frambuesapremium.jpg", category: "premium"
+  },
 ];
+
+const CATEGORY_LABELS = {
+  tortas: "Tortas",
+  tartas: "Tartas",
+  "peque-dulces": "Peque-Dulces",
+  premium: "Premium",
+};
+const CATEGORY_ORDER = ["tortas", "tartas", "peque-dulces", "premium"];
 
 const clp = (n) => n.toLocaleString("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 });
 
 // ---------- Vitrina ----------
 const grid = document.getElementById("productGrid");
-const filters = document.getElementById("filters");
-let activeFilter = "todos";
 
-function renderGrid() {
-  grid.innerHTML = "";
-  const items = PRODUCTS.filter(p => activeFilter === "todos" || p.category === activeFilter);
-  items.forEach(p => {
-    const card = document.createElement("article");
-    card.className = "product-card";
-    card.innerHTML = `
+function cardHTML(p) {
+  const hasOptions = p.prices.length > 1;
+  const priceOptions = hasOptions
+    ? `<div class="price-options">
+        ${p.prices.map((opt, i) => `
+          <button type="button" class="price-chip${i === 0 ? " active" : ""}" data-price="${opt.price}" data-label="${opt.label}">${opt.label}</button>
+        `).join("")}
+      </div>`
+    : "";
+
+  return `
+    <article class="product-card" data-id="${p.id}">
       <div class="product-media">
         ${p.tag ? `<span class="product-tag">${p.tag}</span>` : ""}
         <img src="${p.img}" alt="${p.name}" class="product-photo"
@@ -47,30 +154,57 @@ function renderGrid() {
       <div class="product-body">
         <h3 class="product-name">${p.name}</h3>
         <p class="product-desc">${p.desc}</p>
+        ${priceOptions}
         <div class="product-footer">
-          <span class="product-price">${clp(p.price)}</span>
+          <span class="product-price">${clp(p.prices[0].price)}</span>
           <button class="add-btn" data-id="${p.id}">Agregar</button>
         </div>
       </div>
+    </article>
+  `;
+}
+
+function renderGrid() {
+  grid.innerHTML = "";
+  CATEGORY_ORDER.forEach(cat => {
+    const items = PRODUCTS.filter(p => p.category === cat);
+    const section = document.createElement("div");
+    section.className = "product-section";
+    section.innerHTML = `
+      <h3 class="product-section-title">${CATEGORY_LABELS[cat] || cat}</h3>
+      <div class="product-grid">
+        ${items.length
+          ? items.map(cardHTML).join("")
+          : `<p class="product-empty">Muy pronto vamos a<br>sumar productos acá.</p>`}
+      </div>
     `;
-    grid.appendChild(card);
+    grid.appendChild(section);
   });
 }
 
-filters.addEventListener("click", (e) => {
-  const btn = e.target.closest(".filter-chip");
-  if (!btn) return;
-  filters.querySelectorAll(".filter-chip").forEach(c => c.classList.remove("active"));
-  btn.classList.add("active");
-  activeFilter = btn.dataset.filter;
-  renderGrid();
+// ---------- Selección de tamaño/precio ----------
+grid.addEventListener("click", (e) => {
+  const chip = e.target.closest(".price-chip");
+  if (!chip) return;
+  const card = chip.closest(".product-card");
+  card.querySelectorAll(".price-chip").forEach(c => c.classList.remove("active"));
+  chip.classList.add("active");
+  const priceEl = card.querySelector(".product-price");
+  priceEl.textContent = clp(Number(chip.dataset.price));
+  priceEl.classList.remove("price-pulse");
+  void priceEl.offsetWidth; // reinicia la animación aunque se repita
+  priceEl.classList.add("price-pulse");
 });
 
 // ---------- Carrito ----------
-let cart = {}; // { id: qty }
+let cart = {}; // { "id::label": { name, label, price, qty, emoji } }
 
-function addToCart(id, btn) {
-  cart[id] = (cart[id] || 0) + 1;
+function addToCart(key, item, btn) {
+  if (cart[key]) {
+    cart[key].qty += 1;
+  } else {
+    cart[key] = { ...item, qty: 1 };
+  }
   renderCart();
   if (btn) {
     btn.classList.add("added");
@@ -82,8 +216,8 @@ function addToCart(id, btn) {
   }
 }
 
-function removeFromCart(id) {
-  delete cart[id];
+function removeFromCart(key) {
+  delete cart[key];
   renderCart();
 }
 
@@ -92,27 +226,27 @@ function renderCart() {
   const cartTotal = document.getElementById("cartTotal");
   const cartCount = document.getElementById("cartCount");
 
-  const ids = Object.keys(cart);
-  cartCount.textContent = ids.reduce((sum, id) => sum + cart[id], 0);
+  const keys = Object.keys(cart);
+  cartCount.textContent = keys.reduce((sum, k) => sum + cart[k].qty, 0);
 
-  if (ids.length === 0) {
+  if (keys.length === 0) {
     cartItems.innerHTML = `<p class="cart-empty">Tu boleta está vacía. Agrega algo de la vitrina.</p>`;
     cartTotal.textContent = clp(0);
     return;
   }
 
   let total = 0;
-  cartItems.innerHTML = ids.map(id => {
-    const p = PRODUCTS.find(x => x.id === id);
-    const subtotal = p.price * cart[id];
+  cartItems.innerHTML = keys.map(key => {
+    const item = cart[key];
+    const subtotal = item.price * item.qty;
     total += subtotal;
     return `
       <div class="cart-item">
         <div>
-          <div class="cart-item-name">${p.emoji} ${p.name}</div>
-          <div class="cart-item-qty">${cart[id]} × ${clp(p.price)}</div>
+          <div class="cart-item-name">${item.emoji} ${item.name} <span class="cart-item-label">— ${item.label}</span></div>
+          <div class="cart-item-qty">${item.qty} × ${clp(item.price)}</div>
         </div>
-        <button class="cart-item-remove" data-remove="${id}">Quitar</button>
+        <button class="cart-item-remove" data-remove="${key}">Quitar</button>
       </div>
     `;
   }).join("");
@@ -122,7 +256,14 @@ function renderCart() {
 grid.addEventListener("click", (e) => {
   const btn = e.target.closest(".add-btn");
   if (!btn) return;
-  addToCart(btn.dataset.id, btn);
+  const card = btn.closest(".product-card");
+  const id = btn.dataset.id;
+  const p = PRODUCTS.find(x => x.id === id);
+  const activeChip = card.querySelector(".price-chip.active");
+  const label = activeChip ? activeChip.dataset.label : p.prices[0].label;
+  const price = activeChip ? Number(activeChip.dataset.price) : p.prices[0].price;
+  const key = `${id}::${label}`;
+  addToCart(key, { name: p.name, label, price, emoji: p.emoji }, btn);
 });
 
 // ---------- Lightbox (ampliar foto de producto) ----------
@@ -183,11 +324,11 @@ document.getElementById("cartClose").addEventListener("click", closeCart);
 cartOverlay.addEventListener("click", closeCart);
 
 document.getElementById("cartCheckout").addEventListener("click", () => {
-  const ids = Object.keys(cart);
-  if (ids.length === 0) return;
-  const resumen = ids.map(id => {
-    const p = PRODUCTS.find(x => x.id === id);
-    return `${cart[id]}x ${p.name}`;
+  const keys = Object.keys(cart);
+  if (keys.length === 0) return;
+  const resumen = keys.map(key => {
+    const item = cart[key];
+    return `${item.qty}x ${item.name} (${item.label})`;
   }).join(", ");
   const mensaje = encodeURIComponent(`Hola! Quiero encargar: ${resumen}`);
   window.open(`https://wa.me/56920679622?text=${mensaje}`, "_blank");
