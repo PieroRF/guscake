@@ -388,24 +388,24 @@ document.getElementById("orderForm").addEventListener("submit", (e) => {
 const HERO_SLIDES = [
   {
     img: "img/hero-torta-1.jpg",
-    eyebrow: "Nuestro favorito de siempre",
-    titleHTML: `Pie de Limón<br><span class="accent">Relleno</span> Infinito`,
-    text: "La perfección absoluta: base sableé, relleno de limón tan intenso y vibrante que despierta todos tus sentidos!",
+    eyebrow: "La más vendida",
+    titleHTML: `Alfajor frambuesa<br><span class="accent">Dúo clásico</span>`,
+    text: "Delicadas capas de hojarasca rellenas de manjar tradicional, crema de vainilla y frambuesas frescas.",
     caption: "✨ La estrella de la casa ✨",
   },
   {
     img: "img/hero-torta-2.jpg",
-    eyebrow: "El clásico de siempre",
+    eyebrow: "De todo un poco",
     titleHTML: `Mini pastelitos<br><span class="accent">Bocados elegantes</span>`,
     text: "Selección dulce para regalar momentos inolvidables: pie limón, suspiro limeño, cheesecake y brownie.",
-    caption: "Irresistibles y perfectos para compartir",
+    caption: "Ideal para compartir",
   },
   {
     img: "img/hero-torta-3.jpg",
     eyebrow: "Hecho a mano, sin atajos",
-    titleHTML: `Mix de tartas<br><span class="accent">Nuestro</span> Especial`,
-    text: "El equilibrio perfecto entre dos clásicos: la frescura cítrica del pie de limón con merengue y la textura cremosa del cheesecake.",
-    caption: "Si quieres de todo un poco, este es tu pedido",
+    titleHTML: `Mix de tartas<br><span class="accent">Equilibrio perfecto</span>`,
+    text: "Tartas, cheesecake, pie de limón, brownie y kuchen sureño. Una selección pensada especialmente para compartir.",
+    caption: "Todo en un solo pedido",
   },
 ];
 
