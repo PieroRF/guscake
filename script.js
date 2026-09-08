@@ -9,16 +9,13 @@ const PRODUCTS = [
   { id: "p4", name: "Carrot cake", desc: "Bizcocho húmedo de zanahoria, relleno de frosting de queso crema de vainilla.", price: 36500, emoji: "🎂", img: "img/productos/carrotcake.jpg", category: "tortas" },
   { id: "p5", name: "Red velvet", desc: "Bizcocho rojo intenso con un toque de cacao, relleno de frosting de queso crema de vainilla.", price: 36500, emoji: "🎂", img: "img/productos/redvelvet.jpg", category: "tortas" },
   { id: "p6", name: "Pie de limón", desc: "Masa sableé rellena de crema de limón, cubierta de merengue suizo.", price: 22500, emoji: "🍰", img: "img/productos/piedelimon.jpg", category: "tartas" },
-  { id: "p7", name: "Pie de frambuesa", desc: "Masa sableé rellena de crema de frambuesas naturales, cubierta de merengue suizo.", price: 22500, emoji: "🍰", img: "img/productos/piedeframbuesa.jpg", category: "tartas" },
-  { id: "p8", name: "Kuchen sureño", desc: "Masa sableé rellena de cremoso kuchen de frutos rojos con toques de limón sutil.", price: 20500, emoji: "🍰", img: "img/productos/kuchensureño.jpg", category: "tartas" },
-  { id: "p9", name: "Choco Brownie", desc: "Bizcocho húmedo de chocolate, cubierto de ganache bitter.", price: 21500, emoji: "🍰", img: "img/productos/chocobrownie.jpg", category: "tartas" },
-  { id: "p10", name: "Cheseecake Maracuya", desc: "Tarta a base de queso crema de vainilla, cubierta con gel de maracuya.", price: 28500, emoji: "🍰", img: "img/productos/cheseecakemaracuya.jpg", category: "tartas" },
-  { id: "p11", name: "Cheseecake Frambuesa", desc: "Tarta a base de queso crema de vainilla, cubierta con gel de frambuesa.", price: 28500, emoji: "🍰", img: "img/productos/cheseecakeframbuesa.jpg", category: "tartas" },
-  { id: "p12", name: "Bomba chocolatosa", desc: "Cocada de bizcocho húmedo de chocolate, bañada en chocolate bitter.", price: 1200, emoji: "🍪", img: "img/productos/bombachocolatosa.jpg", category: "peque-dulces" },
-  { id: "p13", name: "Cocadas", desc: "Cocadas de bizcocho de vainilla. Bañadas en coco rallado.", price: 700, emoji: "🍪", img: "img/productos/cocadas.jpg", category: "peque-dulces" },
-  { id: "p14", name: "Alfajor tradicional", desc: "Galletas de chocolate Con toques de zeste de naranja, rellenas de manjar tradicional y bañadas en chocalate bitter o blanco.", price: 2000, emoji: "🍪", img: "img/productos/alfajortradicional.jpg", category: "peque-dulces" },
-  { id: "p15", name: "Muffins", desc: "Bizcocho húmedo de vainilla. diferentes variedades; Chocolate, vainilla, frambuesa, arándanos, mora y frutos del bosque.", price: 2500, emoji: "🍪", img: "img/productos/muffins.jpg", category: "peque-dulces" },
-  { id: "p16", name: "Alfajor Merengue", desc: "Discos de merengues suizo rellenos de manjar artesanal.", price: 1800, emoji: "🍪", img: "img/productos/alfajormerengue.jpg", category: "peque-dulces" },
+  { id: "p7", name: "Kuchen sureño", desc: "Masa sableé rellena de cremoso kuchen de frutos rojos con toques de limón sutil.", price: 20500, emoji: "🍰", img: "img/productos/kuchensureño.jpg", category: "tartas" },
+  { id: "p8", name: "Choco Brownie", desc: "Bizcocho húmedo de chocolate, cubierto de ganache bitter.", price: 21500, emoji: "🍰", img: "img/productos/chocobrownie.jpg", category: "tartas" },
+  { id: "p9", name: "Cheseecake Maracuya", desc: "Tarta a base de queso crema de vainilla, cubierta con gel de maracuya.", price: 28500, emoji: "🍰", img: "img/productos/cheseecakemaracuya.jpg", category: "tartas" },
+  { id: "p10", name: "Cheseecake Frambuesa", desc: "Tarta a base de queso crema de vainilla, cubierta con gel de frambuesa.", price: 28500, emoji: "🍰", img: "img/productos/cheseecakeframbuesa.jpg", category: "tartas" },
+  { id: "p11", name: "Alfajor tradicional", desc: "Galletas de chocolate Con toques de zeste de naranja, rellenas de manjar tradicional y bañadas en chocalate bitter o blanco.", price: 2000, emoji: "🍪", img: "img/productos/alfajortradicional.jpg", category: "peque-dulces" },
+  { id: "p12", name: "Alfajor Maicena", desc: "Galletas de maicenas rellenas de manjar Artesanal, cubiertas de coco rallado y espolvoreadas con azúcar flor.", price: 1900, emoji: "🍪", img: "img/productos/alfajormaicena.jpg", category: "peque-dulces" },
+  { id: "p13", name: "Alfajor Hojarasca", desc: "Discos de hojarascas rellenas de manjar artesanal, cubiertas con coco rallado y espolvoreadas con azúcar flor.", price: 1700, emoji: "🍪", img: "img/productos/alfajorhojarasca.jpg", category: "peque-dulces" },
 
 ];
 
