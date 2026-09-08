@@ -103,15 +103,27 @@ const PRODUCTS = [
   },
   {
     id: "p14", name: "Chocolate premium",
-    desc: "HAY QUE AGREGAR LA DESCRIPCION.",
+    desc: "HAY QUE AGREGAR LA DESCRIPCION Y PRECIO.",
     prices: [{ label: "Precio único", price: 1700 }],
-    emoji: "🍪", img: "img/productos/chocolatepremium.jpg", category: "premium"
+    emoji: "⭐", img: "img/productos/chocolatepremium.jpg", category: "premium"
   },
   {
     id: "p15", name: "Frambuesa premium",
-    desc: "HAY QUE AGREGAR LA DESCRIPCION.",
+    desc: "HAY QUE AGREGAR LA DESCRIPCION Y PRECIO.",
     prices: [{ label: "Precio único", price: 1700 }],
-    emoji: "🍪", img: "img/productos/frambuesapremium.jpg", category: "premium"
+    emoji: "⭐", img: "img/productos/frambuesapremium.jpg", category: "premium"
+  },
+  {
+    id: "p16", name: "Carrot premium",
+    desc: "HAY QUE AGREGAR LA DESCRIPCION Y PRECIO.",
+    prices: [{ label: "Precio único", price: 1700 }],
+    emoji: "⭐", img: "img/productos/carrotpremium.jpg", category: "premium"
+  },
+  {
+    id: "p17", name: "Pastelitos premium",
+    desc: "HAY QUE AGREGAR LA DESCRIPCION Y PRECIO.",
+    prices: [{ label: "Precio único", price: 1700 }],
+    emoji: "⭐", img: "img/productos/pastelitospremium.jpg", category: "premium"
   },
 ];
 
@@ -121,7 +133,7 @@ const CATEGORY_LABELS = {
   "peque-dulces": "Peque-Dulces",
   premium: "Premium",
 };
-const CATEGORY_ORDER = ["tortas", "tartas", "peque-dulces", "premium"];
+const CATEGORY_ORDER = ["premium", "tortas", "tartas", "peque-dulces"];
 
 const clp = (n) => n.toLocaleString("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 });
 
@@ -168,10 +180,13 @@ function renderGrid() {
   grid.innerHTML = "";
   CATEGORY_ORDER.forEach(cat => {
     const items = PRODUCTS.filter(p => p.category === cat);
+    const isPremium = cat === "premium";
     const section = document.createElement("div");
     section.className = "product-section";
     section.innerHTML = `
-      <h3 class="product-section-title">${CATEGORY_LABELS[cat] || cat}</h3>
+      <h3 class="product-section-title${isPremium ? " product-section-title--premium" : ""}">
+        ${isPremium ? "✨ Premium ✨" : (CATEGORY_LABELS[cat] || cat)}
+      </h3>
       <div class="product-grid">
         ${items.length
           ? items.map(cardHTML).join("")
