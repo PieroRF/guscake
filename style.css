@@ -933,6 +933,8 @@ h2{
   border-radius:999px;
   box-shadow:0 6px 14px rgba(46,29,20,0.2);
   white-space:nowrap;
+  text-align:center;
+  line-height:1.35;
 }
 
 @media (max-width:820px){
