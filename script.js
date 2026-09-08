@@ -103,34 +103,34 @@ const PRODUCTS = [
   },
   {
     id: "p14", name: "Chocolate premium",
-    desc: "HAY QUE AGREGAR LA DESCRIPCION Y PRECIO.",
-    prices: [{ label: "Precio único", price: 1700 }],
+    desc: "Bizcocho húmedo de chocolate, relleno de manjar artesanal y chocolate real. Un box ideal para regalar.",
+    prices: [{ label: "Precio único", price: 16500 }],
     emoji: "⭐", img: "img/productos/chocolatepremium.jpg", category: "premium"
   },
   {
     id: "p15", name: "Frambuesa premium",
-    desc: "HAY QUE AGREGAR LA DESCRIPCION Y PRECIO.",
-    prices: [{ label: "Precio único", price: 1700 }],
+    desc: "Fina selección de hojarascas, rellenas de manjar artesanal, crema batida y frambuesas naturales. Un box ideal para regalar.",
+    prices: [{ label: "Precio único", price: 15500 }],
     emoji: "⭐", img: "img/productos/frambuesapremium.jpg", category: "premium"
   },
   {
     id: "p16", name: "Carrot premium",
-    desc: "HAY QUE AGREGAR LA DESCRIPCION Y PRECIO.",
-    prices: [{ label: "Precio único", price: 1700 }],
+    desc: "Bizcocho húmedo de zanahorias de la huerta, relleno de un exquisito frosting de queso crema y manjar artesanal. Un box ideal para regalar.",
+    prices: [{ label: "Precio único", price: 16500 }],
     emoji: "⭐", img: "img/productos/carrotpremium.jpg", category: "premium"
   },
   {
     id: "p17", name: "Pastelitos premium",
-    desc: "HAY QUE AGREGAR LA DESCRIPCION Y PRECIO.",
-    prices: [{ label: "Precio único", price: 1700 }],
+    desc: "La combinación ideal para compartir: intensos brownies con manjar artesanal, suaves cheesecakes de vainilla y frambuesa, clásicos pies de limón natural y tradicionales suspiros limeños. Pastelería artesanal lista para regalar y disfrutar.",
+    prices: [{ label: "Precio único", price: 28500 }],
     emoji: "⭐", img: "img/productos/pastelitospremium.jpg", category: "premium"
   },
 ];
 
 const CATEGORY_LABELS = {
-  tortas: "Tortas",
-  tartas: "Tartas",
-  "peque-dulces": "Peque-Dulces",
+  tortas: "Tortas 🎂",
+  tartas: "Tartas 🍰",
+  "peque-dulces": "Peque-Dulces 🍪",
   premium: "Premium",
 };
 const CATEGORY_ORDER = ["premium", "tortas", "tartas", "peque-dulces"];
