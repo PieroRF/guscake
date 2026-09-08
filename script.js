@@ -139,8 +139,9 @@ const CATEGORY_LABELS = {
   tartas: "Tartas 🍰",
   "peque-dulces": "Peque-Dulces 🍪",
   premium: "Premium",
+  temporada: "Fiestas Patrias 🇨🇱",
 };
-const CATEGORY_ORDER = ["premium", "tortas", "tartas", "peque-dulces"];
+const CATEGORY_ORDER = ["premium", "temporada", "tortas", "tartas", "peque-dulces"];
 
 const clp = (n) => n.toLocaleString("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 });
 
@@ -192,7 +193,7 @@ function renderGrid() {
     section.className = "product-section";
     section.innerHTML = `
       <h3 class="product-section-title${isPremium ? " product-section-title--premium" : ""}">
-        ${isPremium ? "✨ Premium ✨" : (CATEGORY_LABELS[cat] || cat)}
+        ${isPremium ? "💎 Premium 💎" : (CATEGORY_LABELS[cat] || cat)}
       </h3>
       <div class="product-grid">
         ${items.length
@@ -202,6 +203,61 @@ function renderGrid() {
     `;
     grid.appendChild(section);
   });
+}
+
+// ---------- Carrusel automático de columnas de productos ----------
+function initProductCarousel() {
+  const btnLeft = document.getElementById("scrollLeft");
+  const btnRight = document.getElementById("scrollRight");
+  if (!grid || !btnLeft || !btnRight) return;
+
+  let autoTimer;
+
+  function pageWidth() {
+    const section = grid.querySelector(".product-section");
+    if (!section) return grid.clientWidth;
+    const gap = parseFloat(getComputedStyle(grid).columnGap) || 32;
+    return section.getBoundingClientRect().width + gap;
+  }
+
+  function atEnd() {
+    return grid.scrollLeft >= grid.scrollWidth - grid.clientWidth - 4;
+  }
+
+  function scrollNext() {
+    if (atEnd()) {
+      grid.scrollTo({ left: 0, behavior: "smooth" });
+    } else {
+      grid.scrollBy({ left: pageWidth(), behavior: "smooth" });
+    }
+  }
+
+  function scrollPrev() {
+    if (grid.scrollLeft <= 4) {
+      grid.scrollTo({ left: grid.scrollWidth, behavior: "smooth" });
+    } else {
+      grid.scrollBy({ left: -pageWidth(), behavior: "smooth" });
+    }
+  }
+
+  function startAuto() {
+    autoTimer = setInterval(scrollNext, 5000);
+  }
+  function resetAuto() {
+    clearInterval(autoTimer);
+    startAuto();
+  }
+
+  btnLeft.addEventListener("click", () => { scrollPrev(); resetAuto(); });
+  btnRight.addEventListener("click", () => { scrollNext(); resetAuto(); });
+
+  // pausa el avance automático mientras el usuario mira/toca la vitrina
+  grid.addEventListener("mouseenter", () => clearInterval(autoTimer));
+  grid.addEventListener("mouseleave", startAuto);
+  grid.addEventListener("touchstart", () => clearInterval(autoTimer), { passive: true });
+  grid.addEventListener("touchend", startAuto);
+
+  startAuto();
 }
 
 // ---------- Selección de tamaño/precio ----------
@@ -407,6 +463,13 @@ const HERO_SLIDES = [
     text: "Tartas, cheesecake, pie de limón, brownie y kuchen sureño. Una selección pensada especialmente para compartir.",
     caption: "Todo en un solo pedido",
   },
+  {
+    img: "img/hero-torta-4.jpg",
+    eyebrow: "🔴⚪🔵 Especial dieciochero 🔴⚪🔵",
+    titleHTML: `Sabor a Chile<br><span class="accent">18 de Septiembre</span>`,
+    text: "Kuchen, alfajores y tortas con un toque patrio, ideales para celebrar en familia. Encarga con anticipación para estas fiestas.",
+    caption: "Disponible por tiempo limitado",
+  },
 ];
 
 function initHeroSlider() {
@@ -513,3 +576,4 @@ renderGrid();
 renderCart();
 initScrollReveal();
 initHeroSlider();
+initProductCarousel();
