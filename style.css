@@ -4,18 +4,20 @@
    ========================================================== */
 
 :root{
-  --cream: #EFDC98;
-  --cream-deep: #E0C878;
+  /* Cremas del fondo un punto más profundas y menos "limón": mejoran el
+     contraste con el texto oscuro y hacen resaltar las tarjetas y las fotos. */
+  --cream: #E4CD90;
+  --cream-deep: #D2B96C;
   --espresso: #2E1D14;
-  --espresso-soft: #5A4736;
+  --espresso-soft: #4F3D2C;
   --navy: #3A2318;
   --navy-deep: #1F1108;
   --navy-soft: #4A2E1D;
   --gold: #D9A94F;
   --gold-deep: #B98935;
   --gold-pale: #F0D9A0;
-  --accent: #A9491F;
-  --line: rgba(46,29,20,0.14);
+  --accent: #993D18;
+  --line: rgba(46,29,20,0.18);
   --line-navy: rgba(217,169,79,0.25);
   --white: #FFFCF2;
 
@@ -782,7 +784,7 @@ h2{
   display:inline-block;
   margin:0 0 22px;
   padding-bottom:8px;
-  border-bottom:2px solid var(--gold);
+  border-bottom:2px solid var(--gold-deep);
   animation:sectionIn 0.5s var(--ease) both;
 }
 .product-section-title--premium{
