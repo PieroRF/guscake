@@ -3,12 +3,84 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GusCake — Pastelería de autor</title>
+
+<!-- ==================== SEO ====================
+     Dominio del sitio: https://guscake.cl/ (ver SEO.md para conectar el
+     dominio al hosting y configurar el DNS). -->
+<title>GusCake | Pastelería Artesanal en San Pedro de la Paz</title>
+<meta name="description" content="Pastelería artesanal premium en San Pedro de la Paz, Biobío. Tortas, tartas, alfajores, empolvados y box de dulces hechos con manjar de receta propia. Delivery y pedidos por encargo.">
+<meta name="keywords" content="pastelería San Pedro de la Paz, tortas Concepción, pastelería artesanal Biobío, alfajores artesanales, tortas por encargo, delivery pastelería, GusCake">
+<meta name="author" content="GusCake — Gustavo Riquelme Flores">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<link rel="canonical" href="https://guscake.cl/">
+<meta name="theme-color" content="#1F1108">
+
+<!-- SEO local -->
+<meta name="geo.region" content="CL-BI">
+<meta name="geo.placename" content="San Pedro de la Paz, Región del Biobío">
+<meta name="geo.position" content="-36.8590584;-73.1474327">
+<meta name="ICBM" content="-36.8590584, -73.1474327">
+
+<!-- Open Graph (WhatsApp, Facebook, Instagram) -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="GusCake">
+<meta property="og:title" content="GusCake | Pastelería Artesanal en San Pedro de la Paz">
+<meta property="og:description" content="Tortas, tartas, alfajores y box de dulces premium hechos con manjar de receta propia. Delivery y pedidos por encargo en San Pedro de la Paz, Biobío.">
+<meta property="og:locale" content="es_CL">
+<meta property="og:url" content="https://guscake.cl/">
+<meta property="og:image" content="https://guscake.cl/img/hero-torta-1.jpg">
+<meta property="og:image:alt" content="Tortas artesanales de GusCake">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="GusCake | Pastelería Artesanal en San Pedro de la Paz">
+<meta name="twitter:description" content="Tortas, tartas, alfajores y box de dulces premium. Delivery y pedidos por encargo en San Pedro de la Paz, Biobío.">
+<meta name="twitter:image" content="https://guscake.cl/img/hero-torta-1.jpg">
+
 <link rel="icon" type="image/png" href="img/logo-icon.png">
+<link rel="apple-touch-icon" href="img/logo-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,500;1,9..144,600&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+
+<!-- Datos estructurados: negocio local tipo pastelería -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Bakery",
+  "name": "GusCake",
+  "description": "Pastelería artesanal premium en San Pedro de la Paz: tortas, tartas, alfajores, empolvados y box de dulces hechos con manjar de receta propia.",
+  "image": "https://guscake.cl/img/hero-torta-1.jpg",
+  "logo": "https://guscake.cl/img/logo.png",
+  "url": "https://guscake.cl/",
+  "telephone": "+56920679622",
+  "priceRange": "$$",
+  "servesCuisine": "Pastelería artesanal",
+  "areaServed": "San Pedro de la Paz, Concepción y Gran Concepción",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "San Pedro de la Paz",
+    "addressRegion": "Región del Biobío",
+    "addressCountry": "CL"
+  },
+  "geo": {
+    "@type": "GeoCoordinates",
+    "latitude": -36.8590584,
+    "longitude": -73.1474327
+  },
+  "openingHoursSpecification": [{
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+    "opens": "09:00",
+    "closes": "19:00"
+  }],
+  "sameAs": [
+    "https://www.instagram.com/guscake_cl/",
+    "https://www.tiktok.com/@gustaavojrf"
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -192,7 +264,13 @@
 
 <footer class="footer">
   <div class="wrap footer-inner">
-    <p>© <span id="year"></span> Gus Cake — Pastelería de autor</p>
+    <div class="footer-brand">
+      <p>© <span id="year"></span> Gus Cake — Pastelería de autor</p>
+      <address class="footer-nap">
+        Pastelería artesanal en San Pedro de la Paz, Región del Biobío, Chile.<br>
+        <a href="https://wa.me/56920679622">+56 9 2067 9622</a> · Lunes a sábado 09:00–19:00
+      </address>
+    </div>
     <div class="footer-social">
       <a href="https://www.instagram.com/guscake_cl/" target="_blank" rel="noopener" class="social-icon" aria-label="Síguenos en Instagram">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
