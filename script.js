@@ -154,7 +154,8 @@ const PRODUCTS = [
     id: "p22", name: "Empanada tradicional",
     desc: "El sabor más tradicional de nuestras Fiestas Patrias directo a tu mesa. Nuestra clásica empanada chilena está preparada con un sabroso pino de carne picada y cebolla en su punto justo, acompañado de aceituna y huevo cocido.",
     prices: [{ label: "Precio único", price: 2800 }],
-    emoji: "🇨🇱", img: "img/productos/empanadatradicional.jpg", category: "temporada"
+    emoji: "🇨🇱", img: "img/productos/empanadatradicional.jpg", category: "temporada",
+    tag: "Producto salado", tagVariant: "salado"
   },
 ];
 
@@ -185,7 +186,7 @@ function cardHTML(p) {
   return `
     <article class="product-card" data-id="${p.id}">
       <div class="product-media">
-        ${p.tag ? `<span class="product-tag">${p.tag}</span>` : ""}
+        ${p.tag ? `<span class="product-tag${p.tagVariant ? ` product-tag--${p.tagVariant}` : ""}">${p.tag}</span>` : ""}
         <img src="${p.img}" alt="${p.name}" class="product-photo"
              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <span class="product-emoji-fallback">${p.emoji}</span>

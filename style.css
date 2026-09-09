@@ -410,38 +410,41 @@ h2{
   transition:background 0.3s var(--ease), color 0.3s var(--ease), padding-left 0.3s var(--ease);
 }
 .mobile-nav a:hover{background:rgba(217,169,79,0.08); color:var(--gold); padding-left:34px;}
-.mobile-nav a.nav-stack{
+/* "Precios Mayoristas" y "Volver al inicio" del menú móvil comparten
+   exactamente la misma forma (píldora, mismo borde, mismo tamaño);
+   solo cambian los colores: dorado vs gris. */
+.mobile-nav a.nav-stack,
+.mobile-nav a.mobile-nav-cta{
+  margin:14px 28px;
+  padding:14px 26px;
+  border:2px solid transparent;
+  border-radius:999px;
   text-align:center;
   line-height:1.2;
-  margin:12px 28px 4px;
-  padding:12px 18px;
-  border:1.5px solid var(--gold-pale);
-  border-radius:14px;
-  color:var(--navy-deep);
   font-weight:700;
+  box-shadow:0 4px 16px rgba(0,0,0,0.22);
+}
+.mobile-nav a.nav-stack{
+  border-color:var(--gold-pale);
+  color:var(--navy-deep);
   background:linear-gradient(135deg, var(--gold-pale) 0%, var(--gold) 45%, var(--gold-deep) 100%);
-  box-shadow:0 4px 16px rgba(217,169,79,0.35);
+}
+.mobile-nav a.mobile-nav-cta{
+  color:#f4f1ea;
+  background:linear-gradient(135deg, #7a7a7a 0%, #5c5c5c 55%, #474747 100%);
+}
+.mobile-nav a.nav-stack:hover,
+.mobile-nav a.mobile-nav-cta:hover{
+  padding:14px 26px;
+  filter:brightness(1.1);
 }
 .mobile-nav a.nav-stack:hover{
-  background:linear-gradient(135deg, var(--gold-pale) 0%, var(--gold) 45%, var(--gold-deep) 100%);
   color:var(--navy-deep);
-  padding-left:18px;
-  filter:brightness(1.08);
+  background:linear-gradient(135deg, var(--gold-pale) 0%, var(--gold) 45%, var(--gold-deep) 100%);
 }
-.mobile-nav-cta{
-  margin:14px 28px 18px;
-  text-align:center;
-  border-bottom:none !important;
-  background:linear-gradient(135deg, #7a7a7a 0%, #5c5c5c 55%, #474747 100%);
+.mobile-nav a.mobile-nav-cta:hover{
   color:#f4f1ea;
-  font-weight:700;
-  box-shadow:0 4px 16px rgba(0,0,0,0.28);
-}
-.mobile-nav-cta:hover{
-  background:linear-gradient(135deg, #7a7a7a 0%, #5c5c5c 55%, #474747 100%) !important;
-  color:#f4f1ea !important;
-  filter:brightness(1.12);
-  padding-left:28px;
+  background:linear-gradient(135deg, #7a7a7a 0%, #5c5c5c 55%, #474747 100%);
 }
 
 @media (max-width:900px){
@@ -923,6 +926,12 @@ h2{
   text-transform:uppercase;
   white-space:nowrap;
   max-width:calc(100% - 20px);
+}
+/* Variante para productos salados: verde en vez del dorado (dulce) */
+.product-tag--salado{
+  background:#3d7a4f;
+  color:#ffffff;
+  box-shadow:0 4px 12px rgba(61,122,79,0.4);
 }
 .product-body{
   padding:18px 18px 20px;
