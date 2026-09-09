@@ -20,8 +20,10 @@
 <meta property="og:url" content="https://guscake.cl/mayoristas.html">
 <meta property="og:image" content="https://guscake.cl/img/hero-torta-1.jpg">
 
-<link rel="icon" type="image/png" href="img/logo-icon.png">
-<link rel="apple-touch-icon" href="img/logo-icon.png">
+<link rel="icon" type="image/svg+xml" href="img/logo.svg">
+<link rel="icon" type="image/png" href="img/logo-icon.png"><!-- respaldo para navegadores sin SVG -->
+<link rel="apple-touch-icon" href="img/logo-icon.png"><!-- iOS no admite SVG aquí -->
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,400;1,9..144,500;1,9..144,600&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -32,7 +34,8 @@
 <header class="topbar">
   <div class="wrap topbar-inner">
     <a href="index.html" class="brand">
-      <img src="img/logo-icon.png" alt="GusCake" class="brand-mark">
+      <img src="img/logo.svg" alt="GusCake — pastelería artesanal" class="brand-mark"
+           onerror="this.onerror=null; this.src='img/logo-icon.png';">
       <span class="brand-text">
         <span class="brand-name">Gus Cake</span>
         <span class="brand-sub">Pastelería de autor</span>
