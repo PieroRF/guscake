@@ -40,6 +40,8 @@ html{
      overflow-y:scroll cubre a todos los navegadores; donde exista
      scrollbar-gutter se usa esa vía (más limpia) sin doble reserva. */
   overflow-y:scroll;
+  /* nada puede provocar desplazamiento horizontal (importante en móvil) */
+  overflow-x:hidden;
 }
 @supports (scrollbar-gutter:stable){
   html{
@@ -94,6 +96,7 @@ body::before{
   position:fixed;
   inset:0;
   z-index:9999;
+  overflow:hidden;              /* el logo ampliado no desborda la pantalla */
   display:flex;
   align-items:center;
   justify-content:center;
@@ -697,6 +700,7 @@ html:not(.no-splash) .hero-in{
 .hero-slide-img{
   width:100%; height:100%;
   object-fit:cover;
+  object-position:center;
   display:block;
   animation:kenburns 16s ease-in-out infinite alternate;
 }
@@ -817,18 +821,30 @@ html:not(.no-splash) .hero-in{
 }
 
 @media (max-width:600px){
-  .hero{padding:60px 0 70px; text-align:center;}
+  .hero{padding:60px 0 74px; text-align:center;}
   .hero-grid{text-align:center;}
   .hero-title{font-size:2.15rem;}
   .hero-text{font-size:0.98rem; margin-left:auto; margin-right:auto; max-width:100%;}
   .hero-actions{justify-content:center;}
   .hero-actions .btn{flex:1 1 auto; justify-content:center;}
   .hero-facts{justify-content:center;}
-  .hero-showcase{max-width:340px;}
-  .hero-frame{aspect-ratio:4/3.4;}
-  .hero-caption{left:50%; transform:translateX(-50%); bottom:-16px; white-space:nowrap;}
-  .hero-seal{width:64px; height:64px; top:-18px; right:-6px; font-size:0.5rem;}
-  .hero-seal b{font-size:1rem;}
+  /* la vitrina de fotos nunca debe pasarse del ancho de pantalla */
+  .hero-showcase{width:100%; max-width:min(340px, 86vw);}
+  .hero-showcase-glow{inset:-5% -4% -7% -4%; filter:blur(22px);}
+  /* en móvil el marco queda derecho y quieto: nada que lo empuje fuera de cuadro */
+  .hero-frame{aspect-ratio:4/3.4; transform:none; animation:none;}
+  .hero-caption{
+    left:50%;
+    transform:translateX(-50%);
+    bottom:-14px;
+    white-space:normal;
+    text-align:center;
+    max-width:calc(100% - 16px);
+    font-size:0.7rem;
+    padding:8px 14px;
+  }
+  .hero-seal{width:58px; height:58px; top:-14px; right:2px; font-size:0.46rem;}
+  .hero-seal b{font-size:0.9rem;}
 
   .vitrina, .nosotros, .pedidos, .ubicacion { padding: 64px 0; }
   .order-form { padding: 22px; }
