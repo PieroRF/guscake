@@ -118,7 +118,7 @@ const PRODUCTS = [
     id: "p16", name: "Frambuesa premium",
     desc: "Fina selección de hojarascas, rellenas de manjar artesanal, crema batida y frambuesas naturales. Un box ideal para regalar.",
     prices: [{ label: "Precio único", price: 15500 }],
-    emoji: "⭐", img: "img/productos/frambuesapremium.jpg", category: "premium"
+    emoji: "⭐", img: "img/productos/frambuesapremium.jpg", category: "premium", tag: "Producto destacado"
   },
   {
     id: "p17", name: "Carrot premium",
@@ -130,7 +130,7 @@ const PRODUCTS = [
     id: "p18", name: "Pastelitos premium",
     desc: "La combinación ideal para compartir: intensos brownies con manjar artesanal, suaves cheesecakes de vainilla y frambuesa, clásicos pies de limón natural y tradicionales suspiros limeños. Pastelería artesanal lista para regalar y disfrutar.",
     prices: [{ label: "Precio único", price: 28500 }],
-    emoji: "⭐", img: "img/productos/pastelitospremium.jpg", category: "premium"
+    emoji: "⭐", img: "img/productos/pastelitospremium.jpg", category: "premium", tag: "Producto destacado"
   },
   {
     id: "p19", name: "Box dieciochero GusCake",
@@ -142,7 +142,7 @@ const PRODUCTS = [
     id: "p20", name: "Box de empolvados",
     desc: "La pausa dulce ideal para tus tardes: pack de 8 unidades con delicado bizcocho de vainilla, relleno con nuestro manjar artesanal de receta propia y coronado con azúcar flor.",
     prices: [{ label: "Precio único", price: 9600 }],
-    emoji: "🇨🇱", img: "img/productos/boxempolvados.jpg", category: "temporada"
+    emoji: "🇨🇱", img: "img/productos/boxempolvados.jpg", category: "temporada", tag: "Producto destacado"
   },
   {
     id: "p21", name: "Pajaritos",
