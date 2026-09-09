@@ -651,17 +651,17 @@ function initHeroSlider() {
   if (!track || !dotsWrap || !caption || !eyebrow || !title || !text) return;
 
   track.innerHTML = HERO_SLIDES.map((s, i) => `
-    <div class="scene-slide${i === 0 ? " active" : ""}">
-      <img src="${s.img}" alt="${s.caption}" onerror="this.style.display='none';">
+    <div class="hero-slide${i === 0 ? " active" : ""}">
+      <img class="hero-slide-img" src="${s.img}" alt="${s.caption}" onerror="this.style.display='none';">
     </div>
   `).join("");
 
   dotsWrap.innerHTML = HERO_SLIDES.map((_, i) => `
-    <button class="scene-dot${i === 0 ? " active" : ""}" aria-label="Ver foto ${i + 1}"></button>
+    <button class="hero-dot${i === 0 ? " active" : ""}" aria-label="Ver foto ${i + 1}"></button>
   `).join("");
 
-  const slides = track.querySelectorAll(".scene-slide");
-  const dots = dotsWrap.querySelectorAll(".scene-dot");
+  const slides = track.querySelectorAll(".hero-slide");
+  const dots = dotsWrap.querySelectorAll(".hero-dot");
   const textEls = [eyebrow, title, text, caption];
   let current = 0;
 
@@ -767,6 +767,18 @@ function initPageTransitions() {
     });
   });
 }
+
+// ---------- Splash de bienvenida ----------
+// El overlay se desvanece por CSS; aquí solo se quita del DOM al terminar.
+(function initSplash() {
+  const splash = document.getElementById("splash");
+  if (!splash) return;
+  const remove = () => splash.remove();
+  splash.addEventListener("animationend", (e) => {
+    if (e.target === splash && e.animationName === "splashOut") remove();
+  });
+  setTimeout(remove, 2800); // respaldo por si no dispara animationend
+})();
 
 // ---------- Init ----------
 document.getElementById("year").textContent = new Date().getFullYear();
