@@ -436,7 +436,7 @@ h2{
   border-top:1px solid var(--line-navy);
   transition:max-height 0.4s var(--ease);
 }
-.mobile-nav.open{max-height:400px;}
+.mobile-nav.open{max-height:480px;}
 .mobile-nav a{
   text-decoration:none;
   color:rgba(246,241,231,0.88);
@@ -446,19 +446,25 @@ h2{
   transition:background 0.3s var(--ease), color 0.3s var(--ease), padding-left 0.3s var(--ease);
 }
 .mobile-nav a:hover{background:rgba(217,169,79,0.08); color:var(--gold); padding-left:34px;}
-/* "Precios Mayoristas" y "Volver al inicio" del menú móvil comparten
-   exactamente la misma forma (píldora, mismo borde, mismo tamaño);
-   solo cambian los colores: dorado vs gris. */
+/* "Precios Mayoristas" y "Pedidos Especiales" / "Volver al inicio": en el menú
+   móvil van en UNA sola línea, misma forma y tamaño, alineados como un par;
+   solo cambia el color (dorado vs gris). */
 .mobile-nav a.nav-stack,
 .mobile-nav a.mobile-nav-cta{
-  margin:14px 28px;
-  padding:14px 26px;
+  display:block;
+  margin:14px 24px 6px;
+  padding:13px 22px;
   border:2px solid transparent;
   border-radius:999px;
   text-align:center;
+  white-space:nowrap;
   line-height:1.2;
+  font-size:0.95rem;
   font-weight:700;
   box-shadow:0 4px 16px rgba(0,0,0,0.22);
+}
+.mobile-nav a.mobile-nav-cta{
+  margin:6px 24px 18px;
 }
 .mobile-nav a.nav-stack{
   border-color:var(--gold-pale);
@@ -471,7 +477,7 @@ h2{
 }
 .mobile-nav a.nav-stack:hover,
 .mobile-nav a.mobile-nav-cta:hover{
-  padding:14px 26px;
+  padding:13px 22px;
   filter:brightness(1.1);
 }
 .mobile-nav a.nav-stack:hover{
@@ -488,13 +494,23 @@ h2{
   .nav-toggle{display:flex;}
   .mobile-nav{display:flex;}
   .btn-cta{display:none;}
+  /* En móvil la barra superior queda más alta y con más aire entre elementos */
+  .topbar-inner{
+    padding-top:21px;
+    padding-bottom:21px;
+    gap:18px;
+  }
+  .brand{gap:14px;}
+  .topbar-actions{gap:16px;}
+  .nav-toggle{width:42px; height:42px;}
 }
 
 @media (max-width:480px){
   .wrap{padding:0 20px;}
-  .topbar-inner{gap:12px;}
+  .topbar-inner{gap:14px;}
   .brand-sub{display:none;}
-  .cart-btn{padding:8px 12px; font-size:0.8rem;}
+  .brand-name{font-size:1.08rem;}
+  .cart-btn{padding:9px 13px; font-size:0.82rem;}
 }
 
 /* ---------- HERO ---------- */

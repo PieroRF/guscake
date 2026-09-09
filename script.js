@@ -6,7 +6,7 @@
 const PRODUCTS = [
   {
     id: "p1", name: "Alfajor de amor",
-    desc: "Finas laminasde hojarasca, rellenas de manjar tradicional, frambuesas naturales y crema chantilly de vainilla.",
+    desc: "Finas laminas de hojarasca, rellenas de manjar tradicional, frambuesas naturales y crema chantilly de vainilla.",
     prices: [
       { label: "Torta 04 porciones", price: 15500 },
       { label: "Torta 10 porciones", price: 25500 },
