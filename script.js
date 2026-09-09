@@ -518,16 +518,63 @@ document.getElementById("cartCheckout").addEventListener("click", () => {
   window.open(`https://wa.me/56920679622?text=${mensaje}`, "_blank");
 });
 
+// ---------- Mensaje animado de "formulario enviado" ----------
+// Se comparte con mayoristas.html (allí hay una copia de esta función).
+function showFormSuccess(message) {
+  const anterior = document.querySelector(".form-success");
+  if (anterior) anterior.remove();
+
+  const overlay = document.createElement("div");
+  overlay.className = "form-success";
+  overlay.setAttribute("role", "dialog");
+  overlay.setAttribute("aria-live", "assertive");
+  overlay.innerHTML = `
+    <div class="form-success-card">
+      <svg class="form-success-check" viewBox="0 0 52 52" aria-hidden="true">
+        <circle cx="26" cy="26" r="24"></circle>
+        <path d="M14 27l8 8 16-16"></path>
+      </svg>
+      <p class="form-success-title">¡Formulario enviado correctamente!</p>
+      <p class="form-success-text">${message}</p>
+      <button type="button" class="btn btn-primary form-success-close">Cerrar</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  const cerrar = () => {
+    overlay.classList.add("is-closing");
+    setTimeout(() => overlay.remove(), 300);
+  };
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay || e.target.classList.contains("form-success-close")) cerrar();
+  });
+  document.addEventListener("keydown", function esc(e) {
+    if (e.key === "Escape") {
+      cerrar();
+      document.removeEventListener("keydown", esc);
+    }
+  });
+  setTimeout(cerrar, 6000);
+}
+
 // ---------- Formulario de encargos ----------
 // El formulario mayorista vive en mayoristas.html con su propio script,
 // pero usa este mismo endpoint de Formspree y correo de destino.
-function wireFormspreeForm(formId, noteId, okMessage) {
+function wireFormspreeForm(formId, okMessage) {
   const form = document.getElementById(formId);
   if (!form) return;
-  const note = document.getElementById(noteId);
+  const note = document.getElementById("formNote");
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();
+
+    // Ningún campo puede quedar vacío: si falta algo, el navegador
+    // muestra el aviso y no se envía.
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
     const formData = new FormData(form);
 
     fetch(form.action, {
@@ -537,22 +584,22 @@ function wireFormspreeForm(formId, noteId, okMessage) {
     })
       .then((response) => {
         if (response.ok) {
-          note.textContent = okMessage;
           form.reset();
-        } else {
+          showFormSuccess(okMessage);
+        } else if (note) {
           note.textContent = "No pudimos enviarlo. Escríbenos directo por WhatsApp, por favor.";
         }
       })
       .catch(() => {
-        note.textContent = "No pudimos enviarlo. Escríbenos directo por WhatsApp, por favor.";
+        if (note) note.textContent = "No pudimos enviarlo. Escríbenos directo por WhatsApp, por favor.";
       })
       .finally(() => {
-        setTimeout(() => (note.textContent = ""), 5000);
+        if (note) setTimeout(() => (note.textContent = ""), 5000);
       });
   });
 }
 
-wireFormspreeForm("orderForm", "formNote", "¡Listo! Te confirmamos por WhatsApp dentro de 02 horas.");
+wireFormspreeForm("orderForm", "Te confirmaremos por WhatsApp dentro de 2 horas.");
 
 // ---------- Carrusel de fotos del hero ----------
 const HERO_SLIDES = [

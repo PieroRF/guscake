@@ -54,8 +54,10 @@
         <p class="eyebrow">Precios mayoristas</p>
         <h2>¿Tienes una cafetería?</h2>
         <p class="pedidos-text">Completa el formulario y te enviaremos nuestra lista de precios mayoristas junto con la disponibilidad de cada producto.</p>
-        <p class="pedidos-text"><strong>Importante:</strong> para acceder a los valores mayoristas, el monto total del pedido debe superar los $70.000.</p>
-        <p class="pedidos-text"><a class="btn-link" href="index.html">← Volver a la página principal</a></p>
+        <p class="pedidos-text"><strong>Importante:</strong> Para acceder a los valores mayoristas, el monto total del pedido debe superar los $70.000.</p>
+        <a class="btn btn-back" href="index.html">
+          <span class="btn-back-arrow" aria-hidden="true">←</span> Volver a la página principal
+        </a>
       </div>
 
       <form class="order-form" id="mayoristaForm" action="https://formspree.io/f/mljewqqa" method="POST">
@@ -171,12 +173,57 @@
     });
   })();
 
+  // Mensaje animado de "formulario enviado" (copia de la función de script.js).
+  function showFormSuccess(message) {
+    const anterior = document.querySelector(".form-success");
+    if (anterior) anterior.remove();
+
+    const overlay = document.createElement("div");
+    overlay.className = "form-success";
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-live", "assertive");
+    overlay.innerHTML =
+      '<div class="form-success-card">' +
+      '<svg class="form-success-check" viewBox="0 0 52 52" aria-hidden="true">' +
+      '<circle cx="26" cy="26" r="24"></circle>' +
+      '<path d="M14 27l8 8 16-16"></path>' +
+      "</svg>" +
+      '<p class="form-success-title">¡Formulario enviado correctamente!</p>' +
+      '<p class="form-success-text">' + message + "</p>" +
+      '<button type="button" class="btn btn-primary form-success-close">Cerrar</button>' +
+      "</div>";
+    document.body.appendChild(overlay);
+
+    const cerrar = () => {
+      overlay.classList.add("is-closing");
+      setTimeout(() => overlay.remove(), 300);
+    };
+    overlay.addEventListener("click", (e) => {
+      if (e.target === overlay || e.target.classList.contains("form-success-close")) cerrar();
+    });
+    document.addEventListener("keydown", function esc(e) {
+      if (e.key === "Escape") {
+        cerrar();
+        document.removeEventListener("keydown", esc);
+      }
+    });
+    setTimeout(cerrar, 6000);
+  }
+
   // Envío del formulario mayorista: mismo endpoint de Formspree que el
   // formulario de encargos, así llega al correo registrado en el código.
   const form = document.getElementById("mayoristaForm");
   const note = document.getElementById("mayoristaNote");
   form.addEventListener("submit", (e) => {
     e.preventDefault();
+
+    // Ningún campo puede quedar vacío: si falta algo, el navegador
+    // muestra el aviso y no se envía.
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
     const formData = new FormData(form);
     fetch(form.action, {
       method: "POST",
@@ -185,8 +232,8 @@
     })
       .then((response) => {
         if (response.ok) {
-          note.textContent = "¡Listo! Revisaremos tu solicitud y te contactaremos con los precios mayoristas.";
           form.reset();
+          showFormSuccess("Revisaremos tu solicitud y te contactaremos con los precios mayoristas.");
         } else {
           note.textContent = "No pudimos enviarlo. Escríbenos directo por WhatsApp, por favor.";
         }

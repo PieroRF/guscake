@@ -31,7 +31,20 @@
 }
 
 *{box-sizing:border-box;}
-html{scroll-behavior:smooth;}
+html{
+  scroll-behavior:smooth;
+  /* La barra de scroll siempre ocupa espacio, así el contenido centrado
+     (encabezado incluido) no se desplaza entre páginas cortas y largas.
+     overflow-y:scroll cubre a todos los navegadores; donde exista
+     scrollbar-gutter se usa esa vía (más limpia) sin doble reserva. */
+  overflow-y:scroll;
+}
+@supports (scrollbar-gutter:stable){
+  html{
+    overflow-y:auto;
+    scrollbar-gutter:stable;
+  }
+}
 body{
   margin:0;
   background:var(--cream);
@@ -144,6 +157,26 @@ h2{
   font-weight:500;
 }
 .btn-link:hover{color:var(--gold); transform:translateX(3px);}
+/* Botón "Volver a la página principal" en la página de mayoristas (fondo oscuro) */
+.btn-back{
+  background:transparent;
+  border-color:var(--gold);
+  color:var(--gold);
+  padding:11px 22px;
+  font-size:0.9rem;
+  margin-top:10px;
+}
+.btn-back .btn-back-arrow{
+  transition:transform 0.3s var(--ease);
+}
+.btn-back:hover{
+  background:var(--gold);
+  color:var(--navy-deep);
+  box-shadow:0 10px 22px rgba(217,169,79,0.32);
+}
+.btn-back:hover .btn-back-arrow{
+  transform:translateX(-4px);
+}
 .btn-stack{
   display:block;
   text-align:center;
@@ -207,10 +240,20 @@ h2{
 .topbar-inner{
   display:flex;
   align-items:center;
-  justify-content:space-between;
   padding-top:14px;
   padding-bottom:14px;
   gap:24px;
+}
+/* La marca y las acciones ocupan el mismo ancho a cada lado, así el menú
+   central queda SIEMPRE en la misma posición, sin importar cuántos botones
+   tenga cada página (p. ej. index tiene carrito y mayoristas no). */
+.topbar-inner > .brand,
+.topbar-inner > .topbar-actions{
+  flex:1 1 0;
+  min-width:0;
+}
+.topbar-inner > .topbar-actions{
+  justify-content:flex-end;
 }
 .brand{
   display:flex;
@@ -1097,6 +1140,82 @@ h2{
   color:var(--gold-deep);
   min-height:1.2em;
   margin:0;
+}
+
+/* ---------- MENSAJE ANIMADO DE FORMULARIO ENVIADO ---------- */
+.form-success{
+  position:fixed;
+  inset:0;
+  z-index:200;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:rgba(31,17,8,0.55);
+  backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);
+  animation:successFadeIn 0.25s var(--ease) both;
+}
+.form-success.is-closing{animation:successFadeOut 0.3s var(--ease) both;}
+.form-success-card{
+  background:var(--cream);
+  border-radius:var(--radius);
+  padding:38px 34px;
+  max-width:360px;
+  width:100%;
+  text-align:center;
+  box-shadow:0 30px 60px rgba(46,29,20,0.4);
+  animation:successPop 0.5s var(--ease) both;
+}
+.form-success-check{
+  width:74px;
+  height:74px;
+  margin-bottom:14px;
+}
+.form-success-check circle{
+  fill:none;
+  stroke:var(--gold-deep);
+  stroke-width:3;
+  stroke-dasharray:151;
+  stroke-dashoffset:151;
+  animation:successDraw 0.5s var(--ease) 0.15s forwards;
+}
+.form-success-check path{
+  fill:none;
+  stroke:var(--gold-deep);
+  stroke-width:4;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  stroke-dasharray:40;
+  stroke-dashoffset:40;
+  animation:successDraw 0.35s var(--ease) 0.6s forwards;
+}
+.form-success-title{
+  font-family:var(--font-display);
+  font-style:italic;
+  font-weight:600;
+  font-size:1.3rem;
+  color:var(--espresso);
+  margin:0 0 6px;
+}
+.form-success-text{
+  font-size:0.9rem;
+  color:var(--espresso-soft);
+  margin:0 0 20px;
+}
+@keyframes successFadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes successFadeOut{from{opacity:1;}to{opacity:0;}}
+@keyframes successPop{
+  0%{opacity:0; transform:scale(0.85) translateY(12px);}
+  60%{opacity:1; transform:scale(1.03);}
+  100%{opacity:1; transform:scale(1) translateY(0);}
+}
+@keyframes successDraw{to{stroke-dashoffset:0;}}
+@media (prefers-reduced-motion: reduce){
+  .form-success,
+  .form-success-card{animation:none;}
+  .form-success-check circle,
+  .form-success-check path{animation:none; stroke-dashoffset:0;}
 }
 
 @media (max-width:980px){
