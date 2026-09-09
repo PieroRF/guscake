@@ -242,13 +242,58 @@
   <!-- UBICACION -->
   <section class="ubicacion" id="ubicacion">
     <div class="wrap ubicacion-grid">
-      <div class="reveal">
+      <div class="ubicacion-info reveal">
         <p class="eyebrow">Visítanos</p>
-        <h2>San Pedro de la Paz<br>Región del Bio Bio</h2>
-        <p class="ubicacion-text">Nos encontramos cercanos a Condominio Olas.</p>
-        <p class="ubicacion-text"><strong>Lunes a sábado:</strong> 09:00 – 19:00</p>
+        <h2>San Pedro de la Paz<br><span class="ubicacion-region">Región del Biobío</span></h2>
+
+        <ul class="ubicacion-list">
+          <li>
+            <span class="ubicacion-ic" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+                <circle cx="12" cy="10" r="2.6" stroke="currentColor" stroke-width="1.6"/>
+              </svg>
+            </span>
+            <span class="ubicacion-item">
+              <strong>Dónde estamos</strong>
+              Cercanos a Condominio Olas, San Pedro de la Paz.
+            </span>
+          </li>
+          <li>
+            <span class="ubicacion-ic" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.6"/>
+                <path d="M12 7v5.2l3.4 2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="ubicacion-item">
+              <strong>Horario</strong>
+              Lunes a sábado · 09:00 – 19:00 h
+            </span>
+          </li>
+          <li>
+            <span class="ubicacion-ic" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 12a8 8 0 0 1-11.7 7.1L4 20l1-4.2A8 8 0 1 1 20 12z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="ubicacion-item">
+              <strong>Escríbenos</strong>
+              <a href="https://wa.me/56920679622" target="_blank" rel="noopener">+56 9 2067 9622</a>
+            </span>
+          </li>
+        </ul>
+
+        <a class="btn btn-primary ubicacion-cta" href="https://www.google.com/maps/dir/?api=1&destination=-36.8590584,-73.1474327" target="_blank" rel="noopener">Cómo llegar</a>
       </div>
+
       <div class="mapa-embed reveal reveal-delay-1">
+        <span class="mapa-pin" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11z" fill="currentColor"/>
+            <circle cx="12" cy="10" r="2.4" fill="#fff"/>
+          </svg>
+        </span>
         <iframe
           src="https://www.google.com/maps?q=-36.8590584,-73.1474327&z=17&output=embed"
           width="100%"
@@ -266,14 +311,9 @@
 </main>
 
 <footer class="footer">
-  <div class="wrap footer-inner">
-    <div class="footer-brand">
-      <p>© <span id="year"></span> Gus Cake — Pastelería de autor</p>
-      <address class="footer-nap">
-        Pastelería artesanal en San Pedro de la Paz, Región del Biobío, Chile.<br>
-        <a href="https://wa.me/56920679622">+56 9 2067 9622</a> · Lunes a sábado 09:00–19:00
-      </address>
-    </div>
+  <div class="wrap footer-main">
+    <p class="footer-copy">© <span id="year"></span> Gus Cake — Pastelería de autor</p>
+
     <div class="footer-social">
       <a href="https://www.instagram.com/guscake_cl/" target="_blank" rel="noopener" class="social-icon" aria-label="Síguenos en Instagram">
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -289,10 +329,17 @@
         </svg>
       </a>
     </div>
-  <p class="footer-note">
-      Hecho con harina, tiempo y paciencia.<br>
-      <span class="footer-author">Desarrollado por <strong>PRF</strong></span>
-    </p>  </div>
+
+    <p class="footer-tagline">Hecho con harina, tiempo y paciencia.</p>
+
+    <address class="footer-nap">
+      Pastelería artesanal en San Pedro de la Paz, Biobío · <a href="https://wa.me/56920679622">+56 9 2067 9622</a> · Lun a Sáb 09:00–19:00
+    </address>
+  </div>
+
+  <div class="footer-credit">
+    <span class="footer-author">Desarrollado por <strong>PRF</strong></span>
+  </div>
 </footer>
 
 <!-- CARRITO LATERAL -->

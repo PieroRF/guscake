@@ -177,9 +177,12 @@ function cardHTML(p) {
   const hasOptions = p.prices.length > 1;
   const priceOptions = hasOptions
     ? `<div class="price-options">
-        ${p.prices.map((opt, i) => `
-          <button type="button" class="price-chip${i === 0 ? " active" : ""}" data-price="${opt.price}" data-label="${opt.label}">${opt.label}</button>
-        `).join("")}
+        ${p.prices.map((opt, i) => {
+          // Texto corto en el botón (p. ej. "10 porc.") para que las 3 opciones
+          // quepan en una sola fila; el carrito sigue usando data-label completo.
+          const shortLabel = opt.label.replace(/^Torta\s+0*/i, "").replace(/\s*porciones/i, " porc.");
+          return `<button type="button" class="price-chip${i === 0 ? " active" : ""}" data-price="${opt.price}" data-label="${opt.label}">${shortLabel}</button>`;
+        }).join("")}
       </div>`
     : "";
 
@@ -458,10 +461,12 @@ const lightboxClose = document.getElementById("lightboxClose");
 const lightboxImg = document.getElementById("lightboxImg");
 const lightboxCaption = document.getElementById("lightboxCaption");
 
-function openLightbox(src, name) {
+function openLightbox(src, name, desc) {
   lightboxImg.src = src;
   lightboxImg.alt = name;
-  lightboxCaption.textContent = name;
+  lightboxCaption.innerHTML =
+    `<span class="lightbox-title">${name}</span>` +
+    (desc ? `<span class="lightbox-desc">${desc}</span>` : "");
   lightbox.classList.add("open");
   lightboxOverlay.classList.add("open");
   lightboxClose.classList.add("open");
@@ -476,7 +481,9 @@ function closeLightbox() {
 grid.addEventListener("click", (e) => {
   const photo = e.target.closest(".product-photo");
   if (!photo || photo.style.display === "none") return;
-  openLightbox(photo.src, photo.alt);
+  const card = photo.closest(".product-card");
+  const p = card && PRODUCTS.find(x => x.id === card.dataset.id);
+  openLightbox(photo.src, p ? p.name : photo.alt, p ? p.desc : "");
 });
 
 lightboxOverlay.addEventListener("click", closeLightbox);
