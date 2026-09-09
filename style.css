@@ -39,6 +39,21 @@ body{
   font-family:var(--font-body);
   line-height:1.55;
   -webkit-font-smoothing:antialiased;
+  animation:pageFadeIn 0.4s var(--ease) both;
+}
+/* Transición suave al navegar entre páginas del sitio */
+body.is-leaving{
+  animation:none;
+  opacity:0;
+  transition:opacity 0.32s var(--ease);
+}
+@keyframes pageFadeIn{
+  from{opacity:0;}
+  to{opacity:1;}
+}
+@media (prefers-reduced-motion: reduce){
+  body{animation:none;}
+  body.is-leaving{transition:none;}
 }
 img{max-width:100%;display:block;}
 a{color:inherit;}
@@ -129,13 +144,27 @@ h2{
   font-weight:500;
 }
 .btn-link:hover{color:var(--gold); transform:translateX(3px);}
-.btn-cta{
-  background:var(--cream);
-  color:var(--navy-deep);
-  padding:11px 22px;
-  font-size:0.88rem;
+.btn-stack{
+  display:block;
+  text-align:center;
+  line-height:1.05;
 }
-.btn-cta:hover{background:var(--gold-pale); box-shadow:0 8px 18px rgba(217,169,79,0.3);}
+/* Mismo tamaño que el botón "Precios Mayoristas" (.nav-stack), en gris para diferenciarlo */
+.btn-cta{
+  background:linear-gradient(135deg, #7a7a7a 0%, #5c5c5c 55%, #474747 100%);
+  color:#f4f1ea;
+  padding:5px 16px;
+  font-size:0.78rem;
+  font-weight:700;
+  letter-spacing:0.02em;
+  border-color:#8a8a8a;
+  border-width:1.5px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.28);
+}
+.btn-cta:hover{
+  filter:brightness(1.12);
+  box-shadow:0 5px 16px rgba(0,0,0,0.35);
+}
 
 /* ---------- scroll-reveal animation ---------- */
 .reveal{
@@ -218,7 +247,11 @@ h2{
 }
 .nav{
   display:flex;
+  align-items:center;
   gap:30px;
+}
+.nav > a:not(.nav-stack){
+  transform:translateY(2px);
 }
 .nav a{
   text-decoration:none;
@@ -239,6 +272,33 @@ h2{
 }
 .nav a:hover{color:var(--white);}
 .nav a:hover::after{width:100%;}
+.nav a.nav-stack{
+  align-self:center;
+  text-align:center;
+  line-height:1.05;
+  padding:5px 16px;
+  border:1.5px solid var(--gold-pale);
+  border-radius:999px;
+  color:var(--navy-deep);
+  font-weight:700;
+  font-size:0.78rem;
+  letter-spacing:0.02em;
+  background:linear-gradient(135deg, var(--gold-pale) 0%, var(--gold) 45%, var(--gold-deep) 100%);
+  box-shadow:0 0 0 rgba(217,169,79,0.0), 0 4px 14px rgba(217,169,79,0.35);
+  animation:mayoristasGlow 2.6s ease-in-out infinite;
+  transition:transform 0.2s var(--ease), box-shadow 0.3s var(--ease), filter 0.3s var(--ease);
+}
+.nav a.nav-stack::after{display:none;}
+.nav a.nav-stack:hover{
+  color:var(--navy-deep);
+  transform:translateY(-1px) scale(1.03);
+  filter:brightness(1.08);
+  box-shadow:0 0 18px rgba(217,169,79,0.55), 0 6px 18px rgba(217,169,79,0.45);
+}
+@keyframes mayoristasGlow{
+  0%, 100%{box-shadow:0 0 6px rgba(217,169,79,0.25), 0 4px 14px rgba(217,169,79,0.30);}
+  50%{box-shadow:0 0 16px rgba(217,169,79,0.55), 0 4px 16px rgba(217,169,79,0.40);}
+}
 
 .topbar-actions{
   display:flex;
@@ -307,10 +367,38 @@ h2{
   transition:background 0.3s var(--ease), color 0.3s var(--ease), padding-left 0.3s var(--ease);
 }
 .mobile-nav a:hover{background:rgba(217,169,79,0.08); color:var(--gold); padding-left:34px;}
+.mobile-nav a.nav-stack{
+  text-align:center;
+  line-height:1.2;
+  margin:12px 28px 4px;
+  padding:12px 18px;
+  border:1.5px solid var(--gold-pale);
+  border-radius:14px;
+  color:var(--navy-deep);
+  font-weight:700;
+  background:linear-gradient(135deg, var(--gold-pale) 0%, var(--gold) 45%, var(--gold-deep) 100%);
+  box-shadow:0 4px 16px rgba(217,169,79,0.35);
+}
+.mobile-nav a.nav-stack:hover{
+  background:linear-gradient(135deg, var(--gold-pale) 0%, var(--gold) 45%, var(--gold-deep) 100%);
+  color:var(--navy-deep);
+  padding-left:18px;
+  filter:brightness(1.08);
+}
 .mobile-nav-cta{
   margin:14px 28px 18px;
   text-align:center;
   border-bottom:none !important;
+  background:linear-gradient(135deg, #7a7a7a 0%, #5c5c5c 55%, #474747 100%);
+  color:#f4f1ea;
+  font-weight:700;
+  box-shadow:0 4px 16px rgba(0,0,0,0.28);
+}
+.mobile-nav-cta:hover{
+  background:linear-gradient(135deg, #7a7a7a 0%, #5c5c5c 55%, #474747 100%) !important;
+  color:#f4f1ea !important;
+  filter:brightness(1.12);
+  padding-left:28px;
 }
 
 @media (max-width:900px){
@@ -790,6 +878,8 @@ h2{
   padding:4px 9px;
   border-radius:999px;
   text-transform:uppercase;
+  white-space:nowrap;
+  max-width:calc(100% - 20px);
 }
 .product-body{
   padding:18px 18px 20px;
@@ -952,6 +1042,9 @@ h2{
 }
 .pedidos .eyebrow{color:var(--gold);}
 .pedidos h2{color:var(--white);}
+/* página dedicada de mayoristas (mayoristas.html) */
+#mayoristas{padding-top:120px;}
+#mayoristas .pedidos-text strong{color:var(--gold);}
 .pedidos-text{
   color:rgba(246,241,231,0.72);
   max-width:44ch;
@@ -1239,6 +1332,7 @@ h2{
 
 @media (prefers-reduced-motion: reduce){
   .whatsapp-float{animation:none;}
+  .nav a.nav-stack{animation:none;}
 }
 
 /* ---------- ÍCONO DE AMPLIAR AL PASAR EL MOUSE ---------- */

@@ -12,7 +12,7 @@ const PRODUCTS = [
       { label: "Torta 10 porciones", price: 25500 },
       { label: "Torta 20 porciones", price: 35500 },
     ],
-    emoji: "🎂", img: "img/productos/alfajordeamor.jpg", category: "tortas", tag: "Especial del día"
+    emoji: "🎂", img: "img/productos/alfajordeamor.jpg", category: "tortas", tag: "Producto destacado"
   },
   {
     id: "p2", name: "Choco Ganache",
@@ -58,7 +58,7 @@ const PRODUCTS = [
     id: "p6", name: "Pie de limón",
     desc: "Masa sableé rellena de crema de limón, cubierta de merengue suizo.",
     prices: [{ label: "Precio único", price: 22500 }],
-    emoji: "🍰", img: "img/productos/piedelimon.jpg", category: "tartas"
+    emoji: "🍰", img: "img/productos/piedelimon.jpg", category: "tartas", tag: "Producto destacado"
   },
   {
     id: "p7", name: "Kuchen sureño",
@@ -519,32 +519,40 @@ document.getElementById("cartCheckout").addEventListener("click", () => {
 });
 
 // ---------- Formulario de encargos ----------
-document.getElementById("orderForm").addEventListener("submit", (e) => {
-  e.preventDefault();
-  const form = e.target;
-  const note = document.getElementById("formNote");
-  const formData = new FormData(form);
+// El formulario mayorista vive en mayoristas.html con su propio script,
+// pero usa este mismo endpoint de Formspree y correo de destino.
+function wireFormspreeForm(formId, noteId, okMessage) {
+  const form = document.getElementById(formId);
+  if (!form) return;
+  const note = document.getElementById(noteId);
 
-  fetch(form.action, {
-    method: "POST",
-    body: formData,
-    headers: { Accept: "application/json" },
-  })
-    .then((response) => {
-      if (response.ok) {
-        note.textContent = "¡Listo! Te confirmamos por WhatsApp dentro de 02 horas.";
-        form.reset();
-      } else {
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+      method: "POST",
+      body: formData,
+      headers: { Accept: "application/json" },
+    })
+      .then((response) => {
+        if (response.ok) {
+          note.textContent = okMessage;
+          form.reset();
+        } else {
+          note.textContent = "No pudimos enviarlo. Escríbenos directo por WhatsApp, por favor.";
+        }
+      })
+      .catch(() => {
         note.textContent = "No pudimos enviarlo. Escríbenos directo por WhatsApp, por favor.";
-      }
-    })
-    .catch(() => {
-      note.textContent = "No pudimos enviarlo. Escríbenos directo por WhatsApp, por favor.";
-    })
-    .finally(() => {
-      setTimeout(() => (note.textContent = ""), 5000);
-    });
-});
+      })
+      .finally(() => {
+        setTimeout(() => (note.textContent = ""), 5000);
+      });
+  });
+}
+
+wireFormspreeForm("orderForm", "formNote", "¡Listo! Te confirmamos por WhatsApp dentro de 02 horas.");
 
 // ---------- Carrusel de fotos del hero ----------
 const HERO_SLIDES = [
@@ -676,8 +684,38 @@ function initScrollReveal() {
   }, 1800);
 }
 
+// ---------- Transición animada entre páginas ----------
+// Al ir a otra página del sitio (p. ej. "Precios Mayoristas"), la página
+// actual se desvanece antes de navegar y la siguiente entra con un fundido.
+function initPageTransitions() {
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // Si se vuelve con el botón "atrás", limpia el estado de salida.
+  window.addEventListener("pageshow", () => document.body.classList.remove("is-leaving"));
+  if (reduceMotion) return;
+
+  document.querySelectorAll("a[href]").forEach((link) => {
+    const href = link.getAttribute("href");
+    const distintaPagina =
+      href &&
+      !href.startsWith("#") &&
+      !link.target &&
+      link.origin === window.location.origin &&
+      link.pathname !== window.location.pathname;
+    if (!distintaPagina) return;
+
+    link.addEventListener("click", (e) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      e.preventDefault();
+      document.body.classList.add("is-leaving");
+      setTimeout(() => { window.location.href = link.href; }, 320);
+    });
+  });
+}
+
 // ---------- Init ----------
 document.getElementById("year").textContent = new Date().getFullYear();
+initPageTransitions();
 renderGrid();
 renderCart();
 initScrollReveal();
