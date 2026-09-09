@@ -103,27 +103,27 @@ body::before{
   background:
     radial-gradient(620px 440px at 50% 42%, rgba(217,169,79,0.18), transparent 70%),
     linear-gradient(160deg, #3f2618 0%, var(--navy-deep) 72%);
-  animation:splashOut 1.9s var(--ease) forwards;
+  animation:splashOut 2.9s var(--ease) forwards;
 }
 .splash-logo{
   display:block;
   width:min(44vw, 224px);
   height:auto;
   aspect-ratio:1 / 1;
-  border-radius:50%;          /* logo redondo */
+  border-radius:50%;
   overflow:hidden;
-  box-shadow:0 24px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(217,169,79,0.35);
+  /* El recorte circular es vectorial (dentro del SVG) y la sombra usa
+     drop-shadow, que sigue la forma redonda: no queda ningún recuadro. */
   transform-origin:center center;
-  will-change:transform, opacity;
+  will-change:transform, opacity, filter;
   shape-rendering:geometricPrecision;
-  /* el logo entra, se acerca un poco y se disuelve limpiamente (sin desenfoque) */
-  animation:splashLogo 1.9s linear forwards;
+  animation:splashLogo 2.9s linear forwards;
 }
 @keyframes splashLogo{
-  0%   {opacity:0; transform:scale(0.9); filter:blur(4px); animation-timing-function:cubic-bezier(0.22,1,0.36,1);}
-  20%  {opacity:1; transform:scale(1);   filter:blur(0);   animation-timing-function:ease;}
-  55%  {opacity:1; transform:scale(1.16); animation-timing-function:cubic-bezier(0.6,0,0.85,0.3);}
-  100% {opacity:0; transform:scale(3.5);}
+  0%   {opacity:0; transform:scale(0.9);  filter:blur(4px) drop-shadow(0 16px 38px rgba(0,0,0,0.45)); animation-timing-function:cubic-bezier(0.22,1,0.36,1);}
+  16%  {opacity:1; transform:scale(1);    filter:blur(0)   drop-shadow(0 16px 38px rgba(0,0,0,0.45)); animation-timing-function:ease;}
+  55%  {opacity:1; transform:scale(1.16); filter:blur(0)   drop-shadow(0 16px 38px rgba(0,0,0,0.45)); animation-timing-function:cubic-bezier(0.6,0,0.85,0.3);}
+  100% {opacity:0; transform:scale(3.5);  filter:blur(0)   drop-shadow(0 16px 38px rgba(0,0,0,0));}
 }
 @keyframes splashOut{
   0%, 62%{opacity:1; visibility:visible;}
@@ -131,7 +131,7 @@ body::before{
 }
 html.no-splash .splash{display:none;}
 @media (prefers-reduced-motion: reduce){
-  .splash{animation:splashOut 0.6s linear forwards;}
+  .splash{animation:splashOut 1.4s linear forwards;}
   .splash-logo{animation:none;}
 }
 
@@ -570,7 +570,7 @@ h2{
   animation-delay:calc(var(--i, 0) * 110ms + 120ms);
 }
 html:not(.no-splash) .hero-in{
-  animation-delay:calc(var(--i, 0) * 110ms + 1150ms);
+  animation-delay:calc(var(--i, 0) * 110ms + 1950ms);
 }
 @keyframes heroRise{
   to{opacity:1; transform:translateY(0); filter:blur(0);}

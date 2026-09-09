@@ -777,7 +777,7 @@ function initPageTransitions() {
   splash.addEventListener("animationend", (e) => {
     if (e.target === splash && e.animationName === "splashOut") remove();
   });
-  setTimeout(remove, 2800); // respaldo por si no dispara animationend
+  setTimeout(remove, 3900); // respaldo por si no dispara animationend
 })();
 
 // ---------- Init ----------
