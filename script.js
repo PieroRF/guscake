@@ -133,6 +133,11 @@ const PRODUCTS = [
     emoji: "⭐", img: "img/productos/pastelitospremium.jpg", category: "premium", tag: "Producto destacado"
   },
   {
+    id: "p23", name: "Arma tu box",
+    desc: "Pronto vas a poder armar tu propio box: eliges los productos que más te gustan y nosotros lo preparamos a tu medida. Estamos habilitando esta opción muy pronto.",
+    emoji: "🍰🧁🍪", img: "img/productos/arma-tu-box.jpg", category: "temporada", soon: true
+  },
+  {
     id: "p19", name: "Box dieciochero GusCake",
     desc: "31 bocados premium pensados para endulzar el asado familiar. Una selección irresistible que reúne alfajores de maicena, hojarasca y chocolate, merengues, barquillos con manjar artesanal y ricas cocadas tradicionales.",
     prices: [{ label: "Precio único", price: 19990 }],
@@ -174,6 +179,28 @@ const clp = (n) => n.toLocaleString("es-CL", { style: "currency", currency: "CLP
 const grid = document.getElementById("productGrid");
 
 function cardHTML(p) {
+  // Tarjeta "próximamente" (p. ej. "Arma tu box"): mismo formato que un
+  // producto pero sin precio ni botón de compra, solo el anuncio.
+  if (p.soon) {
+    return `
+    <article class="product-card product-card--soon" data-id="${p.id}">
+      <div class="product-media">
+        <span class="product-tag product-tag--soon">Próximamente</span>
+        <img src="${p.img}" alt="Surtido de pasteles GusCake para armar tu box" class="product-photo"
+             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <span class="product-emoji-fallback">${p.emoji}</span>
+      </div>
+      <div class="product-body">
+        <h3 class="product-name">${p.name}</h3>
+        <p class="product-desc">${p.desc}</p>
+        <div class="product-footer">
+          <span class="product-soon-cta">Disponible muy pronto</span>
+        </div>
+      </div>
+    </article>
+  `;
+  }
+
   const hasOptions = p.prices.length > 1;
   const priceOptions = hasOptions
     ? `<div class="price-options">
