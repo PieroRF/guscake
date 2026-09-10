@@ -97,6 +97,7 @@
 
       <form class="order-form" id="mayoristaForm" action="https://formspree.io/f/mljewqqa" method="POST">
         <input type="hidden" name="_subject" value="Solicitud de precios mayoristas — GusCake">
+        <input type="text" class="form-hp" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
         <label>
           Nombre titular
           <input type="text" name="nombre_titular" required placeholder="Nombre y apellido del titular">
@@ -258,6 +259,9 @@
   const note = document.getElementById("mayoristaNote");
   form.addEventListener("submit", (e) => {
     e.preventDefault();
+
+    // Honeypot anti-spam: si el campo trampa viene lleno, es un bot -> se descarta.
+    if (form.elements._gotcha && form.elements._gotcha.value) return;
 
     // Ningún campo puede quedar vacío: si falta algo, el navegador
     // muestra el aviso y no se envía.

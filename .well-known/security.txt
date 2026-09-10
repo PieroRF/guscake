@@ -1,0 +1,5 @@
+# Canal para reportar problemas de seguridad de guscake.cl (RFC 9116)
+Contact: https://wa.me/56920679622
+Contact: https://guscake.cl/#pedidos
+Preferred-Languages: es, en
+Expires: 2027-12-31T23:59:59.000Z

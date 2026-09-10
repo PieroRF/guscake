@@ -576,6 +576,9 @@ function wireFormspreeForm(formId, okMessage) {
   form.addEventListener("submit", (e) => {
     e.preventDefault();
 
+    // Honeypot anti-spam: si el campo trampa viene lleno, es un bot -> se descarta.
+    if (form.elements._gotcha && form.elements._gotcha.value) return;
+
     // Ningún campo puede quedar vacío: si falta algo, el navegador
     // muestra el aviso y no se envía.
     if (!form.checkValidity()) {

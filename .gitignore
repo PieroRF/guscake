@@ -1,0 +1,15 @@
+# Editor / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs y temporales
+*.log
+npm-debug.log*
+
+# Entorno (por si más adelante se agrega backend / Mercado Pago)
+.env
+.env.*
+.vercel
+node_modules/
