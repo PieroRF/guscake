@@ -612,7 +612,9 @@ wireFormspreeForm("orderForm", "Te confirmaremos por WhatsApp dentro de 2 horas.
 // ---------- Carrusel de fotos del hero ----------
 const HERO_SLIDES = [
   {
-    img: "img/hero-torta-1.jpg",
+    img: "img/hero-torta-1.jpg",           // se usa como "poster" del video (y de respaldo si el video no carga)
+    video: "video/alfajor-frambuesa.mp4",  // coloca aquí el archivo; opcional un .webm más liviano abajo
+    videoWebm: "",                          // ej: "video/alfajor-frambuesa.webm" (si lo tienes)
     eyebrow: "La más vendida",
     titleHTML: `Alfajor frambuesa<br><span class="accent">Dúo clásico</span>`,
     text: "Delicadas capas de hojarasca rellenas de manjar tradicional, crema de vainilla y frambuesas frescas.",
@@ -633,7 +635,9 @@ const HERO_SLIDES = [
     caption: "Todo en un solo pedido",
   },
   {
-    img: "img/hero-torta-4.jpg",
+    img: "img/hero-torta-4.jpg",        // poster / respaldo si el video no carga
+    video: "video/sabor-a-chile.mp4",   // coloca aquí el archivo
+    videoWebm: "",                       // ej: "video/sabor-a-chile.webm" (opcional)
     eyebrow: "🔴⚪🔵 Especial dieciochero 🔴⚪🔵",
     titleHTML: `Sabor a Chile<br><span class="accent">18 de Septiembre</span>`,
     text: "Kuchen, alfajores y tortas con un toque patrio, ideales para celebrar en familia. Encarga con anticipación para estas fiestas.",
@@ -650,11 +654,15 @@ function initHeroSlider() {
   const text = document.getElementById("heroText");
   if (!track || !dotsWrap || !caption || !eyebrow || !title || !text) return;
 
-  track.innerHTML = HERO_SLIDES.map((s, i) => `
-    <div class="hero-slide${i === 0 ? " active" : ""}">
-      <img class="hero-slide-img" src="${s.img}" alt="${s.caption}" onerror="this.style.display='none';">
-    </div>
-  `).join("");
+  track.innerHTML = HERO_SLIDES.map((s, i) => {
+    const media = s.video
+      ? `<video class="hero-slide-video" poster="${s.img}" muted loop playsinline preload="metadata" aria-label="${s.caption}">
+           ${s.videoWebm ? `<source src="${s.videoWebm}" type="video/webm">` : ""}
+           <source src="${s.video}" type="video/mp4">
+         </video>`
+      : `<img class="hero-slide-img" src="${s.img}" alt="${s.caption}" onerror="this.style.display='none';">`;
+    return `<div class="hero-slide${i === 0 ? " active" : ""}">${media}</div>`;
+  }).join("");
 
   dotsWrap.innerHTML = HERO_SLIDES.map((_, i) => `
     <button class="hero-dot${i === 0 ? " active" : ""}" aria-label="Ver foto ${i + 1}"></button>
@@ -665,12 +673,31 @@ function initHeroSlider() {
   const textEls = [eyebrow, title, text, caption];
   let current = 0;
 
+  // ----- videos del hero: reproducir solo el del slide activo -----
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const saveData = navigator.connection && navigator.connection.saveData;
+  function syncVideos() {
+    const paused = document.hidden || reduceMotion || saveData;
+    slides.forEach((slide, i) => {
+      const v = slide.querySelector(".hero-slide-video");
+      if (!v) return;
+      if (i === current && !paused) {
+        v.play().catch(() => {}); // si el navegador lo bloquea, queda el poster (la foto)
+      } else {
+        v.pause();
+        if (i !== current) { try { v.currentTime = 0; } catch (e) {} }
+      }
+    });
+  }
+  document.addEventListener("visibilitychange", syncVideos);
+
   function goTo(index) {
     slides[current].classList.remove("active");
     dots[current].classList.remove("active");
     current = index;
     slides[current].classList.add("active");
     dots[current].classList.add("active");
+    syncVideos();
 
     textEls.forEach(el => (el.style.opacity = 0));
     setTimeout(() => {
@@ -683,13 +710,25 @@ function initHeroSlider() {
     }, 250);
   }
 
-  let timer = setInterval(() => goTo((current + 1) % HERO_SLIDES.length), 4500);
+  syncVideos();
+
+  // El slide del video se muestra medio segundo más que los de foto.
+  const DWELL = 4500;
+  let timer;
+  function scheduleNext() {
+    clearTimeout(timer);
+    const extra = HERO_SLIDES[current].video ? 500 : 0;
+    timer = setTimeout(() => {
+      goTo((current + 1) % HERO_SLIDES.length);
+      scheduleNext();
+    }, DWELL + extra);
+  }
+  scheduleNext();
 
   dots.forEach((dot, i) => {
     dot.addEventListener("click", () => {
       goTo(i);
-      clearInterval(timer);
-      timer = setInterval(() => goTo((current + 1) % HERO_SLIDES.length), 4500);
+      scheduleNext();
     });
   });
 }

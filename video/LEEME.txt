@@ -1,0 +1,26 @@
+Carpeta de videos del sitio.
+
+Coloca aquí los videos del hero con estos nombres EXACTOS:
+
+  alfajor-frambuesa.mp4      -> slide "Alfajor frambuesa / Dúo clásico"
+  sabor-a-chile.mp4          -> slide "Sabor a Chile / 18 de Septiembre"
+
+  (opcional, más liviano, mismo nombre con .webm)
+  alfajor-frambuesa.webm
+  sabor-a-chile.webm
+  Si agregas el .webm, pon su ruta en el campo "videoWebm" del slide en script.js.
+
+Requisitos de cada archivo:
+- Formato: MP4 (códec H.264), SIN pista de audio (se reproduce mudo igual).
+- Orientación: HORIZONTAL, aprox. 1280x960 o 1280x720.
+  (El marco del hero es apaisado; un video vertical se recorta mucho a los lados.)
+- Duración: 6 a 12 segundos, en bucle lo más limpio posible.
+- Peso: idealmente <= 3 MB, máximo ~8 MB.
+
+Mientras no exista el archivo, ese slide muestra su foto
+(img/hero-torta-1.jpg o img/hero-torta-4.jpg), que también es el "poster" del video.
+
+Comando ffmpeg de referencia para prepararlo:
+  ffmpeg -i original.mp4 -an -t 10 -vf "scale=1280:-2,crop=1280:960" \
+    -c:v libx264 -crf 26 -preset slow -pix_fmt yuv420p -movflags +faststart \
+    video/sabor-a-chile.mp4
