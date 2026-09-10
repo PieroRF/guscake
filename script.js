@@ -640,7 +640,7 @@ const HERO_SLIDES = [
     videoWebm: "",                       // ej: "video/sabor-a-chile.webm" (opcional)
     eyebrow: "🔴⚪🔵 Especial dieciochero 🔴⚪🔵",
     titleHTML: `Sabor a Chile<br><span class="accent">18 de Septiembre</span>`,
-    text: "Kuchen, alfajores y tortas con un toque patrio, ideales para celebrar en familia. Encarga con anticipación para estas fiestas.",
+    text: "Box dieciochero, ideal para compartir. ¡Encarga con anticipación para estas Fiestas Patrias!",
     caption: "Disponible por tiempo limitado",
   },
 ];
