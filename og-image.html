@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex">
+<title>Generador de imagen para redes / favicon — GusCake</title>
+<style>
+  body{
+    margin:0; padding:40px 20px 80px;
+    background:#1F1108; color:#F6F1E7;
+    font-family:system-ui, "Segoe UI", Arial, sans-serif;
+    text-align:center;
+  }
+  h1{ font-family:Georgia, serif; font-style:italic; font-weight:600; margin:0 0 6px; }
+  p.sub{ color:#c9bfa8; margin:0 0 28px; font-size:0.95rem; }
+  .preview{
+    display:inline-block; border-radius:14px; overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,.5); max-width:100%;
+  }
+  .preview svg{ display:block; width:min(760px, 92vw); height:auto; }
+  .buttons{ margin:30px 0 10px; display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+  button{
+    font:inherit; font-weight:700; cursor:pointer;
+    padding:14px 22px; border-radius:999px; border:none;
+    background:linear-gradient(135deg,#F0D9A0,#D9A94F 55%,#B98935);
+    color:#1F1108;
+    box-shadow:0 6px 18px rgba(217,169,79,.35);
+  }
+  button:hover{ filter:brightness(1.06); }
+  ol{ display:inline-block; text-align:left; max-width:640px; margin:24px auto 0; color:#d9cfba; line-height:1.7; font-size:0.95rem; }
+  code{ background:rgba(255,255,255,.08); padding:2px 6px; border-radius:5px; }
+  .fav-preview{ margin-top:8px; }
+  .fav-preview svg{ width:96px; height:96px; border-radius:50%; box-shadow:0 8px 20px rgba(0,0,0,.4); }
+</style>
+</head>
+<body>
+
+  <h1>Imagen para redes / buscadores</h1>
+  <p class="sub">Descarga los dos archivos, guárdalos en la carpeta <code>img/</code> y sube los cambios.</p>
+
+  <!-- ====== TARJETA 1200×630 (og:image) ====== -->
+  <div class="preview">
+    <svg id="card" xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" font-family="Georgia, 'Times New Roman', serif">
+      <defs>
+        <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#4a2e1c"/>
+          <stop offset="0.55" stop-color="#26140a"/>
+          <stop offset="1" stop-color="#160c05"/>
+        </linearGradient>
+        <radialGradient id="glow" cx="0.30" cy="0.48" r="0.55">
+          <stop offset="0" stop-color="#D9A94F" stop-opacity="0.38"/>
+          <stop offset="1" stop-color="#D9A94F" stop-opacity="0"/>
+        </radialGradient>
+        <clipPath id="roundLogo"><circle cx="511" cy="509.5" r="509.5"/></clipPath>
+      </defs>
+
+      <rect width="1200" height="630" fill="url(#bg)"/>
+      <rect width="1200" height="630" fill="url(#glow)"/>
+
+      <!-- logo redondo, escalado a ~430 px y centrado en (330, 315) -->
+      <g transform="translate(115,101) scale(0.4207)">
+        <g clip-path="url(#roundLogo)">
+          <rect x="0" y="0" width="1022" height="509" fill="#28110A"/>
+          <rect x="0" y="509" width="1022" height="510" fill="#F9EFAF"/>
+          <g fill="none" stroke="#C99A4C" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">
+            <path d="M498 300 h95 v20 h-95 z"/>
+            <path d="M503 300 c-18 0 -30 -14 -30 -30 c0 -16 13 -28 28 -28 c2 -18 18 -32 37 -32 c17 0 32 12 36 28 c14 -6 30 3 32 19 c2 18 -12 34 -30 34 c-24 8 -49 8 -73 9 z"/>
+            <line x1="498" y1="300" x2="498" y2="322"/>
+            <line x1="593" y1="300" x2="593" y2="322"/>
+            <line x1="498" y1="322" x2="593" y2="322"/>
+          </g>
+          <g fill="none" stroke="#C99A4C" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M400 245 c10 -12 25 -18 40 -14 c8 2 14 8 12 16 c-3 12 3 22 14 24 c10 2 15 10 12 18 c-16 40 -55 68 -95 70 c-14 1 -22 -9 -18 -22 c8 -30 18 -62 35 -92 z"/>
+            <path d="M400 245 l-32 -30"/>
+            <path d="M382 320 c10 8 22 10 33 6"/>
+          </g>
+          <g fill="none" stroke="#C99A4C" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">
+            <path d="M598 335 c-6 -8 -6 -18 0 -26 c6 -8 6 -14 0 -20"/>
+            <path d="M513 344 q10 -14 20 0 q10 -14 20 0 q10 -14 20 0 q10 -14 20 0 q10 -14 20 0 v10 h-100 z"/>
+            <path d="M508 354 h110 v28 h-110 z"/>
+          </g>
+          <line x1="205" y1="472" x2="290" y2="472" stroke="#C99A4C" stroke-width="7"/>
+          <line x1="740" y1="472" x2="825" y2="472" stroke="#C99A4C" stroke-width="7"/>
+          <text x="511" y="500" font-size="185" font-weight="700" fill="#F5EBB8" text-anchor="middle" letter-spacing="2">Gus</text>
+          <line x1="200" y1="565" x2="300" y2="565" stroke="#28110A" stroke-width="7"/>
+          <line x1="720" y1="565" x2="820" y2="565" stroke="#28110A" stroke-width="7"/>
+          <text x="511" y="680" font-size="180" font-weight="700" fill="#3A1A0C" text-anchor="middle" letter-spacing="2">Cake</text>
+          <line x1="605" y1="595" x2="660" y2="595" stroke="#3A1A0C" stroke-width="6"/>
+        </g>
+      </g>
+      <circle cx="330" cy="315" r="212" fill="none" stroke="#D9A94F" stroke-width="8" opacity="0.75"/>
+
+      <!-- texto -->
+      <text x="612" y="234" font-family="system-ui, Arial, sans-serif" font-size="25" font-weight="700" letter-spacing="7" fill="#D9A94F">PASTELERÍA ARTESANAL</text>
+      <text x="606" y="352" font-size="116" font-style="italic" font-weight="700" fill="#FFFCF2">Gus Cake</text>
+      <line x1="616" y1="392" x2="784" y2="392" stroke="#D9A94F" stroke-width="5"/>
+      <text x="612" y="456" font-family="system-ui, Arial, sans-serif" font-size="31" fill="#EFE6D0">San Pedro de la Paz, Biobío</text>
+      <text x="612" y="512" font-family="'Courier New', monospace" font-size="33" font-weight="700" fill="#D9A94F">guscake.cl</text>
+    </svg>
+  </div>
+
+  <div class="buttons">
+    <button id="dlOg">⬇ Descargar og-image.png (1200×630)</button>
+    <button id="dlFav">⬇ Descargar favicon.png (512×512)</button>
+  </div>
+
+  <div class="fav-preview">
+    <!-- solo el logo redondo, para el favicon -->
+    <svg id="faviconSvg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1022 1019" font-family="Georgia, serif">
+      <defs><clipPath id="roundFav"><circle cx="511" cy="509.5" r="509.5"/></clipPath></defs>
+      <g clip-path="url(#roundFav)">
+        <rect x="0" y="0" width="1022" height="509" fill="#28110A"/>
+        <rect x="0" y="509" width="1022" height="510" fill="#F9EFAF"/>
+        <g fill="none" stroke="#C99A4C" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M498 300 h95 v20 h-95 z"/>
+          <path d="M503 300 c-18 0 -30 -14 -30 -30 c0 -16 13 -28 28 -28 c2 -18 18 -32 37 -32 c17 0 32 12 36 28 c14 -6 30 3 32 19 c2 18 -12 34 -30 34 c-24 8 -49 8 -73 9 z"/>
+          <line x1="498" y1="300" x2="498" y2="322"/>
+          <line x1="593" y1="300" x2="593" y2="322"/>
+          <line x1="498" y1="322" x2="593" y2="322"/>
+        </g>
+        <g fill="none" stroke="#C99A4C" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M400 245 c10 -12 25 -18 40 -14 c8 2 14 8 12 16 c-3 12 3 22 14 24 c10 2 15 10 12 18 c-16 40 -55 68 -95 70 c-14 1 -22 -9 -18 -22 c8 -30 18 -62 35 -92 z"/>
+          <path d="M400 245 l-32 -30"/>
+          <path d="M382 320 c10 8 22 10 33 6"/>
+        </g>
+        <g fill="none" stroke="#C99A4C" stroke-width="6" stroke-linejoin="round" stroke-linecap="round">
+          <path d="M598 335 c-6 -8 -6 -18 0 -26 c6 -8 6 -14 0 -20"/>
+          <path d="M513 344 q10 -14 20 0 q10 -14 20 0 q10 -14 20 0 q10 -14 20 0 q10 -14 20 0 v10 h-100 z"/>
+          <path d="M508 354 h110 v28 h-110 z"/>
+        </g>
+        <line x1="205" y1="472" x2="290" y2="472" stroke="#C99A4C" stroke-width="7"/>
+        <line x1="740" y1="472" x2="825" y2="472" stroke="#C99A4C" stroke-width="7"/>
+        <text x="511" y="500" font-size="185" font-weight="700" fill="#F5EBB8" text-anchor="middle" letter-spacing="2">Gus</text>
+        <line x1="200" y1="565" x2="300" y2="565" stroke="#28110A" stroke-width="7"/>
+        <line x1="720" y1="565" x2="820" y2="565" stroke="#28110A" stroke-width="7"/>
+        <text x="511" y="680" font-size="180" font-weight="700" fill="#3A1A0C" text-anchor="middle" letter-spacing="2">Cake</text>
+        <line x1="605" y1="595" x2="660" y2="595" stroke="#3A1A0C" stroke-width="6"/>
+      </g>
+    </svg>
+  </div>
+
+  <ol>
+    <li>Presiona los dos botones ⬇ (se descargan <code>og-image.png</code> y <code>favicon.png</code>).</li>
+    <li>Mueve ambos archivos a la carpeta <code>img/</code> del proyecto.</li>
+    <li>Sube los cambios: <code>git add img/og-image.png img/favicon.png index.html mayoristas.html site.webmanifest</code> → <code>git commit</code> → <code>git push</code>.</li>
+    <li>En Google Search Console pide reindexar <code>https://guscake.cl/</code>.</li>
+  </ol>
+
+<script>
+  function svgToPng(svgEl, w, h, filename) {
+    const clone = svgEl.cloneNode(true);
+    clone.setAttribute("width", w);
+    clone.setAttribute("height", h);
+    const str = new XMLSerializer().serializeToString(clone);
+    const svgBlob = new Blob([str], { type: "image/svg+xml;charset=utf-8" });
+    const url = URL.createObjectURL(svgBlob);
+    const img = new Image();
+    img.onload = function () {
+      const canvas = document.createElement("canvas");
+      canvas.width = w;
+      canvas.height = h;
+      canvas.getContext("2d").drawImage(img, 0, 0, w, h);
+      URL.revokeObjectURL(url);
+      canvas.toBlob(function (blob) {
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+      }, "image/png");
+    };
+    img.onerror = function () { alert("No se pudo generar la imagen en este navegador."); };
+    img.src = url;
+  }
+
+  document.getElementById("dlOg").addEventListener("click", function () {
+    svgToPng(document.getElementById("card"), 1200, 630, "og-image.png");
+  });
+  document.getElementById("dlFav").addEventListener("click", function () {
+    svgToPng(document.getElementById("faviconSvg"), 512, 512, "favicon.png");
+  });
+</script>
+</body>
+</html>

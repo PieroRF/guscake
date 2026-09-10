@@ -1,0 +1,13 @@
+{
+  "name": "GusCake — Pastelería Artesanal",
+  "short_name": "GusCake",
+  "description": "Pastelería artesanal en San Pedro de la Paz, Biobío.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1F1108",
+  "theme_color": "#1F1108",
+  "icons": [
+    { "src": "/img/favicon.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "any" },
+    { "src": "/img/favicon.png", "type": "image/png", "sizes": "512x512", "purpose": "any maskable" }
+  ]
+}
