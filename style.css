@@ -1003,18 +1003,18 @@ html:not(.no-splash) .hero-in{
   box-shadow:0 0 10px 2px rgba(217,169,79,0.6);
   animation:premiumGlow 2s ease-in-out infinite;
 }
-/* Título de Fiestas Patrias: más grande y en negrita, letras azul/blanco/rojo
-   con contorno para que el blanco resalte sobre la crema, y un subrayado
-   tricolor con un brillo que lo recorre para llamar la atención. */
+/* Título de Fiestas Patrias: mismo tamaño, relleno y margen que el resto de
+   los títulos (así la columna no se descuadra), pero en negrita y con letras
+   azul/blanco/rojo contorneadas y un subrayado tricolor con brillo animado
+   para que igualmente llame la atención. */
 .product-section-title--chile{
-  border-bottom:none;
+  /* borde transparente: ocupa los mismos 2px que el borde de los demás
+     títulos para que la columna arranque exactamente a la misma altura;
+     la línea visible es el subrayado tricolor de ::after. */
+  border-bottom:2px solid transparent;
   position:relative;
-  font-size:1.62rem;
   font-weight:700;
   letter-spacing:0.015em;
-  padding-bottom:12px;
-  margin-bottom:24px;
-  animation:sectionIn 0.5s var(--ease) both, chilePulse 4s ease-in-out 0.6s infinite;
 }
 .product-section-title--chile .cl-azul{
   color:#0039a6;
@@ -1041,20 +1041,21 @@ html:not(.no-splash) .hero-in{
   background-size:38% 100%, 100% 100%;
   background-repeat:no-repeat;
   background-position:-38% 0, 0 0;
-  box-shadow:0 0 12px 2px rgba(0,57,166,0.30);
-  animation:chileSheen 2.6s linear infinite;
+  animation:chileSheen 2.6s linear infinite, chileGlow 2.4s ease-in-out infinite;
 }
 @keyframes chileSheen{
   0%{background-position:-38% 0, 0 0;}
   100%{background-position:138% 0, 0 0;}
 }
-@keyframes chilePulse{
-  0%,100%{transform:scale(1);}
-  50%{transform:scale(1.025);}
+/* El resplandor del subrayado late entre azul y rojo para llamar la atención
+   sin cambiar el tamaño del título (no afecta la alineación de las tarjetas). */
+@keyframes chileGlow{
+  0%,100%{box-shadow:0 0 8px 1px rgba(0,57,166,0.30);}
+  50%{box-shadow:0 0 17px 3px rgba(213,43,30,0.45);}
 }
 @media (prefers-reduced-motion: reduce){
-  .product-section-title--chile{animation:sectionIn 0.5s var(--ease) both;}
   .product-section-title--chile::after{animation:none;}
+  .product-tag--soon{animation:none;}
 }
 @keyframes premiumShimmer{
   to{background-position:250% center;}
@@ -1093,23 +1094,33 @@ html:not(.no-splash) .hero-in{
   font-size:2.4rem;
   letter-spacing:4px;
 }
+/* Insignia "Próximamente": rojo vivo con un latido suave para captar la mirada */
 .product-tag--soon{
-  background:#0039a6;
+  background:#e0281b;
   color:#ffffff;
-  box-shadow:0 4px 12px rgba(0,57,166,0.4);
+  font-weight:700;
+  box-shadow:0 4px 14px rgba(224,40,27,0.55);
+  animation:soonBadge 1.8s ease-in-out infinite;
 }
+@keyframes soonBadge{
+  0%,100%{transform:scale(1); box-shadow:0 4px 14px rgba(224,40,27,0.5);}
+  50%{transform:scale(1.06); box-shadow:0 6px 20px rgba(224,40,27,0.78);}
+}
+/* Botón "Disponible muy pronto": pastilla dorada rellena, alto contraste */
 .product-soon-cta{
   width:100%;
   font-family:var(--font-mono);
-  font-size:0.72rem;
+  font-size:0.76rem;
   font-weight:700;
-  letter-spacing:0.05em;
+  letter-spacing:0.06em;
   text-transform:uppercase;
   text-align:center;
-  color:#0039a6;
-  border:1.5px solid #0039a6;
+  color:var(--navy-deep);
+  background:var(--gold);
+  border:none;
   border-radius:999px;
-  padding:9px 12px;
+  padding:10px 12px;
+  box-shadow:0 6px 18px rgba(217,169,79,0.5);
 }
 
 /* ---------- SELECTOR DE TAMAÑO / PRECIO ---------- */
