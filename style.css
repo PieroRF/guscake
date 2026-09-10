@@ -225,6 +225,33 @@ h2{
 .btn-back:hover .btn-back-arrow{
   transform:translateX(-4px);
 }
+/* Botones de acción de la página de mayoristas (PDF + volver):
+   apilados, mismo ancho y alineados a la izquierda para que se vean como un par. */
+.mayorista-actions{
+  margin-top:26px;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:14px;
+}
+.mayorista-actions .btn{
+  width:100%;
+  max-width:340px;
+  margin-top:0;
+  padding:14px 24px;
+  font-size:0.92rem;
+}
+.btn-pdf{
+  gap:10px;
+}
+.btn-pdf-icon{
+  width:20px;
+  height:20px;
+  flex-shrink:0;
+}
+@media (max-width:980px){
+  .mayorista-actions .btn{max-width:420px;}
+}
 .btn-stack{
   display:block;
   text-align:center;

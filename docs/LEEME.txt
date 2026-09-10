@@ -1,0 +1,15 @@
+Carpeta de documentos descargables del sitio.
+
+Coloca aquí la lista de precios mayoristas con este nombre EXACTO:
+
+  precios-mayoristas-guscake.pdf   -> botón "Ver lista de precios (PDF)" en mayoristas.html
+
+Notas:
+- El nombre debe ser en minúsculas, sin espacios ni tildes (ya está así arriba).
+  Si cambias el nombre del archivo, actualiza también el atributo href del
+  enlace en mayoristas.html (busca: docs/precios-mayoristas-guscake.pdf).
+- Mientras el archivo no exista, el botón dará error 404 al abrirlo.
+- Peso recomendado: <= 2 MB para que abra rápido en el celular.
+- Al reemplazar el PDF por una versión nueva, mantén el mismo nombre:
+  así el botón sigue funcionando sin tocar el código.
+- Queda accesible en: https://guscake.cl/docs/precios-mayoristas-guscake.pdf
