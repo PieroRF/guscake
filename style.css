@@ -622,8 +622,24 @@ html:not(.no-splash) .hero-in{
   margin:0 0 2em;
   min-height:4.6em;
 }
-#heroEyebrow, #heroTitle, #heroText{
-  transition:opacity 0.35s var(--ease);
+/* Cambio de texto del hero al rotar de foto/producto: en vez de un simple
+   fundido, la etiqueta, el título y el párrafo salen deslizándose hacia
+   arriba con un leve desenfoque y vuelven a entrar en cascada (uno detrás de
+   otro, reutilizando el mismo retraso "--i" del efecto de entrada inicial).
+   El JS controla la fase con el atributo [data-phase="out"|"in"]. */
+.hero-swap-text[data-phase="out"]{
+  animation:heroSwapTextOut 0.26s var(--ease) both;
+}
+.hero-swap-text[data-phase="in"]{
+  animation:heroSwapTextIn 0.55s var(--ease) both;
+  animation-delay:calc(var(--i, 0) * 90ms);
+}
+@keyframes heroSwapTextOut{
+  to{opacity:0; transform:translateY(-10px); filter:blur(3px);}
+}
+@keyframes heroSwapTextIn{
+  from{opacity:0; transform:translateY(16px); filter:blur(5px);}
+  to{opacity:1; transform:translateY(0); filter:blur(0);}
 }
 .hero-actions{
   display:flex;
@@ -769,13 +785,28 @@ html:not(.no-splash) .hero-in{
   padding:10px 18px;
   border-radius:999px;
   box-shadow:0 16px 30px rgba(0,0,0,0.42);
-  transition:opacity 0.35s var(--ease);
   animation:captionIn 0.6s var(--ease) both;
   animation-delay:0.95s;
 }
 @keyframes captionIn{
   from{opacity:0; transform:translateX(-18px);}
   to{opacity:1; transform:translateX(0);}
+}
+/* Igual que .hero-swap-text pero sin transform: en móvil el badge ya usa
+   translateX(-50%) para centrarse y no debe pisarse con la animación. */
+.hero-swap-caption[data-phase="out"]{
+  animation:heroSwapCaptionOut 0.24s var(--ease) both;
+}
+.hero-swap-caption[data-phase="in"]{
+  animation:heroSwapCaptionIn 0.5s var(--ease) both;
+  animation-delay:0.28s;
+}
+@keyframes heroSwapCaptionOut{
+  to{opacity:0; filter:blur(3px);}
+}
+@keyframes heroSwapCaptionIn{
+  from{opacity:0; filter:blur(4px);}
+  to{opacity:1; filter:blur(0);}
 }
 .hero-seal{
   position:absolute;
@@ -879,6 +910,8 @@ html:not(.no-splash) .hero-in{
   .hero-scroll svg, .hero-facts .dot, .hero-title .accent, .hero-caption{animation:none;}
   .hero-frame{transform:rotate(-1deg);}
   .hero-caption{opacity:1;}
+  .hero-swap-text[data-phase]{animation:none; opacity:1; transform:none; filter:none;}
+  .hero-swap-caption[data-phase]{animation:none; opacity:1; filter:none;}
 }
 
 /* ---------- VITRINA ---------- */
@@ -1080,7 +1113,7 @@ html:not(.no-splash) .hero-in{
   animation:sectionIn 0.5s var(--ease) both;
 }
 
-/* Tarjeta "Arma tu box" (próximamente): mismo tamaño que un producto, sin
+/* Tarjeta "¡Pronto, nuevo box!" (próximamente): mismo tamaño que un producto, sin
    precio ni botón de compra, con borde punteado y aire de novedad. */
 .product-card--soon{
   border:1.6px dashed var(--gold-deep);

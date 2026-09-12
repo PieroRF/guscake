@@ -133,9 +133,9 @@ const PRODUCTS = [
     emoji: "⭐", img: "img/productos/pastelitospremium.jpg", category: "premium", tag: "Producto destacado"
   },
   {
-    id: "p23", name: "Arma tu box",
-    desc: "Pronto vas a poder armar tu propio box: eliges los productos que más te gustan y nosotros lo preparamos a tu medida. Estamos habilitando esta opción muy pronto.",
-    emoji: "🍰🧁🍪", img: "img/productos/arma-tu-box.jpg", category: "temporada", soon: true
+    id: "p23", name: "¡Pronto, nuevo box!",
+    desc: "Estamos afinando los últimos detalles.",
+    emoji: "🍰🧁🍪", img: "img/productos/nuevo-box.jpg", category: "temporada", soon: true
   },
   {
     id: "p19", name: "Box dieciochero GusCake",
@@ -179,14 +179,14 @@ const clp = (n) => n.toLocaleString("es-CL", { style: "currency", currency: "CLP
 const grid = document.getElementById("productGrid");
 
 function cardHTML(p) {
-  // Tarjeta "próximamente" (p. ej. "Arma tu box"): mismo formato que un
-  // producto pero sin precio ni botón de compra, solo el anuncio.
+  // Tarjeta "próximamente" (p. ej. "¡Pronto, nuevo box!"): mismo formato que
+  // un producto pero sin precio ni botón de compra, solo el anuncio.
   if (p.soon) {
     return `
     <article class="product-card product-card--soon" data-id="${p.id}">
       <div class="product-media">
         <span class="product-tag product-tag--soon">Próximamente</span>
-        <img src="${p.img}" alt="Surtido de pasteles GusCake para armar tu box" class="product-photo"
+        <img src="${p.img}" alt="Surtido de pasteles GusCake — nuevo box de dulces próximamente" class="product-photo"
              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <span class="product-emoji-fallback">${p.emoji}</span>
       </div>
@@ -661,7 +661,7 @@ const HERO_SLIDES = [
     img: "img/hero-torta-3.jpg",
     eyebrow: "Hecho a mano, sin atajos",
     titleHTML: `Mix de tartas<br><span class="accent">Equilibrio perfecto</span>`,
-    text: "Tartas, cheesecake, pie de limón, brownie y kuchen sureño. Una selección pensada especialmente para compartir.",
+    text: "Tartas, cheesecake, pie de limón, brownie y kuchen sureño. Especial para compartir.",
     caption: "Todo en un solo pedido",
   },
   {
@@ -729,15 +729,18 @@ function initHeroSlider() {
     dots[current].classList.add("active");
     syncVideos();
 
-    textEls.forEach(el => (el.style.opacity = 0));
+    // Los textos salen deslizándose hacia arriba y desenfocados; al volver a
+    // entrar lo hacen en cascada (etiqueta, título, párrafo y por último la
+    // insignia de la foto), en vez del simple fundido de antes.
+    textEls.forEach(el => (el.dataset.phase = "out"));
     setTimeout(() => {
       const s = HERO_SLIDES[current];
       eyebrow.textContent = s.eyebrow;
       title.innerHTML = s.titleHTML;
       text.textContent = s.text;
       caption.textContent = s.caption;
-      textEls.forEach(el => (el.style.opacity = 1));
-    }, 250);
+      textEls.forEach(el => (el.dataset.phase = "in"));
+    }, 260);
   }
 
   syncVideos();
