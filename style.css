@@ -1025,6 +1025,11 @@ html:not(.no-splash) .hero-in{
   background-clip:text;
   -webkit-text-fill-color:transparent;
   color:transparent;
+  /* Contorno y sombra oscuros: el dorado del texto es muy parecido al fondo
+     crema de la vitrina, así que sin esto se pierde en ciertos momentos del
+     brillo animado. El contorno mantiene el título legible en todo momento. */
+  -webkit-text-stroke:0.6px rgba(46,29,20,0.55);
+  text-shadow:0 2px 5px rgba(46,29,20,0.35);
   animation:sectionIn 0.5s var(--ease) both, premiumShimmer 2.8s linear infinite;
 }
 .product-section-title--premium::after{
