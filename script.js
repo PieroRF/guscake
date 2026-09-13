@@ -2,6 +2,12 @@
 // GUS CAKE — lógica de vitrina, carrito, formulario y hero
 // ==========================================================
 
+// Contenido de temporada (Fiestas Patrias): se muestra automáticamente hasta
+// esta fecha inclusive y desaparece solo (columna de la vitrina + slide del
+// hero), sin tener que tocar el código cada año.
+const FIESTAS_PATRIAS_CIERRE = new Date("2026-10-01T00:00:00");
+const fiestasPatriasVigente = new Date() < FIESTAS_PATRIAS_CIERRE;
+
 //PRODUCTOS//
 const PRODUCTS = [
   {
@@ -110,19 +116,19 @@ const PRODUCTS = [
   },
   {
     id: "p15", name: "Chocolate premium",
-    desc: "Bizcocho húmedo de chocolate, relleno de manjar artesanal y chocolate real. Un box ideal para regalar.",
+    desc: "Bizcocho húmedo de chocolate, relleno de manjar artesanal y chocolate real. Un clásico intenso, perfecto para los amantes del chocolate.",
     prices: [{ label: "Precio único", price: 16500 }],
     emoji: "⭐", img: "img/productos/chocolatepremium.jpg", category: "premium"
   },
   {
     id: "p16", name: "Frambuesa premium",
-    desc: "Fina selección de hojarascas, rellenas de manjar artesanal, crema batida y frambuesas naturales. Un box ideal para regalar.",
+    desc: "Fina selección de hojarascas, rellenas de manjar artesanal, crema batida y frambuesas naturales. Fresco, delicado y perfecto para sorprender en cualquier ocasión.",
     prices: [{ label: "Precio único", price: 15500 }],
     emoji: "⭐", img: "img/productos/frambuesapremium.jpg", category: "premium", tag: "Producto destacado"
   },
   {
     id: "p17", name: "Carrot premium",
-    desc: "Bizcocho húmedo de zanahorias de la huerta, relleno de un exquisito frosting de queso crema y manjar artesanal. Un box ideal para regalar.",
+    desc: "Bizcocho húmedo de zanahorias de la huerta, relleno de un exquisito frosting de queso crema y manjar artesanal. Suave, aromático y perfecto para acompañar con un buen café.",
     prices: [{ label: "Precio único", price: 16500 }],
     emoji: "⭐", img: "img/productos/carrotpremium.jpg", category: "premium"
   },
@@ -133,12 +139,15 @@ const PRODUCTS = [
     emoji: "⭐", img: "img/productos/pastelitospremium.jpg", category: "premium", tag: "Producto destacado"
   },
   {
-    id: "p23", name: "¡Pronto, nuevo box!",
-    desc: "Estamos afinando los últimos detalles.",
-    emoji: "🍰🧁🍪", img: "img/productos/nuevo-box.jpg", category: "temporada", soon: true
+    // Se retira junto con el resto de Fiestas Patrias después del 30/09 (ver
+    // FIESTAS_PATRIAS_CIERRE al inicio del archivo).
+    id: "p23", name: "Box dieciochero 2",
+    desc: "25 bocados artesanales premium para Fiestas Patrias: surtido de alfajores, pajaritos, empolvados y merengues rellenos con manjar tradicional.",
+    prices: [{ label: "Precio único", price: 15990 }],
+    emoji: "🍰🧁🍪", img: "img/productos/boxdieciochero2.jpg", category: "temporada", tag: "Nuevo producto"
   },
   {
-    id: "p19", name: "Box dieciochero GusCake",
+    id: "p19", name: "Box dieciochero 1",
     desc: "31 bocados premium pensados para endulzar el asado familiar. Una selección irresistible que reúne alfajores de maicena, hojarasca y chocolate, merengues, barquillos con manjar artesanal y ricas cocadas tradicionales.",
     prices: [{ label: "Precio único", price: 19990 }],
     emoji: "🇨🇱", img: "img/productos/boxdieciochero.jpg", category: "temporada"
@@ -171,7 +180,10 @@ const CATEGORY_LABELS = {
   premium: "Premium",
   temporada: "Fiestas Patrias",
 };
-const CATEGORY_ORDER = ["premium", "temporada", "tortas", "tartas", "peque-dulces"];
+// La columna "temporada" (Fiestas Patrias) se retira sola después del 30/09
+// (ver FIESTAS_PATRIAS_CIERRE al inicio del archivo).
+const CATEGORY_ORDER = ["premium", "temporada", "tortas", "tartas", "peque-dulces"]
+  .filter(cat => cat !== "temporada" || fiestasPatriasVigente);
 
 const clp = (n) => n.toLocaleString("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 });
 
@@ -186,7 +198,7 @@ function cardHTML(p) {
     <article class="product-card product-card--soon" data-id="${p.id}">
       <div class="product-media">
         <span class="product-tag product-tag--soon">Próximamente</span>
-        <img src="${p.img}" alt="Surtido de pasteles GusCake — nuevo box de dulces próximamente" class="product-photo"
+        <img src="${p.img}" alt="${p.name} — próximamente" class="product-photo"
              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
         <span class="product-emoji-fallback">${p.emoji}</span>
       </div>
@@ -672,8 +684,9 @@ const HERO_SLIDES = [
     titleHTML: `Sabor a Chile<br><span class="accent">18 de Septiembre</span>`,
     text: "Box dieciochero, ideal para compartir. ¡Encarga con anticipación para estas Fiestas Patrias!",
     caption: "Disponible por tiempo limitado",
+    temporada: true, // se retira solo del hero después del 30/09 (FIESTAS_PATRIAS_CIERRE)
   },
-];
+].filter(s => !s.temporada || fiestasPatriasVigente);
 
 function initHeroSlider() {
   const track = document.getElementById("heroSlides");
@@ -840,6 +853,104 @@ function initPageTransitions() {
   });
 }
 
+// ---------- Reseñas (Instagram / TikTok) ----------
+// Comentarios y reseñas reales de clientes, copiados tal cual desde Instagram
+// o TikTok. Para agregar, cambiar o quitar una reseña solo hay que editar
+// este arreglo — no hace falta tocar el HTML ni el CSS. Mientras esté vacío
+// (como ahora) se muestra un aviso de "muy pronto" en vez de inventar reseñas.
+const TESTIMONIOS = [
+  {
+    autor: "@fadich_zc",
+    red: "tiktok",
+    texto: "Los mejoresss",
+    link: "",
+  },
+  {
+    autor: "@sandrafe151",
+    red: "tiktok",
+    texto: "es una delicia 😋😋",
+    link: "",
+  },
+  {
+    autor: "@danidi1312",
+    red: "tiktok",
+    texto: "hay amoooo el pie de limón 💖 se ve delicioso 🤭",
+    link: "",
+  },
+  {
+    autor: "@sofiacarvajal661",
+    red: "tiktok",
+    texto: "nooo, me muero 🤤🤤, se me antojaron las cocadas se ven 10 de 10",
+    link: "",
+  },
+  {
+    autor: "@bbecitaboni",
+    red: "instagram",
+    texto: "Amooo",
+    link: "",
+  },
+  {
+    autor: "@maxilr_12",
+    red: "instagram",
+    texto: "🔥🙌",
+    link: "",
+  },
+  // Ejemplo de cómo se agrega cada reseña real:
+  // {
+  //   autor: "Nombre tal como aparece en la red social",
+  //   red: "instagram",  // o "tiktok"
+  //   texto: "El comentario o reseña, copiado tal cual.",
+  //   link: "https://www.instagram.com/p/xxxxxxx/", // opcional: URL de la publicación
+  // },
+];
+
+const RESENA_ICONOS = {
+  instagram: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.6"/>
+    <circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.6"/>
+    <circle cx="17.3" cy="6.7" r="1.1" fill="currentColor"/>
+  </svg>`,
+  tiktok: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M14.7 3v10.2a3.3 3.3 0 1 1-2.9-3.28" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M14.7 3c.35 2.7 2.1 4.3 4.6 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`,
+};
+
+function testimonioCardHTML(t, i, esClon) {
+  return `
+    <article class="resena-card" style="--i:${i}"${esClon ? ' aria-hidden="true"' : ""}>
+      <span class="resena-quote" aria-hidden="true">&ldquo;</span>
+      <p class="resena-texto">${t.texto}</p>
+      <div class="resena-footer">
+        <span class="resena-red resena-red--${t.red}">${RESENA_ICONOS[t.red] || ""}</span>
+        ${t.link
+          ? `<a class="resena-autor" href="${t.link}" target="_blank" rel="noopener"${esClon ? ' tabindex="-1"' : ""}>${t.autor}</a>`
+          : `<span class="resena-autor">${t.autor}</span>`}
+      </div>
+    </article>
+  `;
+}
+
+function renderTestimonios() {
+  const track = document.getElementById("resenasTrack");
+  if (!track) return;
+
+  if (!TESTIMONIOS.length) {
+    track.classList.add("resenas-track--empty");
+    track.innerHTML = `<p class="resenas-empty">Muy pronto vamos a compartir aquí las reseñas de nuestra comunidad en Instagram y TikTok.</p>`;
+    return;
+  }
+
+  // El set de tarjetas se dibuja dos veces (la segunda copia va oculta a
+  // lectores de pantalla) para que el desplazamiento lateral automático sea
+  // infinito y sin cortes, en vez de acumularse hacia abajo.
+  const real = TESTIMONIOS.map((t, i) => testimonioCardHTML(t, i, false)).join("");
+  const clon = TESTIMONIOS.map((t, i) => testimonioCardHTML(t, i, true)).join("");
+  track.innerHTML = real + clon;
+  // La velocidad se ajusta sola según cuántas reseñas haya (~5s por tarjeta).
+  track.style.setProperty("--marquee-duration", `${TESTIMONIOS.length * 5}s`);
+}
+
 // ---------- Splash de bienvenida ----------
 // El overlay se desvanece por CSS; aquí solo se quita del DOM al terminar.
 (function initSplash() {
@@ -857,6 +968,7 @@ document.getElementById("year").textContent = new Date().getFullYear();
 initPageTransitions();
 renderGrid();
 renderCart();
+renderTestimonios();
 initScrollReveal();
 initHeroSlider();
 initProductCarousel();

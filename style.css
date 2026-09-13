@@ -1447,6 +1447,119 @@ html:not(.no-splash) .hero-in{
   .nosotros-badge{order:-1;}
 }
 
+/* ---------- RESEÑAS ---------- */
+.resenas{
+  padding:96px 0;
+  background:var(--cream-deep);
+  position:relative;
+  z-index:1;
+}
+.resenas .eyebrow{color:var(--accent);}
+.resenas-head{
+  max-width:620px;
+  margin:0 0 40px;
+}
+.resenas-sub{
+  margin:0;
+  color:var(--espresso-soft);
+}
+/* Visor con bordes difuminados: recorta la cinta de tarjetas, que es más
+   ancha que la pantalla porque se dibuja dos veces (ver renderTestimonios). */
+.resenas-viewport{
+  overflow:hidden;
+  -webkit-mask-image:linear-gradient(to right, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
+          mask-image:linear-gradient(to right, transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
+}
+.resenas-track{
+  display:flex;
+  width:max-content;
+  gap:24px;
+  animation:resenasMarquee var(--marquee-duration, 30s) linear infinite;
+}
+/* Al pasar el mouse (o enfocar un enlace con teclado) se detiene para poder leer. */
+.resenas-track:hover, .resenas-track:focus-within{
+  animation-play-state:paused;
+}
+@keyframes resenasMarquee{
+  to{transform:translateX(-50%);}
+}
+/* Mientras no haya reseñas cargadas, sin desplazamiento ni tarjetas clonadas. */
+.resenas-track--empty{
+  display:block;
+  width:100%;
+  animation:none;
+}
+/* Igual que .product-empty: mismo aviso mientras no haya reseñas cargadas. */
+.resenas-empty{
+  font-family:var(--font-mono);
+  font-size:0.82rem;
+  line-height:1.6;
+  color:var(--espresso-soft);
+  text-align:center;
+  padding:36px 16px;
+  border:1.5px dashed var(--line);
+  border-radius:var(--radius);
+}
+.resena-card{
+  flex:0 0 clamp(230px, 78vw, 300px);
+  background:var(--white);
+  border-radius:var(--radius);
+  padding:28px 26px 22px;
+  box-shadow:var(--shadow-soft);
+  border:1px solid var(--line);
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  transition:transform 0.35s var(--ease), box-shadow 0.35s var(--ease);
+  animation:cardIn 0.5s var(--ease) both;
+  animation-delay:calc(var(--i, 0) * 90ms);
+}
+.resena-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 20px 34px rgba(46,29,20,0.14);
+}
+.resena-quote{
+  font-family:var(--font-display);
+  font-size:2.6rem;
+  line-height:0.4;
+  color:var(--gold);
+}
+.resena-texto{
+  margin:0;
+  font-size:0.98rem;
+  font-style:italic;
+  line-height:1.6;
+  color:var(--espresso);
+}
+.resena-footer{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:auto;
+  padding-top:14px;
+  border-top:1px solid var(--line);
+}
+.resena-red{
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  color:#fff;
+}
+.resena-red svg{width:15px; height:15px;}
+.resena-red--instagram{background:linear-gradient(135deg,#f58529,#dd2a7b,#8134af,#515bd4);}
+.resena-red--tiktok{background:#010101;}
+.resena-autor{
+  font-weight:600;
+  font-size:0.88rem;
+  color:var(--espresso);
+  text-decoration:none;
+}
+a.resena-autor:hover{color:var(--gold-deep);}
+
 /* ---------- PEDIDOS ---------- */
 .pedidos{
   padding:96px 0;
@@ -1904,7 +2017,12 @@ html:not(.no-splash) .hero-in{
 
 @media (prefers-reduced-motion: reduce){
   html{scroll-behavior:auto;}
-  .btn, .cart-panel, .cart-overlay, .product-card{animation:none; transition:none;}
+  .btn, .cart-panel, .cart-overlay, .product-card, .resena-card{animation:none; transition:none;}
+  /* Sin desplazamiento automático: el visor pasa a recorrerse con scroll
+     manual, y se oculta la copia clonada de tarjetas (ya no hace falta). */
+  .resenas-viewport{overflow-x:auto; -webkit-overflow-scrolling:touch; -webkit-mask-image:none; mask-image:none;}
+  .resenas-track{animation:none;}
+  .resenas-track .resena-card[aria-hidden="true"]{display:none;}
 }
 
 /* ---------- WHATSAPP FLOTANTE ---------- */
