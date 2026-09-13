@@ -774,7 +774,9 @@ html:not(.no-splash) .hero-in{
 .hero-caption{
   position:absolute;
   z-index:3;
-  left:-10px; bottom:24px;
+  /* centrada en la franja inferior de la foto (el -50% de centrado vive en
+     el propio keyframe de entrada, ver captionIn, para que no se pise). */
+  left:50%; bottom:24px;
   background:rgba(31,17,8,0.92);
   border:1px solid rgba(217,169,79,0.35);
   -webkit-backdrop-filter:blur(4px);
@@ -789,8 +791,11 @@ html:not(.no-splash) .hero-in{
   animation-delay:0.95s;
 }
 @keyframes captionIn{
-  from{opacity:0; transform:translateX(-18px);}
-  to{opacity:1; transform:translateX(0);}
+  /* translateX(-50%) primero centra la insignia (left:50% la deja apoyada
+     en el borde central; esto la corre medio ancho propio hacia la
+     izquierda); el segundo translateX es solo el efecto de entrada. */
+  from{opacity:0; transform:translateX(-50%) translateX(-18px);}
+  to{opacity:1; transform:translateX(-50%) translateX(0);}
 }
 /* Igual que .hero-swap-text pero sin transform: en móvil el badge ya usa
    translateX(-50%) para centrarse y no debe pisarse con la animación. */
@@ -801,16 +806,23 @@ html:not(.no-splash) .hero-in{
   animation:heroSwapCaptionIn 0.5s var(--ease) both;
   animation-delay:0.28s;
 }
+/* Esta animación reemplaza por completo a "captionIn" cada vez que cambia
+   la foto (misma especificidad ganadora por el atributo [data-phase]), así
+   que tiene que repetir su propio transform:translateX(-50%) — si no, el
+   centrado se pierde apenas cambia la primera foto (quedaba pegado a la
+   izquierda otra vez). */
 @keyframes heroSwapCaptionOut{
-  to{opacity:0; filter:blur(3px);}
+  from{transform:translateX(-50%);}
+  to{opacity:0; filter:blur(3px); transform:translateX(-50%);}
 }
 @keyframes heroSwapCaptionIn{
-  from{opacity:0; filter:blur(4px);}
-  to{opacity:1; filter:blur(0);}
+  from{opacity:0; filter:blur(4px); transform:translateX(-50%);}
+  to{opacity:1; filter:blur(0); transform:translateX(-50%);}
 }
 .hero-seal{
   position:absolute;
-  z-index:3;
+  /* más alto que el banderín (z-index:3) para que quede siempre por encima */
+  z-index:4;
   top:-24px; right:-14px;
   width:84px; height:84px;
   border-radius:50%;
@@ -838,6 +850,34 @@ html:not(.no-splash) .hero-in{
   0%,100%{transform:translateY(0) rotate(-7deg);}
   50%{transform:translateY(-9px) rotate(7deg);}
 }
+
+/* Decoración temporal de Fiestas Patrias sobre la foto principal del hero:
+   un banderín arriba del marco y la bandera chilena abajo a la izquierda.
+   Se retiran solos después del 30/09 (ver heroFiestasDecor /
+   fiestasPatriasVigente en script.js), sin dejar hueco ni tocar el resto
+   del hero. */
+.hero-fiestas-decor{display:contents;}
+.hero-bunting{
+  position:absolute;
+  z-index:3;
+  top:-18px;
+  left:4%;
+  right:4%;
+  pointer-events:none;
+  filter:drop-shadow(0 4px 6px rgba(0,0,0,0.25));
+}
+.hero-bunting svg{width:100%; height:40px; display:block;}
+.hero-fiesta-flag{
+  position:absolute;
+  z-index:3;
+  bottom:-24px;
+  left:-22px;
+  width:76px;
+  height:68px;
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,0.35));
+  /* el asta queda quieta; la tela ondea sola con el "animate" del SVG */
+}
+.hero-fiesta-flag svg{width:100%; height:100%; display:block;}
 
 /* indicador de scroll */
 .hero-scroll{
@@ -888,8 +928,8 @@ html:not(.no-splash) .hero-in{
   /* en móvil el marco queda derecho y quieto: nada que lo empuje fuera de cuadro */
   .hero-frame{aspect-ratio:4/3.4; transform:none; animation:none;}
   .hero-caption{
-    left:50%;
-    transform:translateX(-50%);
+    /* el centrado (left:50% + el -50% del keyframe) ya lo hereda de la regla
+       base; acá solo van los ajustes propios de móvil. */
     bottom:-14px;
     white-space:normal;
     text-align:center;
@@ -899,6 +939,9 @@ html:not(.no-splash) .hero-in{
   }
   .hero-seal{width:58px; height:58px; top:-14px; right:2px; font-size:0.46rem;}
   .hero-seal b{font-size:0.9rem;}
+  .hero-bunting{top:-13px;}
+  .hero-bunting svg{height:28px;}
+  .hero-fiesta-flag{width:58px; height:52px; bottom:-17px; left:-16px;}
 
   .vitrina, .nosotros, .pedidos, .ubicacion { padding: 64px 0; }
   .order-form { padding: 22px; }
@@ -909,9 +952,13 @@ html:not(.no-splash) .hero-in{
   .hero-orb, .hero-showcase-glow, .hero-frame, .hero-slide-img, .hero-seal,
   .hero-scroll svg, .hero-facts .dot, .hero-title .accent, .hero-caption{animation:none;}
   .hero-frame{transform:rotate(-1deg);}
-  .hero-caption{opacity:1;}
+  /* el banderín y la bandera se mueven con "animate" nativo de SVG, que CSS
+     no puede pausar: se detiene a mano por JS (ver script.js). */
+  /* con la animación apagada nadie más deja el -50% de centrado puesto:
+     hay que fijarlo a mano para que no quede pegada a la izquierda. */
+  .hero-caption{opacity:1; transform:translateX(-50%);}
   .hero-swap-text[data-phase]{animation:none; opacity:1; transform:none; filter:none;}
-  .hero-swap-caption[data-phase]{animation:none; opacity:1; filter:none;}
+  .hero-swap-caption[data-phase]{animation:none; opacity:1; filter:none; transform:translateX(-50%);}
 }
 
 /* ---------- VITRINA ---------- */
@@ -1054,6 +1101,19 @@ html:not(.no-splash) .hero-in{
   font-weight:700;
   letter-spacing:0.015em;
 }
+/* Chupalla y copihue a los costados del título: en "em" para no alterar el
+   alto de la línea (la columna debe seguir arrancando a la misma altura que
+   las demás, ver nota de arriba). */
+.chile-title-icon{
+  display:inline-flex;
+  vertical-align:-0.15em;
+  width:0.78em;
+  height:0.78em;
+  margin:0 0.1em;
+}
+.chile-title-icon svg{width:100%; height:100%; display:block;}
+.chile-title-icon:first-child{color:#0039a6;}
+.chile-title-icon:last-child{color:#d52b1e;}
 .product-section-title--chile .cl-azul{
   color:#0039a6;
   text-shadow:0 1px 0 #fff, 0 0 9px rgba(0,57,166,0.35);

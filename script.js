@@ -8,6 +8,21 @@
 const FIESTAS_PATRIAS_CIERRE = new Date("2026-10-01T00:00:00");
 const fiestasPatriasVigente = new Date() < FIESTAS_PATRIAS_CIERRE;
 
+// La decoración sobre la foto principal del hero (banderín y bandera) usa
+// la misma fecha de corte: se saca del DOM sola, sin dejar espacio vacío ni
+// tener que tocar nada a mano.
+if (!fiestasPatriasVigente) {
+  const heroDecor = document.getElementById("heroFiestasDecor");
+  if (heroDecor) heroDecor.remove();
+} else if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  // El banderín y la bandera ondean con "animate"/"animateTransform" nativos
+  // de SVG (no son animaciones CSS), así que "reducir movimiento" se aplica
+  // pausándolos a mano con la API del propio SVG.
+  document.querySelectorAll(".hero-bunting svg, .hero-fiesta-flag svg").forEach(svg => {
+    if (svg.pauseAnimations) svg.pauseAnimations();
+  });
+}
+
 //PRODUCTOS//
 const PRODUCTS = [
   {
@@ -251,6 +266,20 @@ function cardHTML(p) {
   `;
 }
 
+// Iconos decorativos de Fiestas Patrias (mismo dibujo que el cartel de
+// arriba del todo, ver index.html) para flanquear el título de la columna.
+const FIESTAS_ICONOS = {
+  chupalla: `<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <ellipse cx="12" cy="17" rx="10" ry="2.3"/>
+    <path d="M6.6 15.6c.3-3.9 2.6-6.9 5.4-6.9s5.1 3 5.4 6.9c-1.6.9-3.5 1.4-5.4 1.4s-3.8-.5-5.4-1.4z"/>
+  </svg>`,
+  copihue: `<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <path d="M12 3.4c1.9 0 3.2 2.1 3.2 5 0 3.4-1.5 6.7-3.2 9.1-1.7-2.4-3.2-5.7-3.2-9.1 0-2.9 1.3-5 3.2-5z"/>
+    <ellipse cx="7.5" cy="9.6" rx="2.5" ry="1.4" transform="rotate(-35 7.5 9.6)" opacity="0.75"/>
+    <ellipse cx="16.5" cy="9.6" rx="2.5" ry="1.4" transform="rotate(35 16.5 9.6)" opacity="0.75"/>
+  </svg>`,
+};
+
 // Pinta un título letra por letra con los colores de la bandera chilena
 // (azul, blanco y rojo) para la columna de Fiestas Patrias.
 function tricolorChileno(texto) {
@@ -285,7 +314,10 @@ function renderGrid() {
       if (isPremium) {
         titleContent = "💎 Premium 💎";
       } else if (isTemporada) {
-        titleContent = tricolorChileno(CATEGORY_LABELS[cat]);
+        titleContent =
+          `<span class="chile-title-icon">${FIESTAS_ICONOS.chupalla}</span>` +
+          tricolorChileno(CATEGORY_LABELS[cat]) +
+          `<span class="chile-title-icon">${FIESTAS_ICONOS.copihue}</span>`;
       } else {
         titleContent = CATEGORY_LABELS[cat] || cat;
       }
@@ -680,7 +712,7 @@ const HERO_SLIDES = [
     img: "img/hero-torta-4.jpg",        // poster / respaldo si el video no carga
     video: "video/sabor-a-chile.mp4",   // coloca aquí el archivo
     videoWebm: "",                       // ej: "video/sabor-a-chile.webm" (opcional)
-    eyebrow: "🔴⚪🔵 Especial dieciochero 🔴⚪🔵",
+    eyebrow: "🔴⚪🔵 Especial dieciochero 🔵⚪🔴",
     titleHTML: `Sabor a Chile<br><span class="accent">18 de Septiembre</span>`,
     text: "Box dieciochero, ideal para compartir. ¡Encarga con anticipación para estas Fiestas Patrias!",
     caption: "Disponible por tiempo limitado",

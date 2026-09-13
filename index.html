@@ -221,6 +221,95 @@
         </div>
         <span class="hero-caption hero-swap-caption" id="heroCaption">✨ La estrella de la casa ✨</span>
         <span class="hero-seal" aria-hidden="true"><b>100%</b>artesanal</span>
+
+        <!-- Decoración temporal de Fiestas Patrias: se retira sola después
+             del 30/09 (mismo interruptor de fecha que el resto, ver script.js). -->
+        <div class="hero-fiestas-decor" id="heroFiestasDecor">
+          <!-- Cada banderín se mece colgado del hilo (animateTransform con
+               retraso escalonado), como si el viento pasara de a poco por
+               toda la fila. -->
+          <span class="hero-bunting" aria-hidden="true">
+            <svg viewBox="0 0 480 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M0 8 Q240 34 480 8" fill="none" stroke="#3A2318" stroke-width="2"/>
+              <g>
+                <polygon points="10,10 40,10 25,42" fill="#0039a6"/>
+                <circle cx="25" cy="20" r="2.6" fill="#fff"/>
+                <animateTransform attributeName="transform" type="rotate" dur="1.5s" begin="0s" repeatCount="indefinite" values="-18 25 10; 18 25 10; -18 25 10"/>
+              </g>
+              <g>
+                <polygon points="70,15 100,15 85,47" fill="#d52b1e"/>
+                <circle cx="85" cy="25" r="2.6" fill="#fff"/>
+                <animateTransform attributeName="transform" type="rotate" dur="1.5s" begin="0.15s" repeatCount="indefinite" values="-18 85 15; 18 85 15; -18 85 15"/>
+              </g>
+              <g>
+                <polygon points="130,19 160,19 145,51" fill="#0039a6"/>
+                <circle cx="145" cy="29" r="2.6" fill="#fff"/>
+                <animateTransform attributeName="transform" type="rotate" dur="1.5s" begin="0.3s" repeatCount="indefinite" values="-18 145 19; 18 145 19; -18 145 19"/>
+              </g>
+              <g>
+                <polygon points="190,22 220,22 205,54" fill="#d52b1e"/>
+                <circle cx="205" cy="32" r="2.6" fill="#fff"/>
+                <animateTransform attributeName="transform" type="rotate" dur="1.5s" begin="0.45s" repeatCount="indefinite" values="-18 205 22; 18 205 22; -18 205 22"/>
+              </g>
+              <g>
+                <polygon points="250,23 280,23 265,55" fill="#0039a6"/>
+                <circle cx="265" cy="33" r="2.6" fill="#fff"/>
+                <animateTransform attributeName="transform" type="rotate" dur="1.5s" begin="0.6s" repeatCount="indefinite" values="-18 265 23; 18 265 23; -18 265 23"/>
+              </g>
+              <g>
+                <polygon points="310,22 340,22 325,54" fill="#d52b1e"/>
+                <circle cx="325" cy="32" r="2.6" fill="#fff"/>
+                <animateTransform attributeName="transform" type="rotate" dur="1.5s" begin="0.75s" repeatCount="indefinite" values="-18 325 22; 18 325 22; -18 325 22"/>
+              </g>
+              <g>
+                <polygon points="370,19 400,19 385,51" fill="#0039a6"/>
+                <circle cx="385" cy="29" r="2.6" fill="#fff"/>
+                <animateTransform attributeName="transform" type="rotate" dur="1.5s" begin="0.9s" repeatCount="indefinite" values="-18 385 19; 18 385 19; -18 385 19"/>
+              </g>
+              <g>
+                <polygon points="430,15 460,15 445,47" fill="#d52b1e"/>
+                <circle cx="445" cy="25" r="2.6" fill="#fff"/>
+                <animateTransform attributeName="transform" type="rotate" dur="1.5s" begin="1.05s" repeatCount="indefinite" values="-18 445 15; 18 445 15; -18 445 15"/>
+              </g>
+            </svg>
+          </span>
+          <!-- La bandera se recorta con una forma ondulante que cambia sola
+               (animate sobre "d"), simulando la tela al viento; el asta
+               queda fija. -->
+          <span class="hero-fiesta-flag" aria-hidden="true">
+            <svg viewBox="0 0 40 36" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <clipPath id="chFlagWave">
+                  <path d="M8,5 C16,4.3 25,4.3 33,5 C32,10 32.6,15 33,23 C25,23.7 16,23.7 8,23 Z">
+                    <animate attributeName="d" dur="1.6s" repeatCount="indefinite" values="
+                      M8,5 C16,4.3 25,4.3 33,5 C32,10 32.6,15 33,23 C25,23.7 16,23.7 8,23 Z;
+                      M8,5 C17,7.2 24,2.8 33,7 C30.5,11.5 34,13.5 32,20 C26.5,25 15.5,21 8,23 Z;
+                      M8,5 C15,2.8 26,6.8 33,3.2 C34.5,10.5 30.5,16.5 34,24.5 C23.5,21.5 17.5,25.8 8,23 Z;
+                      M8,5 C16,4.3 25,4.3 33,5 C32,10 32.6,15 33,23 C25,23.7 16,23.7 8,23 Z"/>
+                  </path>
+                </clipPath>
+              </defs>
+              <!-- asta -->
+              <line x1="7" y1="34" x2="7" y2="4" stroke="#D9A94F" stroke-width="2.6" stroke-linecap="round"/>
+              <circle cx="7" cy="3.4" r="2.2" fill="#D9A94F"/>
+              <!-- bandera chilena, recortada con la ola de arriba -->
+              <g clip-path="url(#chFlagWave)">
+                <rect x="8" y="5" width="9" height="9" fill="#0039a6"/>
+                <rect x="17" y="5" width="17" height="9" fill="#fff"/>
+                <rect x="8" y="14" width="26" height="9" fill="#d52b1e"/>
+                <path d="M12.5 8l.7 1.5 1.6.2-1.2 1.2.3 1.6-1.4-.8-1.4.8.3-1.6-1.2-1.2 1.6-.2z" fill="#fff"/>
+              </g>
+              <!-- contorno visible con la misma ola (el clip-path no se dibuja solo) -->
+              <path fill="none" stroke="#1F1108" stroke-width="1.1" d="M8,5 C16,4.3 25,4.3 33,5 C32,10 32.6,15 33,23 C25,23.7 16,23.7 8,23 Z">
+                <animate attributeName="d" dur="1.6s" repeatCount="indefinite" values="
+                  M8,5 C16,4.3 25,4.3 33,5 C32,10 32.6,15 33,23 C25,23.7 16,23.7 8,23 Z;
+                  M8,5 C17,7.2 24,2.8 33,7 C30.5,11.5 34,13.5 32,20 C26.5,25 15.5,21 8,23 Z;
+                  M8,5 C15,2.8 26,6.8 33,3.2 C34.5,10.5 30.5,16.5 34,24.5 C23.5,21.5 17.5,25.8 8,23 Z;
+                  M8,5 C16,4.3 25,4.3 33,5 C32,10 32.6,15 33,23 C25,23.7 16,23.7 8,23 Z"/>
+              </path>
+            </svg>
+          </span>
+        </div>
       </div>
     </div>
 
