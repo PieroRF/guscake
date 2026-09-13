@@ -150,7 +150,7 @@ const PRODUCTS = [
     id: "p19", name: "Box dieciochero 1",
     desc: "31 bocados premium pensados para endulzar el asado familiar. Una selección irresistible que reúne alfajores de maicena, hojarasca y chocolate, merengues, barquillos con manjar artesanal y ricas cocadas tradicionales.",
     prices: [{ label: "Precio único", price: 19990 }],
-    emoji: "🇨🇱", img: "img/productos/boxdieciochero.jpg", category: "temporada"
+    emoji: "🇨🇱", img: "img/productos/boxdieciochero1.jpg", category: "temporada"
   },
   {
     id: "p20", name: "Box de empolvados",
@@ -917,16 +917,15 @@ const RESENA_ICONOS = {
 };
 
 function testimonioCardHTML(t, i, esClon) {
+  // Sello de la red social bien grande, sobresaliendo arriba de la tarjeta
+  // (mismo truco visual que la insignia "100% artesanal" del chef).
   return `
     <article class="resena-card" style="--i:${i}"${esClon ? ' aria-hidden="true"' : ""}>
-      <span class="resena-quote" aria-hidden="true">&ldquo;</span>
+      <span class="resena-badge resena-badge--${t.red}" aria-hidden="true">${RESENA_ICONOS[t.red] || ""}</span>
       <p class="resena-texto">${t.texto}</p>
-      <div class="resena-footer">
-        <span class="resena-red resena-red--${t.red}">${RESENA_ICONOS[t.red] || ""}</span>
-        ${t.link
-          ? `<a class="resena-autor" href="${t.link}" target="_blank" rel="noopener"${esClon ? ' tabindex="-1"' : ""}>${t.autor}</a>`
-          : `<span class="resena-autor">${t.autor}</span>`}
-      </div>
+      ${t.link
+        ? `<a class="resena-autor" href="${t.link}" target="_blank" rel="noopener"${esClon ? ' tabindex="-1"' : ""}>${t.autor}</a>`
+        : `<span class="resena-autor">${t.autor}</span>`}
     </article>
   `;
 }
