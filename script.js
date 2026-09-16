@@ -174,13 +174,13 @@ const PRODUCTS = [
     emoji: "🇨🇱", img: "img/productos/boxempolvados.jpg", category: "temporada", tag: "Producto destacado"
   },
   {
-    id: "p21", name: "Pajaritos",
-    desc: "Tradición y dulzura en cada bocado. Panecillo dulce, suave y muy esponjoso, cubierto con un delicado toque de merengue suizo. El infaltable de este Dieciocho.",
-    prices: [{ label: "Precio único", price: 2000 }],
-    emoji: "🇨🇱", img: "img/productos/pajaritos.jpg", category: "temporada"
+    id: "p21", name: "Box de pajaritos",
+    desc: "Tradición y dulzura en cada bocado. Panecillos dulces, suaves y muy esponjosos, cubiertos con un delicado toque de merengue suizo. El infaltable de este Dieciocho.",
+    prices: [{ label: "Precio único", price: 12990 }],
+    emoji: "🇨🇱", img: "img/productos/boxpajaritos.jpg", category: "temporada", tag: "Producto destacado"
   },
   {
-    id: "p22", name: "Empanada tradicional",
+    id: "p23", name: "Empanada tradicional",
     desc: "El sabor más tradicional de nuestras Fiestas Patrias directo a tu mesa. Nuestra clásica empanada chilena está preparada con un sabroso pino de carne picada y cebolla en su punto justo, acompañado de aceituna y huevo cocido.",
     prices: [{ label: "Precio único", price: 2800 }],
     emoji: "🇨🇱", img: "img/productos/empanadatradicional.jpg", category: "temporada",
