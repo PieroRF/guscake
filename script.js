@@ -127,7 +127,8 @@ const PRODUCTS = [
     id: "p14", name: "Alfajor Hojarasca",
     desc: "Discos de hojarascas rellenas de manjar artesanal, cubiertas con coco rallado y espolvoreadas con azúcar flor.",
     prices: [{ label: "Precio único", price: 1700 }],
-    emoji: "🍪", img: "img/productos/alfajorhojarasca.jpg", category: "peque-dulces"
+    emoji: "🍪", img: "img/productos/alfajorhojarasca.jpg", category: "peque-dulces",
+    tag: "Agotado", tagVariant: "agotado"
   },
   {
     id: "p15", name: "Chocolate premium",
@@ -184,7 +185,7 @@ const PRODUCTS = [
     desc: "El sabor más tradicional de nuestras Fiestas Patrias directo a tu mesa. Nuestra clásica empanada chilena está preparada con un sabroso pino de carne picada y cebolla en su punto justo, acompañado de aceituna y huevo cocido.",
     prices: [{ label: "Precio único", price: 2800 }],
     emoji: "🇨🇱", img: "img/productos/empanadatradicional.jpg", category: "temporada",
-    tag: "Producto salado", tagVariant: "salado"
+    tag: "Agotado", tagVariant: "agotado"
   },
 ];
 
@@ -240,8 +241,12 @@ function cardHTML(p) {
       </div>`
     : "";
 
+  // Producto agotado (misma etiqueta roja "Agotado"): se ve igual que
+  // cualquier tarjeta pero con el botón de compra deshabilitado.
+  const isAgotado = p.tagVariant === "agotado";
+
   return `
-    <article class="product-card" data-id="${p.id}">
+    <article class="product-card${isAgotado ? " product-card--agotado" : ""}" data-id="${p.id}">
       <div class="product-media">
         ${p.tag ? `<span class="product-tag${p.tagVariant ? ` product-tag--${p.tagVariant}` : ""}">${p.tag}</span>` : ""}
         <img src="${p.img}" alt="${p.name}" class="product-photo"
@@ -259,7 +264,7 @@ function cardHTML(p) {
         ${priceOptions}
         <div class="product-footer">
           <span class="product-price">${clp(p.prices[0].price)}</span>
-          <button class="add-btn" data-id="${p.id}">Agregar</button>
+          <button class="add-btn${isAgotado ? " add-btn--agotado" : ""}" data-id="${p.id}"${isAgotado ? " disabled" : ""}>${isAgotado ? "Agotado" : "Agregar"}</button>
         </div>
       </div>
     </article>

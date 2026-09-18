@@ -1330,6 +1330,12 @@ html:not(.no-splash) .hero-in{
   color:#ffffff;
   box-shadow:0 4px 12px rgba(61,122,79,0.4);
 }
+/* Variante para productos agotados: rojo para que destaque de inmediato */
+.product-tag--agotado{
+  background:#c62828;
+  color:#ffffff;
+  box-shadow:0 4px 12px rgba(198,40,40,0.4);
+}
 .product-body{
   padding:18px 18px 20px;
   display:flex;
@@ -1416,6 +1422,14 @@ html:not(.no-splash) .hero-in{
 }
 .add-btn:hover{background:var(--gold-deep); transform:translateY(-1px);}
 .add-btn.added{background:var(--gold); color:var(--navy-deep);}
+/* Producto agotado: foto atenuada y botón de compra deshabilitado */
+.product-card--agotado .product-media{filter:grayscale(0.4); opacity:0.85;}
+.add-btn--agotado, .add-btn--agotado:hover{
+  background:var(--line);
+  color:var(--espresso-soft);
+  cursor:not-allowed;
+  transform:none;
+}
 
 /* ---------- NOSOTROS ---------- */
 .nosotros{
