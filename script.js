@@ -33,7 +33,7 @@ const PRODUCTS = [
       { label: "Torta 10 porciones", price: 25500 },
       { label: "Torta 20 porciones", price: 35500 },
     ],
-    emoji: "🎂", img: "img/productos/alfajordeamor.jpg", category: "tortas", tag: "Producto destacado"
+    emoji: "🎂", img: "img/productos/alfajordeamor.jpg", category: "tortas", tag: "Destacado"
   },
   {
     id: "p2", name: "Choco Ganache",
@@ -79,7 +79,7 @@ const PRODUCTS = [
     id: "p6", name: "Pie de limón",
     desc: "Masa sableé rellena de crema de limón, cubierta de merengue suizo.",
     prices: [{ label: "Precio único", price: 22500 }],
-    emoji: "🍰", img: "img/productos/piedelimon.jpg", category: "tartas", tag: "Producto destacado"
+    emoji: "🍰", img: "img/productos/piedelimon.jpg", category: "tartas", tag: "Destacado"
   },
   {
     id: "p7", name: "Kuchen sureño",
@@ -140,7 +140,7 @@ const PRODUCTS = [
     id: "p16", name: "Frambuesa premium",
     desc: "Fina selección de hojarascas, rellenas de manjar artesanal, crema batida y frambuesas naturales. Fresco, delicado y perfecto para sorprender en cualquier ocasión.",
     prices: [{ label: "Precio único", price: 15500 }],
-    emoji: "⭐", img: "img/productos/frambuesapremium.jpg", category: "premium", tag: "Producto destacado"
+    emoji: "⭐", img: "img/productos/frambuesapremium.jpg", category: "premium", tag: "Destacado"
   },
   {
     id: "p17", name: "Carrot premium",
@@ -152,7 +152,7 @@ const PRODUCTS = [
     id: "p18", name: "Pastelitos premium",
     desc: "La combinación ideal para compartir: intensos brownies con manjar artesanal, suaves cheesecakes de vainilla y frambuesa, clásicos pies de limón natural y tradicionales suspiros limeños. Pastelería artesanal lista para regalar y disfrutar.",
     prices: [{ label: "Precio único", price: 28500 }],
-    emoji: "⭐", img: "img/productos/pastelitospremium.jpg", category: "premium", tag: "Producto destacado"
+    emoji: "⭐", img: "img/productos/pastelitospremium.jpg", category: "premium", tag: "Destacado"
   },
   {
     // Se retira junto con el resto de Fiestas Patrias después del 30/09 (ver
@@ -160,7 +160,7 @@ const PRODUCTS = [
     id: "p23", name: "Box dieciochero 2",
     desc: "25 bocados artesanales premium para Fiestas Patrias: surtido de alfajores, pajaritos, empolvados y merengues rellenos con manjar tradicional.",
     prices: [{ label: "Precio único", price: 15990 }],
-    emoji: "🍰🧁🍪", img: "img/productos/boxdieciochero2.jpg", category: "temporada", tag: "Nuevo producto"
+    emoji: "🍰🧁🍪", img: "img/productos/boxdieciochero2.jpg", category: "temporada", tag: "Nuevo"
   },
   {
     id: "p19", name: "Box dieciochero 1",
@@ -172,13 +172,13 @@ const PRODUCTS = [
     id: "p20", name: "Box de empolvados",
     desc: "La pausa dulce ideal para tus tardes: pack de 8 unidades con delicado bizcocho de vainilla, relleno con nuestro manjar artesanal de receta propia y coronado con azúcar flor.",
     prices: [{ label: "Precio único", price: 9600 }],
-    emoji: "🇨🇱", img: "img/productos/boxempolvados.jpg", category: "temporada", tag: "Producto destacado"
+    emoji: "🇨🇱", img: "img/productos/boxempolvados.jpg", category: "temporada", tag: "Destacado"
   },
   {
     id: "p21", name: "Box de pajaritos",
     desc: "Tradición y dulzura en cada bocado. Panecillos dulces, suaves y muy esponjosos, cubiertos con un delicado toque de merengue suizo. El infaltable de este Dieciocho.",
     prices: [{ label: "Precio único", price: 12990 }],
-    emoji: "🇨🇱", img: "img/productos/boxpajaritos.jpg", category: "temporada", tag: "Producto destacado"
+    emoji: "🇨🇱", img: "img/productos/boxpajaritos.jpg", category: "temporada", tag: "Destacado"
   },
   {
     id: "p23", name: "Empanada tradicional",
