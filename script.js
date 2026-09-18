@@ -895,29 +895,13 @@ function initPageTransitions() {
 // o TikTok. Para agregar, cambiar o quitar una reseña solo hay que editar
 // este arreglo — no hace falta tocar el HTML ni el CSS. Mientras esté vacío
 // (como ahora) se muestra un aviso de "muy pronto" en vez de inventar reseñas.
+// Intercaladas TikTok / Instagram a propósito, para que la vitrina de
+// reseñas no se vea agrupada por red social.
 const TESTIMONIOS = [
   {
     autor: "@fadich_zc",
     red: "tiktok",
     texto: "Los mejoresss",
-    link: "",
-  },
-  {
-    autor: "@sandrafe151",
-    red: "tiktok",
-    texto: "es una delicia 😋😋",
-    link: "",
-  },
-  {
-    autor: "@danidi1312",
-    red: "tiktok",
-    texto: "hay amoooo el pie de limón 💖 se ve delicioso 🤭",
-    link: "",
-  },
-  {
-    autor: "@sofiacarvajal661",
-    red: "tiktok",
-    texto: "nooo, me muero 🤤🤤, se me antojaron las cocadas se ven 10 de 10",
     link: "",
   },
   {
@@ -927,9 +911,51 @@ const TESTIMONIOS = [
     link: "",
   },
   {
+    autor: "@sandrafe151",
+    red: "tiktok",
+    texto: "es una delicia 😋😋",
+    link: "",
+  },
+  {
     autor: "@maxilr_12",
     red: "instagram",
     texto: "🔥🙌",
+    link: "",
+  },
+  {
+    autor: "@danidi1312",
+    red: "tiktok",
+    texto: "hay amoooo el pie de limón 💖 se ve delicioso 🤭",
+    link: "",
+  },
+  {
+    autor: "@cotralchile",
+    red: "instagram",
+    texto: "Que delicia 💜🙌🏻",
+    link: "",
+  },
+  {
+    autor: "@sofiacarvajal661",
+    red: "tiktok",
+    texto: "nooo, me muero 🤤🤤, se me antojaron las cocadas se ven 10 de 10",
+    link: "",
+  },
+  {
+    autor: "@flancita.a",
+    red: "instagram",
+    texto: "Amé!",
+    link: "",
+  },
+  {
+    autor: "@leandro_alexis_",
+    red: "tiktok",
+    texto: "Qué rico se veeeee",
+    link: "",
+  },
+  {
+    autor: "@paolapazfotografa",
+    red: "instagram",
+    texto: "👏👏👏 me encanta tu trabajo",
     link: "",
   },
   // Ejemplo de cómo se agrega cada reseña real:
