@@ -306,7 +306,10 @@ function renderGrid() {
   // que permite que el deslizamiento automático sea infinito y sin cortes.
   const buildSet = (isClone) => {
     CATEGORY_ORDER.forEach(cat => {
-      const items = PRODUCTS.filter(p => p.category === cat);
+      // Dentro de cada columna, los productos van de menor a mayor precio
+      // (se usa el precio base, es decir la primera opción de cada uno).
+      const items = PRODUCTS.filter(p => p.category === cat)
+        .sort((a, b) => a.prices[0].price - b.prices[0].price);
       const isPremium = cat === "premium";
       const isTemporada = cat === "temporada";
       const section = document.createElement("div");
