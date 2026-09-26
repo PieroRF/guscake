@@ -2,27 +2,6 @@
 // GUS CAKE — lógica de vitrina, carrito, formulario y hero
 // ==========================================================
 
-// Contenido de temporada (Fiestas Patrias): se muestra automáticamente hasta
-// esta fecha inclusive y desaparece solo (columna de la vitrina + slide del
-// hero), sin tener que tocar el código cada año.
-const FIESTAS_PATRIAS_CIERRE = new Date("2026-10-01T00:00:00");
-const fiestasPatriasVigente = new Date() < FIESTAS_PATRIAS_CIERRE;
-
-// La decoración sobre la foto principal del hero (banderín y bandera) usa
-// la misma fecha de corte: se saca del DOM sola, sin dejar espacio vacío ni
-// tener que tocar nada a mano.
-if (!fiestasPatriasVigente) {
-  const heroDecor = document.getElementById("heroFiestasDecor");
-  if (heroDecor) heroDecor.remove();
-} else if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-  // El banderín y la bandera ondean con "animate"/"animateTransform" nativos
-  // de SVG (no son animaciones CSS), así que "reducir movimiento" se aplica
-  // pausándolos a mano con la API del propio SVG.
-  document.querySelectorAll(".hero-bunting svg, .hero-fiesta-flag svg").forEach(svg => {
-    if (svg.pauseAnimations) svg.pauseAnimations();
-  });
-}
-
 //PRODUCTOS//
 const PRODUCTS = [
   {
@@ -154,39 +133,6 @@ const PRODUCTS = [
     prices: [{ label: "Precio único", price: 28500 }],
     emoji: "⭐", img: "img/productos/pastelitospremium.jpg", category: "premium", tag: "Destacado"
   },
-  {
-    // Se retira junto con el resto de Fiestas Patrias después del 30/09 (ver
-    // FIESTAS_PATRIAS_CIERRE al inicio del archivo).
-    id: "p23", name: "Box dieciochero 2",
-    desc: "25 bocados artesanales premium para Fiestas Patrias: surtido de alfajores, pajaritos, empolvados y merengues rellenos con manjar tradicional.",
-    prices: [{ label: "Precio único", price: 15990 }],
-    emoji: "🍰🧁🍪", img: "img/productos/boxdieciochero2.jpg", category: "temporada", tag: "Nuevo"
-  },
-  {
-    id: "p19", name: "Box dieciochero 1",
-    desc: "31 bocados premium pensados para endulzar el asado familiar. Una selección irresistible que reúne alfajores de maicena, hojarasca y chocolate, merengues, barquillos con manjar artesanal y ricas cocadas tradicionales.",
-    prices: [{ label: "Precio único", price: 19990 }],
-    emoji: "🇨🇱", img: "img/productos/boxdieciochero1.jpg", category: "temporada"
-  },
-  {
-    id: "p20", name: "Box de empolvados",
-    desc: "La pausa dulce ideal para tus tardes: pack de 8 unidades con delicado bizcocho de vainilla, relleno con nuestro manjar artesanal de receta propia y coronado con azúcar flor.",
-    prices: [{ label: "Precio único", price: 9600 }],
-    emoji: "🇨🇱", img: "img/productos/boxempolvados.jpg", category: "temporada", tag: "Destacado"
-  },
-  {
-    id: "p21", name: "Box de pajaritos",
-    desc: "Tradición y dulzura en cada bocado. Panecillos dulces, suaves y muy esponjosos, cubiertos con un delicado toque de merengue suizo. El infaltable de este Dieciocho.",
-    prices: [{ label: "Precio único", price: 12990 }],
-    emoji: "🇨🇱", img: "img/productos/boxpajaritos.jpg", category: "temporada", tag: "Destacado"
-  },
-  {
-    id: "p23", name: "Empanada tradicional",
-    desc: "El sabor más tradicional de nuestras Fiestas Patrias directo a tu mesa. Nuestra clásica empanada chilena está preparada con un sabroso pino de carne picada y cebolla en su punto justo, acompañado de aceituna y huevo cocido.",
-    prices: [{ label: "Precio único", price: 2800 }],
-    emoji: "🇨🇱", img: "img/productos/empanadatradicional.jpg", category: "temporada",
-    tag: "Agotado", tagVariant: "agotado"
-  },
 ];
 
 const CATEGORY_LABELS = {
@@ -194,12 +140,8 @@ const CATEGORY_LABELS = {
   tartas: "Tartas 🍰",
   "peque-dulces": "Peque-Dulces 🍪",
   premium: "Premium",
-  temporada: "Fiestas Patrias",
 };
-// La columna "temporada" (Fiestas Patrias) se retira sola después del 30/09
-// (ver FIESTAS_PATRIAS_CIERRE al inicio del archivo).
-const CATEGORY_ORDER = ["premium", "temporada", "tortas", "tartas", "peque-dulces"]
-  .filter(cat => cat !== "temporada" || fiestasPatriasVigente);
+const CATEGORY_ORDER = ["premium", "tortas", "tartas", "peque-dulces"];
 
 const clp = (n) => n.toLocaleString("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 });
 
@@ -271,35 +213,6 @@ function cardHTML(p) {
   `;
 }
 
-// Iconos decorativos de Fiestas Patrias (mismo dibujo que el cartel de
-// arriba del todo, ver index.html) para flanquear el título de la columna.
-const FIESTAS_ICONOS = {
-  chupalla: `<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <ellipse cx="12" cy="17" rx="10" ry="2.3"/>
-    <path d="M6.6 15.6c.3-3.9 2.6-6.9 5.4-6.9s5.1 3 5.4 6.9c-1.6.9-3.5 1.4-5.4 1.4s-3.8-.5-5.4-1.4z"/>
-  </svg>`,
-  copihue: `<svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <path d="M12 3.4c1.9 0 3.2 2.1 3.2 5 0 3.4-1.5 6.7-3.2 9.1-1.7-2.4-3.2-5.7-3.2-9.1 0-2.9 1.3-5 3.2-5z"/>
-    <ellipse cx="7.5" cy="9.6" rx="2.5" ry="1.4" transform="rotate(-35 7.5 9.6)" opacity="0.75"/>
-    <ellipse cx="16.5" cy="9.6" rx="2.5" ry="1.4" transform="rotate(35 16.5 9.6)" opacity="0.75"/>
-  </svg>`,
-};
-
-// Pinta un título letra por letra con los colores de la bandera chilena
-// (azul, blanco y rojo) para la columna de Fiestas Patrias.
-function tricolorChileno(texto) {
-  const colores = ["cl-azul", "cl-blanco", "cl-rojo"];
-  let i = 0;
-  return [...texto]
-    .map(ch => {
-      if (ch === " ") return " ";
-      const clase = colores[i % colores.length];
-      i++;
-      return `<span class="${clase}">${ch}</span>`;
-    })
-    .join("");
-}
-
 function renderGrid() {
   grid.innerHTML = "";
   // Se dibuja el set de columnas dos veces: el segundo es una copia (is-clone)
@@ -311,24 +224,12 @@ function renderGrid() {
       const items = PRODUCTS.filter(p => p.category === cat)
         .sort((a, b) => a.prices[0].price - b.prices[0].price);
       const isPremium = cat === "premium";
-      const isTemporada = cat === "temporada";
       const section = document.createElement("div");
       section.className = "product-section" + (isClone ? " is-clone" : "");
       if (isClone) section.setAttribute("aria-hidden", "true");
       let titleClass = "product-section-title";
       if (isPremium) titleClass += " product-section-title--premium";
-      if (isTemporada) titleClass += " product-section-title--chile";
-      let titleContent;
-      if (isPremium) {
-        titleContent = "💎 Premium 💎";
-      } else if (isTemporada) {
-        titleContent =
-          `<span class="chile-title-icon">${FIESTAS_ICONOS.chupalla}</span>` +
-          tricolorChileno(CATEGORY_LABELS[cat]) +
-          `<span class="chile-title-icon">${FIESTAS_ICONOS.copihue}</span>`;
-      } else {
-        titleContent = CATEGORY_LABELS[cat] || cat;
-      }
+      const titleContent = isPremium ? "💎 Premium 💎" : (CATEGORY_LABELS[cat] || cat);
       section.innerHTML = `
         <h3 class="${titleClass}">
           ${titleContent}
@@ -716,17 +617,7 @@ const HERO_SLIDES = [
     text: "Tartas, cheesecake, pie de limón, brownie y kuchen sureño. Especial para compartir.",
     caption: "Todo en un solo pedido",
   },
-  {
-    img: "img/hero-torta-4.jpg",        // poster / respaldo si el video no carga
-    video: "video/sabor-a-chile.mp4",   // coloca aquí el archivo
-    videoWebm: "",                       // ej: "video/sabor-a-chile.webm" (opcional)
-    eyebrow: "🔴⚪🔵 Especial dieciochero 🔵⚪🔴",
-    titleHTML: `Sabor a Chile<br><span class="accent">18 de Septiembre</span>`,
-    text: "Box dieciochero, ideal para compartir. ¡Encarga con anticipación para estas Fiestas Patrias!",
-    caption: "Disponible por tiempo limitado",
-    temporada: true, // se retira solo del hero después del 30/09 (FIESTAS_PATRIAS_CIERRE)
-  },
-].filter(s => !s.temporada || fiestasPatriasVigente);
+];
 
 function initHeroSlider() {
   const track = document.getElementById("heroSlides");
