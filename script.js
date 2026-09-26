@@ -106,8 +106,7 @@ const PRODUCTS = [
     id: "p14", name: "Alfajor Hojarasca",
     desc: "Discos de hojarascas rellenas de manjar artesanal, cubiertas con coco rallado y espolvoreadas con azúcar flor.",
     prices: [{ label: "Precio único", price: 1700 }],
-    emoji: "🍪", img: "img/productos/alfajorhojarasca.jpg", category: "peque-dulces",
-    tag: "Agotado", tagVariant: "agotado"
+    emoji: "🍪", img: "img/productos/alfajorhojarasca.jpg", category: "peque-dulces"
   },
   {
     id: "p15", name: "Chocolate premium",
