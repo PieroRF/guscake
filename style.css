@@ -1937,7 +1937,7 @@ a.resena-autor:hover{color:var(--gold-deep);}
 .footer-credit{
   border-top:1px solid var(--line);
   background:rgba(46,29,20,0.035);
-  padding:16px 28px 18px;
+  padding:6px 28px;
   text-align:center;
 }
 .footer-author{
@@ -1949,8 +1949,26 @@ a.resena-autor:hover{color:var(--gold-deep);}
   color:var(--espresso-soft);
 }
 .footer-author strong{
-  color:var(--gold-deep);
-  font-weight:700;
+  font-family:"Great Vibes", cursive;
+  color:#4A4E53;
+  font-weight:400;
+  font-size:1rem;
+  letter-spacing:0.02em;
+  line-height:1;
+  /* Plata con un destello que recorre las letras */
+  background:linear-gradient(110deg, #33363A 0%, #4A4E53 35%, #B5B9BE 50%, #4A4E53 65%, #33363A 100%);
+  background-size:250% 100%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:prfShine 3s linear infinite;
+}
+@keyframes prfShine{
+  from{background-position:150% 0;}
+  to{background-position:-50% 0;}
+}
+@media (prefers-reduced-motion: reduce){
+  .footer-author strong{animation:none;}
 }
 
 @media (max-width:600px){
