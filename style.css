@@ -1071,43 +1071,50 @@ html:not(.no-splash) .hero-in{
   display:inline-block;
   margin:0 0 22px;
   padding-bottom:8px;
-  border-bottom:2px solid var(--gold-deep);
+  position:relative;
   animation:sectionIn 0.5s var(--ease) both;
 }
-.product-section-title--premium{
-  position:relative;
-  border-bottom:none;
-  background:linear-gradient(90deg, var(--gold-deep), var(--gold), #fff5da, var(--gold), var(--gold-deep));
-  background-size:250% auto;
-  -webkit-background-clip:text;
-  background-clip:text;
-  -webkit-text-fill-color:transparent;
-  color:transparent;
-  /* Contorno y sombra oscuros: el dorado del texto es muy parecido al fondo
-     crema de la vitrina, así que sin esto se pierde en ciertos momentos del
-     brillo animado. El contorno mantiene el título legible en todo momento. */
-  -webkit-text-stroke:0.6px rgba(46,29,20,0.55);
-  text-shadow:0 2px 5px rgba(46,29,20,0.35);
-  animation:sectionIn 0.5s var(--ease) both, premiumShimmer 2.8s linear infinite;
+/* Texto del título que "late" suavemente */
+.section-title-text{
+  display:inline-block;
+  animation:premiumBeat 2.4s ease-in-out infinite;
 }
-.product-section-title--premium::after{
+/* Emojis que se balancean y destellan (los 💎 de Dulce variedad, desfasados) */
+.section-title-gem{
+  display:inline-block;
+  animation:premiumSwing 2.4s ease-in-out infinite;
+}
+.section-title-gem:last-child{animation-delay:-1.2s;}
+/* Línea dorada que se dibuja desde el centro hacia los lados */
+.product-section-title::after{
   content:"";
   position:absolute;
   left:0; right:0; bottom:0;
   height:2px;
   background:var(--gold);
   box-shadow:0 0 10px 2px rgba(217,169,79,0.6);
-  animation:premiumGlow 2s ease-in-out infinite;
+  transform-origin:center;
+  animation:premiumLine 2.4s ease-in-out infinite;
 }
 @media (prefers-reduced-motion: reduce){
-  .product-tag--soon{animation:none;}
+  .product-tag--soon,
+  .section-title-text,
+  .section-title-gem,
+  .product-section-title::after{animation:none;}
 }
-@keyframes premiumShimmer{
-  to{background-position:250% center;}
+@keyframes premiumBeat{
+  0%, 40%, 100%{transform:scale(1);}
+  15%{transform:scale(1.07);}
+  28%{transform:scale(1.02);}
 }
-@keyframes premiumGlow{
-  0%, 100%{opacity:0.55;}
-  50%{opacity:1;}
+@keyframes premiumSwing{
+  0%, 100%{transform:rotate(-14deg) scale(1); filter:brightness(1);}
+  50%{transform:rotate(14deg) scale(1.15); filter:brightness(1.35) drop-shadow(0 0 6px rgba(217,169,79,0.8));}
+}
+@keyframes premiumLine{
+  0%{transform:scaleX(0); opacity:0.4;}
+  45%, 70%{transform:scaleX(1); opacity:1;}
+  100%{transform:scaleX(0); opacity:0.4;}
 }
 @keyframes sectionIn{
   from{opacity:0; transform:translateY(14px);}

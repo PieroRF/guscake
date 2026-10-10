@@ -130,6 +130,93 @@ const CATEGORY_LABELS = {
 };
 const CATEGORY_ORDER = ["premium", "tortas", "tartas", "peque-dulces"];
 
+// ---------- Productos desde Google Sheets ----------
+// Para editar productos y precios sin tocar código: pega aquí el enlace CSV
+// de la planilla publicada (Archivo → Compartir → Publicar en la web → CSV).
+// Si queda vacío, o la planilla no responde, se usa la lista PRODUCTS de arriba.
+const PRODUCTS_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTfpLLzVDhyd1qpwdR8iY_Il7QmbC7cegz5YgQltEQCCL5_w2eHrHusu3BxZbSdGjB4k6GR8oPEue-S/pub?gid=1908333832&single=true&output=csv";
+
+const SHEET_CATEGORIES = {
+  "tortas": "tortas",
+  "tartas": "tartas",
+  "peque-dulces": "peque-dulces",
+  "peque dulces": "peque-dulces",
+  "dulce variedad": "premium",
+  "premium": "premium",
+};
+const CATEGORY_EMOJI = { tortas: "🎂", tartas: "🍰", "peque-dulces": "🍪", premium: "⭐" };
+
+// Lector de CSV que respeta comillas (descripciones con comas o saltos de línea).
+function parseCSV(text) {
+  const rows = [];
+  let row = [], field = "", quoted = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (quoted) {
+      if (c === '"' && text[i + 1] === '"') { field += '"'; i++; }
+      else if (c === '"') quoted = false;
+      else field += c;
+    } else if (c === '"') quoted = true;
+    else if (c === ",") { row.push(field); field = ""; }
+    else if (c === "\n" || c === "\r") {
+      if (c === "\r" && text[i + 1] === "\n") i++;
+      row.push(field); rows.push(row); row = []; field = "";
+    } else field += c;
+  }
+  if (field || row.length) { row.push(field); rows.push(row); }
+  return rows;
+}
+
+// Convierte cada fila de la planilla al mismo formato que PRODUCTS.
+// Las filas sin nombre, sin precio, con categoría desconocida o con
+// visible = "no" se ignoran.
+function productsFromCSV(text) {
+  const [header, ...rows] = parseCSV(text.replace(/^﻿/, ""));
+  const col = (name) => header.findIndex(h => h.trim().toLowerCase() === name);
+  const idx = Object.fromEntries(
+    ["id", "nombre", "descripcion", "categoria", "imagen", "etiqueta", "visible",
+     "opcion1", "precio1", "opcion2", "precio2", "opcion3", "precio3"].map(n => [n, col(n)])
+  );
+  const get = (r, n) => (idx[n] >= 0 ? (r[idx[n]] || "").trim() : "");
+  const toPrice = (v) => Number(String(v).replace(/[^\d]/g, ""));
+
+  return rows.map((r, i) => {
+    const category = SHEET_CATEGORIES[get(r, "categoria").toLowerCase()];
+    const prices = [1, 2, 3]
+      .map(n => ({ label: get(r, `opcion${n}`) || "Precio único", price: toPrice(get(r, `precio${n}`)) }))
+      .filter(p => p.price > 0);
+    const name = get(r, "nombre");
+    if (!name || !category || !prices.length || /^no$/i.test(get(r, "visible"))) return null;
+    const tag = get(r, "etiqueta");
+    return {
+      id: get(r, "id") || `s${i + 1}`,
+      name,
+      desc: get(r, "descripcion"),
+      prices,
+      emoji: CATEGORY_EMOJI[category],
+      img: get(r, "imagen"),
+      category,
+      ...(tag && { tag }),
+      ...(/^agotado$/i.test(tag) && { tagVariant: "agotado" }),
+    };
+  }).filter(Boolean);
+}
+
+async function loadProductsFromSheet() {
+  if (!PRODUCTS_SHEET_URL) return;
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 5000);
+    const res = await fetch(PRODUCTS_SHEET_URL, { signal: controller.signal, cache: "no-store" });
+    clearTimeout(timer);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const list = productsFromCSV(await res.text());
+    if (list.length) PRODUCTS.splice(0, PRODUCTS.length, ...list);
+  } catch (err) {
+    console.warn("No se pudo leer la planilla de productos; se usa la lista del código.", err);
+  }
+}
+
 const clp = (n) => n.toLocaleString("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 });
 
 // ---------- Vitrina ----------
@@ -210,15 +297,18 @@ function renderGrid() {
       // (se usa el precio base, es decir la primera opción de cada uno).
       const items = PRODUCTS.filter(p => p.category === cat)
         .sort((a, b) => a.prices[0].price - b.prices[0].price);
-      const isPremium = cat === "premium";
       const section = document.createElement("div");
       section.className = "product-section" + (isClone ? " is-clone" : "");
       if (isClone) section.setAttribute("aria-hidden", "true");
-      let titleClass = "product-section-title";
-      if (isPremium) titleClass += " product-section-title--premium";
-      const titleContent = isPremium ? "💎 Dulce variedad 💎" : (CATEGORY_LABELS[cat] || cat);
+      // Todos los títulos llevan la misma animación: el texto "late" y el
+      // emoji se balancea. "Dulce variedad" lleva un 💎 a cada lado.
+      const [, label, emoji] = (CATEGORY_LABELS[cat] || cat).match(/^(.*?)\s*(\p{Extended_Pictographic}*)$/u);
+      const text = `<span class="section-title-text">${label}</span>`;
+      const titleContent = cat === "premium"
+        ? `<span class="section-title-gem">💎</span> ${text} <span class="section-title-gem">💎</span>`
+        : `${text}${emoji ? ` <span class="section-title-gem">${emoji}</span>` : ""}`;
       section.innerHTML = `
-        <h3 class="${titleClass}">
+        <h3 class="product-section-title">
           ${titleContent}
         </h3>
         <div class="product-grid">
@@ -372,6 +462,10 @@ function addToCart(key, item, btn) {
 }
 
 function removeFromCart(key) {
+  const item = cart[key];
+  if (item) {
+    trackEvent("remove_from_cart", { currency: "CLP", value: item.price * item.qty, items: [analyticsItem(item)] });
+  }
   delete cart[key];
   renderCart();
 }
@@ -418,8 +512,26 @@ grid.addEventListener("click", (e) => {
   const label = activeChip ? activeChip.dataset.label : p.prices[0].label;
   const price = activeChip ? Number(activeChip.dataset.price) : p.prices[0].price;
   const key = `${id}::${label}`;
-  addToCart(key, { name: p.name, label, price, emoji: p.emoji }, btn);
+  addToCart(key, { id, name: p.name, label, price, emoji: p.emoji, category: p.category }, btn);
+  trackEvent("add_to_cart", { currency: "CLP", value: price, items: [analyticsItem({ id, name: p.name, label, price, category: p.category, qty: 1 })] });
 });
+
+// ---------- Estadísticas (Google Analytics 4) ----------
+// Eventos de comercio electrónico estándar: GA4 los muestra en
+// Informes → Monetización → Compras de comercio electrónico.
+function trackEvent(name, params) {
+  if (typeof gtag === "function") gtag("event", name, params);
+}
+function analyticsItem(item) {
+  return {
+    item_id: item.id,
+    item_name: item.name,
+    item_variant: item.label,
+    item_category: (CATEGORY_LABELS[item.category] || item.category || "").replace(/\s*\p{Extended_Pictographic}+/gu, ""),
+    price: item.price,
+    quantity: item.qty,
+  };
+}
 
 // ---------- Lightbox (ampliar foto de producto) ----------
 const lightbox = document.getElementById("lightbox");
@@ -489,6 +601,12 @@ document.getElementById("cartCheckout").addEventListener("click", () => {
     const item = cart[key];
     return `${item.qty}x ${item.name} (${item.label})`;
   }).join(", ");
+  const items = keys.map(key => cart[key]);
+  trackEvent("begin_checkout", {
+    currency: "CLP",
+    value: items.reduce((sum, it) => sum + it.price * it.qty, 0),
+    items: items.map(analyticsItem),
+  });
   const mensaje = encodeURIComponent(`Hola! Quiero encargar: ${resumen}`);
   window.open(`https://wa.me/56920679622?text=${mensaje}`, "_blank");
 });
@@ -940,9 +1058,12 @@ function renderTestimonios() {
 // ---------- Init ----------
 document.getElementById("year").textContent = new Date().getFullYear();
 initPageTransitions();
-renderGrid();
 renderCart();
 renderTestimonios();
 initScrollReveal();
 initHeroSlider();
-initProductCarousel();
+// La vitrina espera a la planilla de productos (si hay una configurada).
+loadProductsFromSheet().finally(() => {
+  renderGrid();
+  initProductCarousel();
+});

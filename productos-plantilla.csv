@@ -1,0 +1,17 @@
+id,nombre,descripcion,categoria,imagen,etiqueta,opcion1,precio1,opcion2,precio2,opcion3,precio3,visible
+p1,Alfajor de amor,"Finas laminas de hojarasca, rellenas de manjar tradicional, frambuesas naturales y crema chantilly de vainilla.",Tortas,img/productos/alfajordeamor.jpg,Destacado,Torta 04 porciones,15500,Torta 10 porciones,25500,Torta 20 porciones,35500,si
+p2,Choco Ganache,"Bizcocho húmedo de chocolate, relleno de manjar tradicional y ganache bitter.",Tortas,img/productos/chocoganache.jpg,,Torta 04 porciones,16500,Torta 10 porciones,26500,Torta 20 porciones,36500,si
+p3,Manjar nuez,"Finas laminas de hojarascas, rellenas de manjar artesanal y nueces molidas.",Tortas,img/productos/manjarnuez.jpg,,Torta 04 porciones,15500,Torta 10 porciones,25500,Torta 20 porciones,35500,si
+p4,Carrot cake,"Bizcocho húmedo de zanahoria, relleno de frosting de queso crema de vainilla.",Tortas,img/productos/carrotcake.jpg,,Torta 04 porciones,16500,Torta 10 porciones,26500,Torta 20 porciones,36500,si
+p5,Red velvet,"Bizcocho rojo intenso con un toque de cacao, relleno de frosting de queso crema de vainilla.",Tortas,img/productos/redvelvet.jpg,,Torta 04 porciones,16500,Torta 10 porciones,26500,Torta 20 porciones,36500,si
+p6,Pie de limón,"Masa sableé rellena de crema de limón, cubierta de merengue suizo.",Tartas,img/productos/piedelimon.jpg,Destacado,Precio único,22500,,,,,si
+p7,Kuchen sureño,Masa sableé rellena de cremoso kuchen de frutos rojos con toques de limón sutil.,Tartas,img/productos/kuchensureño.jpg,,Precio único,20500,,,,,si
+p8,Choco Brownie,"Bizcocho húmedo de chocolate, cubierto de ganache bitter.",Tartas,img/productos/chocobrownie.jpg,,Precio único,21500,,,,,si
+p9,Cheseecake Maracuya,"Tarta a base de queso crema de vainilla, cubierta con gel de maracuya.",Tartas,img/productos/cheseecakemaracuya.jpg,,Precio único,28500,,,,,si
+p10,Cheseecake Frambuesa,"Tarta a base de queso crema de vainilla, cubierta con gel de frambuesa.",Tartas,img/productos/cheseecakeframbuesa.jpg,,Precio único,28500,,,,,si
+p19,Mix de tartas,"Tartas, cheesecake, pie de limón, brownie y kuchen sureño. Especial para compartir.",Dulce variedad,img/hero-torta-3.jpg,,Precio único,25500,,,,,si
+p11,Barquillos (06 uds.),"Galleta fina, ligera y crujiente. Rellena de manjar artesanal.",Peque-Dulces,img/productos/barquillos.jpg,,Precio único,5500,,,,,si
+p12,Alfajor tradicional,"Galletas de chocolate Con toques de zeste de naranja, rellenas de manjar tradicional y bañadas en chocalate bitter o blanco.",Peque-Dulces,img/productos/alfajortradicional.jpg,,Precio único,2000,,,,,si
+p13,Alfajor Maicena,"Galletas de maicenas rellenas de manjar Artesanal, cubiertas de coco rallado y espolvoreadas con azúcar flor.",Peque-Dulces,img/productos/alfajormaicena.jpg,,Precio único,1900,,,,,si
+p14,Alfajor Hojarasca,"Discos de hojarascas rellenas de manjar artesanal, cubiertas con coco rallado y espolvoreadas con azúcar flor.",Peque-Dulces,img/productos/alfajorhojarasca.jpg,,Precio único,1700,,,,,si
+p18,Pastelitos premium,"La combinación ideal para compartir: intensos brownies con manjar artesanal, suaves cheesecakes de vainilla y frambuesa, clásicos pies de limón natural y tradicionales suspiros limeños. Pastelería artesanal lista para regalar y disfrutar.",Dulce variedad,img/productos/pastelitospremium.jpg,Destacado,Precio único,28500,,,,,si
