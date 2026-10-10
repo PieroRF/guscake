@@ -379,6 +379,50 @@ h2{
   50%{box-shadow:0 0 16px rgba(217,169,79,0.55), 0 4px 16px rgba(217,169,79,0.40);}
 }
 
+/* ---------- AVISO "PRÓXIMAMENTE" (Cursos online) ---------- */
+.soon-modal{
+  position:fixed;
+  inset:0;
+  z-index:2000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(31,17,8,0.6);
+  backdrop-filter:blur(4px);
+  opacity:0;
+  visibility:hidden;
+  transition:opacity 0.3s var(--ease), visibility 0.3s var(--ease);
+}
+.soon-modal.open{opacity:1; visibility:visible;}
+.soon-modal-box{
+  width:100%;
+  max-width:360px;
+  text-align:center;
+  padding:32px 26px 26px;
+  border-radius:var(--radius);
+  background:var(--white);
+  border:1.5px solid var(--gold);
+  box-shadow:var(--shadow-navy);
+  transform:translateY(16px) scale(0.96);
+  transition:transform 0.35s var(--ease);
+}
+.soon-modal.open .soon-modal-box{transform:none;}
+.soon-modal-icon{font-size:2rem; display:block; margin-bottom:8px;}
+.soon-modal-title{
+  font-family:var(--font-display);
+  font-size:1.5rem;
+  color:var(--espresso);
+  margin:0 0 6px;
+}
+.soon-modal-text{
+  font-family:var(--font-mono);
+  font-size:1rem;
+  color:var(--accent);
+  letter-spacing:0.04em;
+  margin:0 0 20px;
+}
+
 .topbar-actions{
   display:flex;
   align-items:center;

@@ -59,6 +59,7 @@
     <nav class="nav">
       <a href="index.html#vitrina">Catálogo</a>
       <a href="index.html#nosotros">Historia</a>
+      <a href="#" class="js-soon" data-soon="Cursos online">Cursos online</a>
       <a href="index.html#pedidos">Encargos</a>
       <a href="index.html#ubicacion">Ubicación</a>
       <a href="mayoristas.html" class="nav-stack" aria-current="page">Precios<br>Mayoristas</a>
@@ -73,6 +74,7 @@
   <nav class="mobile-nav" id="mobileNav">
     <a href="index.html#vitrina">Catálogo</a>
     <a href="index.html#nosotros">Historia</a>
+    <a href="#" class="js-soon" data-soon="Cursos online">Cursos online</a>
     <a href="index.html#pedidos">Encargos</a>
     <a href="index.html#ubicacion">Ubicación</a>
     <a href="mayoristas.html" class="nav-stack" aria-current="page">Precios Mayoristas</a>
@@ -183,6 +185,36 @@
       navToggle.setAttribute("aria-expanded", "false");
     })
   );
+
+  // Aviso "Próximamente" (mismo comportamiento que la página principal)
+  (function initSoonLinks() {
+    let modal;
+    const close = () => modal && modal.classList.remove("open");
+    document.querySelectorAll(".js-soon").forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        if (!modal) {
+          modal = document.createElement("div");
+          modal.className = "soon-modal";
+          modal.innerHTML = `
+            <div class="soon-modal-box" role="dialog" aria-modal="true" aria-labelledby="soonTitle">
+              <span class="soon-modal-icon">✨</span>
+              <h3 id="soonTitle" class="soon-modal-title"></h3>
+              <p class="soon-modal-text">¡Próximamente!</p>
+              <button type="button" class="btn btn-primary soon-modal-close">Entendido</button>
+            </div>`;
+          document.body.appendChild(modal);
+          modal.addEventListener("click", (ev) => {
+            if (ev.target === modal || ev.target.closest(".soon-modal-close")) close();
+          });
+          document.addEventListener("keydown", (ev) => { if (ev.key === "Escape") close(); });
+        }
+        modal.querySelector(".soon-modal-title").textContent = link.dataset.soon || "";
+        modal.classList.add("open");
+        modal.querySelector(".soon-modal-close").focus();
+      });
+    });
+  })();
 
   // Transición animada al volver a otra página del sitio: la página actual
   // se desvanece antes de navegar y la siguiente entra con un fundido.

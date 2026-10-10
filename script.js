@@ -85,6 +85,12 @@ const PRODUCTS = [
     emoji: "🍰", img: "img/productos/cheseecakeframbuesa.jpg", category: "tartas"
   },
   {
+    id: "p19", name: "Mix de tartas",
+    desc: "Tartas, cheesecake, pie de limón, brownie y kuchen sureño. Especial para compartir.",
+    prices: [{ label: "Precio único", price: 25500 }],
+    emoji: "🍰", img: "img/hero-torta-3.jpg", category: "premium"
+  },
+  {
     id: "p11", name: "Barquillos (06 uds.)",
     desc: "Galleta fina, ligera y crujiente. Rellena de manjar artesanal.",
     prices: [{ label: "Precio único", price: 5500 }],
@@ -109,24 +115,6 @@ const PRODUCTS = [
     emoji: "🍪", img: "img/productos/alfajorhojarasca.jpg", category: "peque-dulces"
   },
   {
-    id: "p15", name: "Chocolate premium",
-    desc: "Bizcocho húmedo de chocolate, relleno de manjar artesanal y chocolate real. Un clásico intenso, perfecto para los amantes del chocolate.",
-    prices: [{ label: "Precio único", price: 16500 }],
-    emoji: "⭐", img: "img/productos/chocolatepremium.jpg", category: "premium"
-  },
-  {
-    id: "p16", name: "Frambuesa premium",
-    desc: "Fina selección de hojarascas, rellenas de manjar artesanal, crema batida y frambuesas naturales. Fresco, delicado y perfecto para sorprender en cualquier ocasión.",
-    prices: [{ label: "Precio único", price: 15500 }],
-    emoji: "⭐", img: "img/productos/frambuesapremium.jpg", category: "premium", tag: "Destacado"
-  },
-  {
-    id: "p17", name: "Carrot premium",
-    desc: "Bizcocho húmedo de zanahorias de la huerta, relleno de un exquisito frosting de queso crema y manjar artesanal. Suave, aromático y perfecto para acompañar con un buen café.",
-    prices: [{ label: "Precio único", price: 16500 }],
-    emoji: "⭐", img: "img/productos/carrotpremium.jpg", category: "premium"
-  },
-  {
     id: "p18", name: "Pastelitos premium",
     desc: "La combinación ideal para compartir: intensos brownies con manjar artesanal, suaves cheesecakes de vainilla y frambuesa, clásicos pies de limón natural y tradicionales suspiros limeños. Pastelería artesanal lista para regalar y disfrutar.",
     prices: [{ label: "Precio único", price: 28500 }],
@@ -138,7 +126,7 @@ const CATEGORY_LABELS = {
   tortas: "Tortas 🎂",
   tartas: "Tartas 🍰",
   "peque-dulces": "Peque-Dulces 🍪",
-  premium: "Premium",
+  premium: "Dulce variedad",
 };
 const CATEGORY_ORDER = ["premium", "tortas", "tartas", "peque-dulces"];
 
@@ -228,7 +216,7 @@ function renderGrid() {
       if (isClone) section.setAttribute("aria-hidden", "true");
       let titleClass = "product-section-title";
       if (isPremium) titleClass += " product-section-title--premium";
-      const titleContent = isPremium ? "💎 Premium 💎" : (CATEGORY_LABELS[cat] || cat);
+      const titleContent = isPremium ? "💎 Dulce variedad 💎" : (CATEGORY_LABELS[cat] || cat);
       section.innerHTML = `
         <h3 class="${titleClass}">
           ${titleContent}
@@ -728,6 +716,37 @@ navToggle.addEventListener("click", () => {
 mobileNav.querySelectorAll("a").forEach(link => {
   link.addEventListener("click", closeMobileNav);
 });
+
+// ---------- Aviso "Próximamente" (p. ej. pestaña Cursos online) ----------
+function initSoonLinks() {
+  let modal;
+  const close = () => modal && modal.classList.remove("open");
+  document.querySelectorAll(".js-soon").forEach(link => {
+    link.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (!modal) {
+        modal = document.createElement("div");
+        modal.className = "soon-modal";
+        modal.innerHTML = `
+          <div class="soon-modal-box" role="dialog" aria-modal="true" aria-labelledby="soonTitle">
+            <span class="soon-modal-icon">✨</span>
+            <h3 id="soonTitle" class="soon-modal-title"></h3>
+            <p class="soon-modal-text">¡Próximamente!</p>
+            <button type="button" class="btn btn-primary soon-modal-close">Entendido</button>
+          </div>`;
+        document.body.appendChild(modal);
+        modal.addEventListener("click", (ev) => {
+          if (ev.target === modal || ev.target.closest(".soon-modal-close")) close();
+        });
+        document.addEventListener("keydown", (ev) => { if (ev.key === "Escape") close(); });
+      }
+      modal.querySelector(".soon-modal-title").textContent = link.dataset.soon || "";
+      modal.classList.add("open");
+      modal.querySelector(".soon-modal-close").focus();
+    });
+  });
+}
+initSoonLinks();
 
 // ---------- Animaciones al hacer scroll ----------
 function initScrollReveal() {
