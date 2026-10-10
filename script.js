@@ -128,7 +128,7 @@ const CATEGORY_LABELS = {
   "peque-dulces": "Peque-Dulces 🍪",
   premium: "Dulce variedad",
 };
-const CATEGORY_ORDER = ["premium", "tortas", "tartas", "peque-dulces"];
+const CATEGORY_ORDER = ["tortas", "tartas", "premium", "peque-dulces"];
 
 // ---------- Productos desde Google Sheets ----------
 // Para editar productos y precios sin tocar código: pega aquí el enlace CSV
@@ -289,141 +289,157 @@ function cardHTML(p) {
 
 function renderGrid() {
   grid.innerHTML = "";
-  // Se dibuja el set de columnas dos veces: el segundo es una copia (is-clone)
-  // que permite que el deslizamiento automático sea infinito y sin cortes.
-  const buildSet = (isClone) => {
-    CATEGORY_ORDER.forEach(cat => {
-      // Dentro de cada columna, los productos van de menor a mayor precio
-      // (se usa el precio base, es decir la primera opción de cada uno).
-      const items = PRODUCTS.filter(p => p.category === cat)
-        .sort((a, b) => a.prices[0].price - b.prices[0].price);
-      const section = document.createElement("div");
-      section.className = "product-section" + (isClone ? " is-clone" : "");
-      if (isClone) section.setAttribute("aria-hidden", "true");
-      // Todos los títulos llevan la misma animación: el texto "late" y el
-      // emoji se balancea. "Dulce variedad" lleva un 💎 a cada lado.
-      const [, label, emoji] = (CATEGORY_LABELS[cat] || cat).match(/^(.*?)\s*(\p{Extended_Pictographic}*)$/u);
-      const text = `<span class="section-title-text">${label}</span>`;
-      const titleContent = cat === "premium"
-        ? `<span class="section-title-gem">💎</span> ${text} <span class="section-title-gem">💎</span>`
-        : `${text}${emoji ? ` <span class="section-title-gem">${emoji}</span>` : ""}`;
-      section.innerHTML = `
-        <h3 class="product-section-title">
-          ${titleContent}
-        </h3>
-        <div class="product-grid">
-          ${items.length
-            ? items.map(cardHTML).join("")
-            : `<p class="product-empty">Muy pronto vamos a<br>sumar productos acá.</p>`}
-        </div>
-      `;
-      grid.appendChild(section);
-    });
-  };
-  buildSet(false);
-  buildSet(true);
+  // Una fila por categoría: el título centrado arriba y los productos
+  // desplazándose hacia los lados (ver initProductRows).
+  CATEGORY_ORDER.forEach(cat => {
+    // Dentro de cada fila, los productos van de menor a mayor precio
+    // (se usa el precio base, es decir la primera opción de cada uno).
+    const items = PRODUCTS.filter(p => p.category === cat)
+      .sort((a, b) => a.prices[0].price - b.prices[0].price);
+    const section = document.createElement("div");
+    section.className = "product-section";
+    // Todos los títulos llevan la misma animación: el texto "late" y el
+    // emoji se balancea. "Dulce variedad" lleva un 💎 a cada lado.
+    const [, label, emoji] = (CATEGORY_LABELS[cat] || cat).match(/^(.*?)\s*(\p{Extended_Pictographic}*)$/u);
+    const text = `<span class="section-title-text">${label}</span>`;
+    const titleContent = cat === "premium"
+      ? `<span class="section-title-gem">💎</span> ${text} <span class="section-title-gem">💎</span>`
+      : `${text}${emoji ? ` <span class="section-title-gem">${emoji}</span>` : ""}`;
+    section.innerHTML = `
+      <h3 class="product-section-title">
+        <span class="section-title-pill">${titleContent}</span>
+      </h3>
+      <div class="product-grid">
+        ${items.length
+          ? items.map(cardHTML).join("")
+          : `<p class="product-empty">Muy pronto vamos a<br>sumar productos acá.</p>`}
+      </div>
+    `;
+    grid.appendChild(section);
+  });
 }
 
-// ---------- Carrusel automático de columnas de productos ----------
-// Avance por pasos: la vitrina descansa mostrando 4 columnas y cada cierto
-// rato desliza suavemente hasta la siguiente, en bucle infinito (el set de
-// columnas está duplicado, así que el salto de retorno es invisible).
-// Las flechas laterales fuerzan ese mismo deslizamiento al instante.
-function initProductCarousel() {
+// ---------- Filas de productos con desplazamiento automático ----------
+// Todas las filas se deslizan juntas, de forma continua, hacia la izquierda.
+// Comparten una misma posición, así que las tarjetas de todas las filas
+// quedan siempre alineadas en columnas. Para que el bucle sea infinito, cada
+// fila repite sus productos (copias con aria-hidden) y al completar una
+// vuelta vuelve al inicio sin que se note. Se pausa al pasar el mouse o tocar
+// la vitrina, y las flechas avanzan o retroceden un producto en todas a la vez.
+function initProductRows() {
   const btnLeft = document.getElementById("scrollLeft");
   const btnRight = document.getElementById("scrollRight");
-  if (!grid || !btnLeft || !btnRight) return;
-
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const COLS = CATEGORY_ORDER.length;  // columnas reales por set
-  const DWELL = 2800;                  // ms quieto entre avances automáticos
-  const GLIDE = reduceMotion ? 0 : 820; // ms que dura pasar de una columna a la siguiente
-
+  const SPEED = 40;   // px por segundo del desplazamiento automático
+  const NUDGE = 450;  // ms que dura el avance de una flecha
   const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
-  // Ancho de una columna incluyendo el gap.
-  function columnWidth() {
-    const section = grid.querySelector(".product-section");
-    if (!section) return grid.clientWidth || 1;
-    const gap = parseFloat(getComputedStyle(grid).columnGap) || 32;
-    return section.getBoundingClientRect().width + gap;
-  }
+  const rows = [...grid.querySelectorAll(".product-grid")].map((track) => ({
+    track,
+    originals: [...track.querySelectorAll(".product-card")],
+    setW: 0,
+  }));
 
-  // Posición de scroll para un índice de columna dado, ya envuelta al primer set.
-  function xForIndex(i) {
-    const cw = columnWidth();
-    const span = COLS * cw;
-    return (((i * cw) % span) + span) % span;
-  }
-
-  let index = 0;        // columna asentada (entero)
-  let curIndex = 0;     // posición actual (fraccionaria mientras desliza)
-  let from = 0, to = 0, glideStart = 0;
-  let dwellUntil = 0;
+  let step = 0;          // ancho de una tarjeta + separación (igual en todas las filas)
+  let pos = 0;           // posición compartida por todas las filas
+  let nudge = null;
   let paused = false;
-  let rafId = null;
+  let resumeAt = 0;
+  let applying = false;  // evita confundir nuestro propio scroll con el del usuario
 
-  function beginGlide(target, now) {
-    from = curIndex;
-    to = target;
-    glideStart = now || performance.now();
+  // Mide las filas y agrega las copias justas para que el bucle no se corte.
+  function layout() {
+    rows.forEach((row) => {
+      const { track, originals } = row;
+      track.querySelectorAll(".is-clone").forEach((el) => el.remove());
+      row.setW = 0;
+      if (!originals.length) return;
+      const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
+      step = originals[0].getBoundingClientRect().width + gap;
+      row.setW = step * originals.length;
+      // Copias suficientes para cubrir una vuelta completa + una pantalla.
+      const copies = Math.ceil((row.setW + track.clientWidth) / row.setW);
+      for (let c = 0; c < copies; c++) {
+        originals.forEach((el) => {
+          const clone = el.cloneNode(true);
+          clone.classList.add("is-clone");
+          clone.setAttribute("aria-hidden", "true");
+          clone.querySelectorAll("button").forEach((b) => b.setAttribute("tabindex", "-1"));
+          track.appendChild(clone);
+        });
+      }
+    });
+    apply();
   }
 
+  function apply() {
+    applying = true;
+    rows.forEach((row) => {
+      if (row.setW) row.track.scrollLeft = ((pos % row.setW) + row.setW) % row.setW;
+    });
+    requestAnimationFrame(() => { applying = false; });
+  }
+
+  // Si la persona desliza una fila a mano, todas siguen desde ahí.
+  rows.forEach((row) => {
+    row.track.addEventListener("scroll", () => {
+      if (applying || nudge || !row.setW) return;
+      const current = ((pos % row.setW) + row.setW) % row.setW;
+      const delta = row.track.scrollLeft - current;
+      if (Math.abs(delta) > 2) {
+        pos += delta;
+        resumeAt = performance.now() + 2500;
+        apply();
+      }
+    }, { passive: true });
+  });
+
+  function nudgeBy(dir) {
+    if (!step) return;
+    const from = nudge ? nudge.to : pos;
+    nudge = { from: pos, to: Math.round(from / step) * step + step * dir, start: performance.now() };
+    resumeAt = performance.now() + 2500;
+  }
+  if (btnLeft) btnLeft.addEventListener("click", () => nudgeBy(-1));
+  if (btnRight) btnRight.addEventListener("click", () => nudgeBy(1));
+
+  grid.addEventListener("mouseenter", () => { paused = true; });
+  grid.addEventListener("mouseleave", () => { paused = false; resumeAt = performance.now() + 400; });
+  grid.addEventListener("touchstart", () => { paused = true; }, { passive: true });
+  grid.addEventListener("touchend", () => { paused = false; resumeAt = performance.now() + 2500; }, { passive: true });
+
+  let last = performance.now();
+  let rafId = null;
   function frame(now) {
     rafId = requestAnimationFrame(frame);
-
-    if (glideStart) {
-      const p = GLIDE ? Math.min(1, (now - glideStart) / GLIDE) : 1;
-      curIndex = from + (to - from) * easeInOut(p);
-      grid.scrollLeft = xForIndex(curIndex);
-      if (p >= 1) {
-        glideStart = 0;
-        index = ((Math.round(to) % COLS) + COLS) % COLS;
-        curIndex = index;
-        grid.scrollLeft = xForIndex(curIndex);
-        dwellUntil = now + DWELL;
-      }
-    } else if (!paused && !reduceMotion && now >= dwellUntil) {
-      beginGlide(index + 1, now);
+    const dt = Math.min(now - last, 100) / 1000;
+    last = now;
+    if (nudge) {
+      const p = Math.min(1, (now - nudge.start) / (reduceMotion ? 1 : NUDGE));
+      pos = nudge.from + (nudge.to - nudge.from) * easeInOut(p);
+      if (p >= 1) nudge = null;
+    } else if (!reduceMotion && !paused && now >= resumeAt) {
+      pos += SPEED * dt;
+    } else {
+      return;
     }
+    apply();
   }
-
-  // Avance manual: responde siempre, aunque el auto esté en pausa o a mitad de camino.
-  function nudge(dir) {
-    const base = glideStart ? Math.round(curIndex) : index;
-    beginGlide(base + dir, performance.now());
-  }
-  btnLeft.addEventListener("click", () => nudge(-1));
-  btnRight.addEventListener("click", () => nudge(1));
-
-  // El usuario arrastra / usa la rueda: seguimos su posición y aplazamos el auto.
-  grid.addEventListener("scroll", () => {
-    if (glideStart) return;
-    if (Math.abs(grid.scrollLeft - xForIndex(curIndex)) > 2) {
-      const raw = ((grid.scrollLeft / columnWidth()) % COLS + COLS) % COLS;
-      curIndex = raw;
-      index = Math.round(raw) % COLS;
-      dwellUntil = performance.now() + DWELL * 2;
-    }
-  }, { passive: true });
-
-  const pause = () => { paused = true; };
-  const resume = (delay) => { paused = false; dwellUntil = performance.now() + (delay || 0); };
-  grid.addEventListener("mouseenter", pause);
-  grid.addEventListener("mouseleave", () => resume(500));
-  grid.addEventListener("touchstart", pause, { passive: true });
-  grid.addEventListener("touchend", () => resume(DWELL), { passive: true });
-
   function play() {
-    if (rafId === null) { dwellUntil = performance.now() + DWELL; rafId = requestAnimationFrame(frame); }
+    if (rafId === null) { last = performance.now(); rafId = requestAnimationFrame(frame); }
   }
   function halt() {
     if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
   }
-  document.addEventListener("visibilitychange", () => (document.hidden ? halt() : play()));
-  window.addEventListener("resize", () => { if (!glideStart) grid.scrollLeft = xForIndex(curIndex); });
 
-  grid.scrollLeft = 0;
+  let resizeTimer;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(layout, 200);
+  });
+  document.addEventListener("visibilitychange", () => (document.hidden ? halt() : play()));
+
+  layout();
   play();
 }
 
@@ -710,14 +726,14 @@ const HERO_SLIDES = [
   },
   {
     img: "img/hero-torta-2.jpg",
-    eyebrow: "De todo un poco",
+    eyebrow: "Bocados premium",
     titleHTML: `Mini pastelitos<br><span class="accent">Bocados elegantes</span>`,
     text: "Selección dulce para regalar momentos inolvidables: pie limón, suspiro limeño, cheesecake y brownie.",
     caption: "Ideal para compartir",
   },
   {
     img: "img/hero-torta-3.jpg",
-    eyebrow: "Hecho a mano, sin atajos",
+    eyebrow: "Ideal para compartir",
     titleHTML: `Mix de tartas<br><span class="accent">Equilibrio perfecto</span>`,
     text: "Tartas, cheesecake, pie de limón, brownie y kuchen sureño. Especial para compartir.",
     caption: "Todo en un solo pedido",
@@ -1065,5 +1081,5 @@ initHeroSlider();
 // La vitrina espera a la planilla de productos (si hay una configurada).
 loadProductsFromSheet().finally(() => {
   renderGrid();
-  initProductCarousel();
+  initProductRows();
 });

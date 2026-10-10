@@ -1014,65 +1014,83 @@ html:not(.no-splash) .hero-in{
 .scroll-arrow:active{
   transform:scale(0.95);
 }
-/* ---------- COLUMNAS DE CATEGORÍAS (carrusel horizontal con deslizamiento automático) ---------- */
+/* ---------- FILAS DE CATEGORÍAS (título centrado arriba, productos desplazándose hacia los lados) ---------- */
 .product-columns{
   display:flex;
-  align-items:flex-start; /* las columnas no se estiran a la más alta */
-  gap:32px;
-  overflow-x:auto;
-  padding:4px 0 10px;
-  scrollbar-width:none;
-  /* el deslizamiento lo anima el JS por pasos; nada de scroll-behavior:smooth
-     para que no se duplique la animación al fijar scrollLeft cada frame */
-  /* Suavizado tenue de los bordes: solo quita el corte seco, sin comerse la columna.
-     Un pelo más ancho a la derecha, que es por donde asoma la columna nueva. */
-  --fade: linear-gradient(to right,
-    transparent 0,
-    #000 22px,
-    #000 calc(100% - 56px),
-    rgba(0,0,0,0.15) calc(100% - 20px),
-    transparent 100%);
-  -webkit-mask-image:var(--fade);
-          mask-image:var(--fade);
+  flex-direction:column;
+  gap:40px;
 }
-.product-columns::-webkit-scrollbar{
-  display:none;
-}
-/* 4 columnas visibles de inmediato + una 5ª asomando que va cambiando en la transición. */
 .product-section{
-  flex:0 0 calc((100% - 4 * 32px) / 4.2);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
   min-width:0;
 }
 .product-grid{
-  display:grid;
-  grid-template-columns:1fr;
+  display:flex;
   gap:24px;
+  width:100%;
+  overflow-x:auto;
+  /* aire arriba y abajo para que la tarjeta pueda elevarse y mostrar su sombra */
+  padding:10px 0 18px;
+  scrollbar-width:none;
+  /* el desplazamiento lo anima el JS cada frame; nada de scroll-behavior:smooth */
+  /* Suavizado tenue de los bordes para que los productos entren y salgan sin corte seco */
+  --fade: linear-gradient(to right,
+    transparent 0, #000 28px, #000 calc(100% - 56px), transparent 100%);
+  -webkit-mask-image:var(--fade);
+          mask-image:var(--fade);
+}
+.product-grid::-webkit-scrollbar{
+  display:none;
+}
+/* Todas las tarjetas del mismo ancho: así quedan alineadas en columnas entre filas */
+.product-grid > .product-card{
+  flex:0 0 260px;
+}
+.product-grid > .product-empty{
+  padding:20px 0;
 }
 
-@media (max-width:1000px){
-  .product-section{flex-basis:calc((100% - 2 * 32px) / 2.3);}
-}
 @media (max-width:600px){
-  .product-section{flex-basis:calc((100% - 32px) / 1.15);}
-  /* en móvil la vitrina es angosta: se estrecha la disolución para no comerse la columna */
-  .product-columns{
+  .product-columns{gap:32px;}
+  .product-grid{
+    gap:16px;
     --fade: linear-gradient(to right,
-      transparent 0, #000 7%, #000 93%, transparent 100%);
+      transparent 0, #000 5%, #000 92%, transparent 100%);
   }
+  .product-grid > .product-card{flex-basis:min(70vw, 240px);}
 }
 
 /* ---------- SECCIONES AGRUPADAS DE PRODUCTOS ---------- */
+/* Título de cada fila: el nombre va en una cápsula clara con borde dorado y,
+   a cada lado, una línea dorada que se extiende hacia afuera y se desvanece. */
 .product-section-title{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:20px;
+  width:100%;
+  max-width:760px;
+  margin:0 auto 14px;
   font-family:var(--font-display);
   font-style:italic;
   font-weight:600;
-  font-size:1.35rem;
+  font-size:1.05rem;
   color:var(--espresso);
-  display:inline-block;
-  margin:0 0 22px;
-  padding-bottom:8px;
-  position:relative;
   animation:sectionIn 0.5s var(--ease) both;
+}
+.section-title-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  flex-shrink:0;
+  padding:5px 18px 6px;
+  border-radius:999px;
+  background:linear-gradient(180deg, var(--white) 0%, #F7EBC8 100%);
+  border:1.5px solid var(--gold);
+  box-shadow:0 6px 18px rgba(46,29,20,0.14), inset 0 1px 0 rgba(255,255,255,0.8);
+  white-space:nowrap;
 }
 /* Texto del título que "late" suavemente */
 .section-title-text{
@@ -1082,24 +1100,37 @@ html:not(.no-splash) .hero-in{
 /* Emojis que se balancean y destellan (los 💎 de Dulce variedad, desfasados) */
 .section-title-gem{
   display:inline-block;
+  font-style:normal;
   animation:premiumSwing 2.4s ease-in-out infinite;
 }
 .section-title-gem:last-child{animation-delay:-1.2s;}
-/* Línea dorada que se dibuja desde el centro hacia los lados */
+/* Líneas doradas a los lados, que crecen desde la cápsula hacia afuera */
+.product-section-title::before,
 .product-section-title::after{
   content:"";
-  position:absolute;
-  left:0; right:0; bottom:0;
+  flex:1;
   height:2px;
-  background:var(--gold);
-  box-shadow:0 0 10px 2px rgba(217,169,79,0.6);
-  transform-origin:center;
+  border-radius:2px;
+  box-shadow:0 0 8px rgba(217,169,79,0.45);
   animation:premiumLine 2.4s ease-in-out infinite;
+}
+.product-section-title::before{
+  background:linear-gradient(to left, var(--gold-deep), rgba(185,137,53,0));
+  transform-origin:right center;
+}
+.product-section-title::after{
+  background:linear-gradient(to right, var(--gold-deep), rgba(185,137,53,0));
+  transform-origin:left center;
+}
+@media (max-width:600px){
+  .product-section-title{font-size:0.95rem; gap:10px;}
+  .section-title-pill{padding:4px 14px 5px; gap:6px;}
 }
 @media (prefers-reduced-motion: reduce){
   .product-tag--soon,
   .section-title-text,
   .section-title-gem,
+  .product-section-title::before,
   .product-section-title::after{animation:none;}
 }
 @keyframes premiumBeat{
@@ -1112,9 +1143,9 @@ html:not(.no-splash) .hero-in{
   50%{transform:rotate(14deg) scale(1.15); filter:brightness(1.35) drop-shadow(0 0 6px rgba(217,169,79,0.8));}
 }
 @keyframes premiumLine{
-  0%{transform:scaleX(0); opacity:0.4;}
+  0%{transform:scaleX(0.35); opacity:0.5;}
   45%, 70%{transform:scaleX(1); opacity:1;}
-  100%{transform:scaleX(0); opacity:0.4;}
+  100%{transform:scaleX(0.35); opacity:0.5;}
 }
 @keyframes sectionIn{
   from{opacity:0; transform:translateY(14px);}
@@ -1307,8 +1338,8 @@ html:not(.no-splash) .hero-in{
   margin:0;
   width:100%;
   text-align:center;
-  /* el bloque nombre+descripción flota al centro vertical del espacio libre */
-  margin-top:auto;
+  /* el nombre parte siempre arriba, a la misma altura en todas las tarjetas */
+  margin-top:0;
   /* tope de 2 líneas por si un nombre es muy largo */
   display:-webkit-box;
   -webkit-box-orient:vertical;
