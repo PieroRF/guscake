@@ -302,8 +302,9 @@ h2{
   border-radius:50%;
   object-fit:cover;
   object-position:center 38%;
-  border:1.5px solid var(--line-navy);
+  border:1.5px solid var(--gold);
   background:var(--navy-deep);
+  box-shadow:0 0 10px rgba(244,194,74,0.55);
 }
 .brand-text{
   display:flex;
@@ -1026,26 +1027,32 @@ html:not(.no-splash) .hero-in{
   align-items:center;
   min-width:0;
 }
+/* Ventana de cada fila: recorta la cinta de productos que se mueve por dentro */
 .product-grid{
-  display:flex;
-  gap:24px;
   width:100%;
-  overflow-x:auto;
+  overflow:hidden;
   /* aire arriba y abajo para que la tarjeta pueda elevarse y mostrar su sombra */
   padding:10px 0 18px;
-  scrollbar-width:none;
-  /* el desplazamiento lo anima el JS cada frame; nada de scroll-behavior:smooth */
+  /* el dedo puede seguir bajando por la página; el gesto horizontal lo maneja el JS */
+  touch-action:pan-y;
   /* Suavizado tenue de los bordes para que los productos entren y salgan sin corte seco */
   --fade: linear-gradient(to right,
-    transparent 0, #000 28px, #000 calc(100% - 56px), transparent 100%);
+    transparent 0, #000 28px, #000 calc(100% - 28px), transparent 100%);
   -webkit-mask-image:var(--fade);
           mask-image:var(--fade);
 }
-.product-grid::-webkit-scrollbar{
-  display:none;
+/* Cinta de productos: el JS la desplaza con transform (fluido también en celular) */
+.product-track{
+  display:flex;
+  gap:24px;
+  width:max-content;
+  will-change:transform;
 }
-/* Todas las tarjetas del mismo ancho: así quedan alineadas en columnas entre filas */
-.product-grid > .product-card{
+.product-grid.is-dragging{cursor:grabbing; user-select:none;}
+.product-track img{-webkit-user-drag:none; user-select:none;}
+.product-grid.is-dragging .product-card{pointer-events:none;}
+/* Todas las tarjetas del mismo ancho */
+.product-track > .product-card{
   flex:0 0 260px;
 }
 .product-grid > .product-empty{
@@ -1054,12 +1061,12 @@ html:not(.no-splash) .hero-in{
 
 @media (max-width:600px){
   .product-columns{gap:32px;}
+  .product-track{gap:16px;}
   .product-grid{
-    gap:16px;
     --fade: linear-gradient(to right,
-      transparent 0, #000 5%, #000 92%, transparent 100%);
+      transparent 0, #000 5%, #000 95%, transparent 100%);
   }
-  .product-grid > .product-card{flex-basis:min(70vw, 240px);}
+  .product-track > .product-card{flex-basis:min(70vw, 240px);}
 }
 
 /* ---------- SECCIONES AGRUPADAS DE PRODUCTOS ---------- */
@@ -1320,6 +1327,37 @@ html:not(.no-splash) .hero-in{
   background:#c62828;
   color:#ffffff;
   box-shadow:0 4px 12px rgba(198,40,40,0.4);
+}
+/* Variante "Nuevo": naranjo intenso que late, brilla y lleva un destello
+   que la cruza, para que se note apenas aparece la tarjeta. */
+.product-tag--nuevo{
+  overflow:hidden;
+  background:linear-gradient(135deg, #FF7A3D 0%, #E2452B 55%, #B8321C 100%);
+  color:#ffffff;
+  letter-spacing:0.08em;
+  transform-origin:left center;
+  animation:nuevoPulse 1.6s ease-in-out infinite;
+}
+.product-tag--nuevo::after{
+  content:"";
+  position:absolute;
+  top:0; bottom:0;
+  left:-60%;
+  width:45%;
+  background:linear-gradient(100deg, transparent 0%, rgba(255,255,255,0.75) 50%, transparent 100%);
+  transform:skewX(-20deg);
+  animation:nuevoShine 2.4s ease-in-out infinite;
+}
+@keyframes nuevoPulse{
+  0%, 100%{transform:scale(1); box-shadow:0 0 0 0 rgba(226,69,43,0.55), 0 4px 12px rgba(226,69,43,0.35);}
+  50%{transform:scale(1.1); box-shadow:0 0 0 6px rgba(226,69,43,0), 0 6px 16px rgba(226,69,43,0.5);}
+}
+@keyframes nuevoShine{
+  0%{left:-60%;}
+  55%, 100%{left:130%;}
+}
+@media (prefers-reduced-motion: reduce){
+  .product-tag--nuevo, .product-tag--nuevo::after{animation:none;}
 }
 .product-body{
   padding:18px 18px 20px;

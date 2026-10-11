@@ -180,6 +180,15 @@ function productsFromCSV(text) {
   const get = (r, n) => (idx[n] >= 0 ? (r[idx[n]] || "").trim() : "");
   const toPrice = (v) => Number(String(v).replace(/[^\d]/g, ""));
 
+  // Si dos filas tienen el mismo id (p. ej. al copiar una fila), se les da
+  // uno distinto: el carrito y la foto ampliada buscan los productos por id.
+  const usedIds = new Set();
+  const uniqueId = (id) => {
+    let out = id, n = 2;
+    while (usedIds.has(out)) out = `${id}-${n++}`;
+    usedIds.add(out);
+    return out;
+  };
   return rows.map((r, i) => {
     const category = SHEET_CATEGORIES[get(r, "categoria").toLowerCase()];
     const prices = [1, 2, 3]
@@ -189,7 +198,7 @@ function productsFromCSV(text) {
     if (!name || !category || !prices.length || /^no$/i.test(get(r, "visible"))) return null;
     const tag = get(r, "etiqueta");
     return {
-      id: get(r, "id") || `s${i + 1}`,
+      id: uniqueId(get(r, "id") || `s${i + 1}`),
       name,
       desc: get(r, "descripcion"),
       prices,
@@ -198,6 +207,7 @@ function productsFromCSV(text) {
       category,
       ...(tag && { tag }),
       ...(/^agotado$/i.test(tag) && { tagVariant: "agotado" }),
+      ...(/^nuevo$/i.test(tag) && { tagVariant: "nuevo" }),
     };
   }).filter(Boolean);
 }
@@ -311,7 +321,7 @@ function renderGrid() {
       </h3>
       <div class="product-grid">
         ${items.length
-          ? items.map(cardHTML).join("")
+          ? `<div class="product-track">${items.map(cardHTML).join("")}</div>`
           : `<p class="product-empty">Muy pronto vamos a<br>sumar productos acá.</p>`}
       </div>
     `;
@@ -320,45 +330,51 @@ function renderGrid() {
 }
 
 // ---------- Filas de productos con desplazamiento automático ----------
-// Todas las filas se deslizan juntas, de forma continua, hacia la izquierda.
-// Comparten una misma posición, así que las tarjetas de todas las filas
-// quedan siempre alineadas en columnas. Para que el bucle sea infinito, cada
-// fila repite sus productos (copias con aria-hidden) y al completar una
-// vuelta vuelve al inicio sin que se note. Se pausa al pasar el mouse o tocar
-// la vitrina, y las flechas avanzan o retroceden un producto en todas a la vez.
+// Cada fila se desliza sola y de forma continua, alternando el sentido: la
+// primera de izquierda a derecha, la segunda de derecha a izquierda, etc.
+// El movimiento se hace con transform (no con el scroll nativo), así que en
+// el celular no hay saltos al deslizar rápido: el arrastre con el dedo y la
+// inercia al soltar los calcula este mismo código. Para que el bucle sea
+// infinito, cada fila repite sus productos (copias con aria-hidden).
 function initProductRows() {
   const btnLeft = document.getElementById("scrollLeft");
   const btnRight = document.getElementById("scrollRight");
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const SPEED = 40;   // px por segundo del desplazamiento automático
-  const NUDGE = 450;  // ms que dura el avance de una flecha
+  const SPEED = 40;        // px por segundo del desplazamiento automático
+  const NUDGE = 450;       // ms que dura el avance de una flecha
+  const FRICTION = 4;      // qué tan rápido se frena la inercia al soltar
+  const RESUME = 2000;     // ms de espera antes de retomar el auto tras tocar
+  const DRAG_START = 8;    // px que hay que mover el dedo para empezar a arrastrar
   const easeInOut = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
 
-  const rows = [...grid.querySelectorAll(".product-grid")].map((track) => ({
+  // pos = cuánto se ha corrido el contenido hacia la izquierda.
+  // dir = +1 avanza hacia la izquierda (derecha → izquierda), -1 al revés.
+  const rows = [...grid.querySelectorAll(".product-track")].map((track, i) => ({
     track,
+    viewport: track.parentElement,
     originals: [...track.querySelectorAll(".product-card")],
+    dir: i % 2 === 0 ? -1 : 1,
     setW: 0,
+    pos: 0,
+    vel: 0,          // velocidad de inercia (px/s) tras soltar el dedo
+    nudge: null,
+    hover: false,
+    drag: null,
+    suppressClick: false,
+    resumeAt: 0,
   }));
 
-  let step = 0;          // ancho de una tarjeta + separación (igual en todas las filas)
-  let pos = 0;           // posición compartida por todas las filas
-  let nudge = null;
-  let paused = false;
-  let resumeAt = 0;
-  let applying = false;  // evita confundir nuestro propio scroll con el del usuario
+  let step = 0; // ancho de una tarjeta + separación
 
   // Mide las filas y agrega las copias justas para que el bucle no se corte.
   function layout() {
     rows.forEach((row) => {
-      const { track, originals } = row;
+      const { track, viewport, originals } = row;
       track.querySelectorAll(".is-clone").forEach((el) => el.remove());
-      row.setW = 0;
-      if (!originals.length) return;
       const gap = parseFloat(getComputedStyle(track).columnGap) || 0;
       step = originals[0].getBoundingClientRect().width + gap;
       row.setW = step * originals.length;
-      // Copias suficientes para cubrir una vuelta completa + una pantalla.
-      const copies = Math.ceil((row.setW + track.clientWidth) / row.setW);
+      const copies = Math.ceil((row.setW + viewport.clientWidth) / row.setW);
       for (let c = 0; c < copies; c++) {
         originals.forEach((el) => {
           const clone = el.cloneNode(true);
@@ -368,45 +384,99 @@ function initProductRows() {
           track.appendChild(clone);
         });
       }
+      paint(row);
     });
-    apply();
   }
 
-  function apply() {
-    applying = true;
-    rows.forEach((row) => {
-      if (row.setW) row.track.scrollLeft = ((pos % row.setW) + row.setW) % row.setW;
-    });
-    requestAnimationFrame(() => { applying = false; });
+  function paint(row) {
+    if (!row.setW) return;
+    const x = ((row.pos % row.setW) + row.setW) % row.setW;
+    row.track.style.transform = `translate3d(${-x}px, 0, 0)`;
   }
 
-  // Si la persona desliza una fila a mano, todas siguen desde ahí.
+  // ---- Arrastre con el dedo (y con el mouse) + inercia ----
   rows.forEach((row) => {
-    row.track.addEventListener("scroll", () => {
-      if (applying || nudge || !row.setW) return;
-      const current = ((pos % row.setW) + row.setW) % row.setW;
-      const delta = row.track.scrollLeft - current;
-      if (Math.abs(delta) > 2) {
-        pos += delta;
-        resumeAt = performance.now() + 2500;
-        apply();
+    const { viewport } = row;
+
+    viewport.addEventListener("pointerdown", (e) => {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      row.drag = { id: e.pointerId, x0: e.clientX, y0: e.clientY, pos0: row.pos, active: false,
+                   lastX: e.clientX, lastT: performance.now(), v: 0 };
+      row.vel = 0;
+      row.nudge = null;
+    });
+
+    viewport.addEventListener("pointermove", (e) => {
+      const d = row.drag;
+      if (!d || d.id !== e.pointerId) return;
+      const dx = e.clientX - d.x0;
+      const dy = e.clientY - d.y0;
+      if (!d.active) {
+        // Movimiento vertical: es la persona bajando por la página, se suelta la fila.
+        if (Math.abs(dy) > DRAG_START && Math.abs(dy) > Math.abs(dx)) { row.drag = null; return; }
+        if (Math.abs(dx) < DRAG_START) return;
+        d.active = true;
+        try { viewport.setPointerCapture(e.pointerId); } catch (_) { /* puntero ya liberado */ }
+        viewport.classList.add("is-dragging");
       }
-    }, { passive: true });
+      const now = performance.now();
+      const dt = Math.max(1, now - d.lastT);
+      d.v = 0.8 * ((d.lastX - e.clientX) / dt * 1000) + 0.2 * d.v; // px/s, suavizado
+      d.lastX = e.clientX;
+      d.lastT = now;
+      row.pos = d.pos0 - dx;
+      paint(row);
+    });
+
+    const end = (e) => {
+      const d = row.drag;
+      if (!d || d.id !== e.pointerId) return;
+      row.drag = null;
+      row.resumeAt = performance.now() + RESUME;
+      if (!d.active) return;
+      viewport.classList.remove("is-dragging");
+      // Si el dedo se detuvo antes de soltar, no hay inercia.
+      row.vel = performance.now() - d.lastT > 80 ? 0 : Math.max(-3000, Math.min(3000, d.v));
+      // Evita que soltar después de arrastrar cuente como clic en una tarjeta.
+      row.suppressClick = true;
+      setTimeout(() => { row.suppressClick = false; }, 0);
+    };
+    viewport.addEventListener("pointerup", end);
+    viewport.addEventListener("pointercancel", end);
+    // Sin esto, arrastrar con el mouse sobre una foto la "levanta" como imagen.
+    viewport.addEventListener("dragstart", (e) => e.preventDefault());
+    viewport.addEventListener("click", (e) => {
+      if (row.suppressClick) { e.stopPropagation(); e.preventDefault(); }
+    }, true);
+
+    // Trackpad: deslizar con dos dedos hacia los lados mueve la fila.
+    viewport.addEventListener("wheel", (e) => {
+      if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+      e.preventDefault();
+      row.pos += e.deltaX;
+      row.vel = 0;
+      row.nudge = null;
+      row.resumeAt = performance.now() + RESUME;
+      paint(row);
+    }, { passive: false });
+
+    viewport.addEventListener("mouseenter", () => { row.hover = true; });
+    viewport.addEventListener("mouseleave", () => { row.hover = false; row.resumeAt = performance.now() + 400; });
   });
 
-  function nudgeBy(dir) {
+  // Flechas: › corre todas las filas un producto hacia la izquierda, ‹ al revés.
+  function nudgeAll(sign) {
     if (!step) return;
-    const from = nudge ? nudge.to : pos;
-    nudge = { from: pos, to: Math.round(from / step) * step + step * dir, start: performance.now() };
-    resumeAt = performance.now() + 2500;
+    const now = performance.now();
+    rows.forEach((row) => {
+      const base = row.nudge ? row.nudge.to : row.pos;
+      row.vel = 0;
+      row.nudge = { from: row.pos, to: base + step * sign, start: now };
+      row.resumeAt = now + RESUME;
+    });
   }
-  if (btnLeft) btnLeft.addEventListener("click", () => nudgeBy(-1));
-  if (btnRight) btnRight.addEventListener("click", () => nudgeBy(1));
-
-  grid.addEventListener("mouseenter", () => { paused = true; });
-  grid.addEventListener("mouseleave", () => { paused = false; resumeAt = performance.now() + 400; });
-  grid.addEventListener("touchstart", () => { paused = true; }, { passive: true });
-  grid.addEventListener("touchend", () => { paused = false; resumeAt = performance.now() + 2500; }, { passive: true });
+  if (btnLeft) btnLeft.addEventListener("click", () => nudgeAll(-1));
+  if (btnRight) btnRight.addEventListener("click", () => nudgeAll(1));
 
   let last = performance.now();
   let rafId = null;
@@ -414,16 +484,25 @@ function initProductRows() {
     rafId = requestAnimationFrame(frame);
     const dt = Math.min(now - last, 100) / 1000;
     last = now;
-    if (nudge) {
-      const p = Math.min(1, (now - nudge.start) / (reduceMotion ? 1 : NUDGE));
-      pos = nudge.from + (nudge.to - nudge.from) * easeInOut(p);
-      if (p >= 1) nudge = null;
-    } else if (!reduceMotion && !paused && now >= resumeAt) {
-      pos += SPEED * dt;
-    } else {
-      return;
-    }
-    apply();
+    rows.forEach((row) => {
+      if (!row.setW || (row.drag && row.drag.active)) return;
+      if (row.nudge) {
+        const p = Math.min(1, (now - row.nudge.start) / (reduceMotion ? 1 : NUDGE));
+        row.pos = row.nudge.from + (row.nudge.to - row.nudge.from) * easeInOut(p);
+        if (p >= 1) row.nudge = null;
+      } else if (Math.abs(row.vel) > 5) {
+        row.pos += row.vel * dt;
+        row.vel *= Math.exp(-FRICTION * dt);
+      } else if (!reduceMotion && !row.hover && !row.drag && now >= row.resumeAt) {
+        row.vel = 0;
+        row.pos += SPEED * row.dir * dt;
+      } else {
+        return;
+      }
+      // Mantiene pos acotado para no perder precisión con el tiempo.
+      if (Math.abs(row.pos) > row.setW * 1000) row.pos %= row.setW;
+      paint(row);
+    });
   }
   function play() {
     if (rafId === null) { last = performance.now(); rafId = requestAnimationFrame(frame); }
