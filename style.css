@@ -1104,7 +1104,7 @@ html:not(.no-splash) .hero-in{
   display:inline-block;
   animation:premiumBeat 2.4s ease-in-out infinite;
 }
-/* Emojis que se balancean y destellan (los 💎 de Dulce variedad, desfasados) */
+/* Emojis que se balancean y destellan (los dulces de Dulce variedad, desfasados) */
 .section-title-gem{
   display:inline-block;
   font-style:normal;

@@ -309,11 +309,11 @@ function renderGrid() {
     const section = document.createElement("div");
     section.className = "product-section";
     // Todos los títulos llevan la misma animación: el texto "late" y el
-    // emoji se balancea. "Dulce variedad" lleva un 💎 a cada lado.
+    // emoji se balancea. "Dulce variedad" lleva un dulce a cada lado (🍭 y 🍬).
     const [, label, emoji] = (CATEGORY_LABELS[cat] || cat).match(/^(.*?)\s*(\p{Extended_Pictographic}*)$/u);
     const text = `<span class="section-title-text">${label}</span>`;
     const titleContent = cat === "premium"
-      ? `<span class="section-title-gem">💎</span> ${text} <span class="section-title-gem">💎</span>`
+      ? `<span class="section-title-gem">🍭</span> ${text} <span class="section-title-gem">🍬</span>`
       : `${text}${emoji ? ` <span class="section-title-gem">${emoji}</span>` : ""}`;
     section.innerHTML = `
       <h3 class="product-section-title">
