@@ -208,6 +208,7 @@ function productsFromCSV(text) {
       ...(tag && { tag }),
       ...(/^agotado$/i.test(tag) && { tagVariant: "agotado" }),
       ...(/^nuevo$/i.test(tag) && { tagVariant: "nuevo" }),
+      ...(/^edici[oó]n limitada$/i.test(tag) && { tagVariant: "limitada" }),
     };
   }).filter(Boolean);
 }
