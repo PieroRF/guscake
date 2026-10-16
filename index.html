@@ -151,6 +151,9 @@
   </svg>
 </div>
 
+<!-- BANNER DE TEMPORADA: se llena desde la pestaña "anuncios" de la planilla -->
+<div class="season-banner" id="seasonBanner" role="region" aria-label="Anuncio" hidden></div>
+
 <header class="topbar">
   <div class="wrap topbar-inner">
     <a href="#inicio" class="brand">
@@ -204,7 +207,7 @@
     <div class="wrap hero-grid">
       <div class="hero-copy">
         <p class="eyebrow hero-in hero-swap-text" style="--i:1" id="heroEyebrow">La más vendida</p>
-        <h1 class="hero-title hero-in hero-swap-text" style="--i:2" id="heroTitle">La favorita<br><span class="accent">Alfajor frambuesa</span></h1>
+        <h1 class="hero-title hero-in hero-swap-text" style="--i:2" id="heroTitle">Alfajor frambuesa<br><span class="accent">Dúo clásico</span></h1>
         <p class="hero-text hero-in hero-swap-text" style="--i:3" id="heroText">Delicadas capas de hojarasca rellenas de manjar tradicional, crema de vainilla y frambuesas frescas.</p>
         <div class="hero-actions hero-in" style="--i:4">
           <a href="#vitrina" class="btn btn-primary">Ver catálogo</a>
@@ -243,13 +246,42 @@
           <p class="eyebrow">La vitrina</p>
           <h2>Nuestros productos</h2>
         </div>
-        <div class="scroll-arrows">
-          <button class="scroll-arrow" id="scrollLeft" aria-label="Ver productos anteriores">‹</button>
-          <button class="scroll-arrow" id="scrollRight" aria-label="Ver más productos">›</button>
+        <!-- Barra de la vitrina: buscador, filtros (panel desplegable) y flechas.
+             Al buscar o filtrar, las filas se cambian por una grilla de resultados. -->
+        <div class="vitrina-toolbar">
+          <label class="vitrina-search">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            <input type="search" id="productSearch" placeholder="Buscar un dulce…" aria-label="Buscar productos" autocomplete="off">
+          </label>
+          <button type="button" class="vitrina-filter-btn" id="filterToggle" aria-expanded="false" aria-controls="filterPanel">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M7 12h10M10 18h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+            <span>Filtrar</span>
+            <span class="filter-badge" id="filterBadge" hidden></span>
+          </button>
+          <div class="scroll-arrows">
+            <button class="scroll-arrow" id="scrollLeft" aria-label="Ver productos anteriores">‹</button>
+            <button class="scroll-arrow" id="scrollRight" aria-label="Ver más productos">›</button>
+          </div>
+          <div class="filter-panel" id="filterPanel" role="dialog" aria-label="Filtrar productos" hidden>
+            <p class="filter-panel-label">Categoría</p>
+            <div class="filter-group" id="productFilters"></div>
+            <p class="filter-panel-label">Precio</p>
+            <div class="filter-group" id="priceFilter">
+              <button type="button" class="filter-chip is-active" data-price="todos" aria-pressed="true">Todos</button>
+              <button type="button" class="filter-chip" data-price="hasta-5000" aria-pressed="false">Hasta $5.000</button>
+              <button type="button" class="filter-chip" data-price="5000-20000" aria-pressed="false">$5.000 a $20.000</button>
+              <button type="button" class="filter-chip" data-price="mas-20000" aria-pressed="false">Más de $20.000</button>
+            </div>
+            <div class="filter-panel-foot">
+              <button type="button" class="filter-reset" id="filterReset">Limpiar</button>
+              <button type="button" class="btn btn-primary filter-done" id="filterDone">Ver productos</button>
+            </div>
+          </div>
         </div>
       </div>
 
       <div class="product-columns" id="productGrid"></div>
+      <div class="product-results" id="productResults" hidden></div>
     </div>
   </section>
 

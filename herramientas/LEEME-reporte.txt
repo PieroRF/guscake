@@ -1,0 +1,53 @@
+REPORTE MENSUAL AUTOMÁTICO — GusCake
+====================================
+
+Qué hace
+--------
+El día 1 de cada mes, a las 9:00, te llega un correo con el resumen del mes
+anterior:
+  - Cuántas personas visitaron la página.
+  - Los productos más agregados al carrito.
+  - Los productos que más se enviaron a pedido por WhatsApp.
+Además, en tu planilla de productos aparece una pestaña nueva
+"Reporte AAAA-MM" con la tabla completa de todos los productos.
+
+Instalación (una sola vez, unos 10 minutos)
+-------------------------------------------
+1. Busca el ID de tu propiedad de Google Analytics:
+   analytics.google.com → Administrar (engranaje, abajo a la izquierda)
+   → Configuración de la propiedad → "ID DE LA PROPIEDAD".
+   Es un número, por ejemplo 456789123. (No es el "G-YG5K7YXBCD".)
+
+2. Abre tu planilla de productos en Google Sheets y ve a
+   Extensiones → Apps Script.
+
+3. Borra lo que aparezca en el editor y pega TODO el contenido del archivo
+   herramientas/reporte-mensual.gs.
+
+4. En la línea  const GA4_PROPERTY_ID = "PEGAR_AQUI_EL_ID";
+   reemplaza PEGAR_AQUI_EL_ID por el número del paso 1 (entre comillas).
+   Si quieres que el correo llegue a otra dirección, escríbela en REPORT_EMAIL.
+
+5. Activa la conexión con Analytics: en el menú izquierdo del editor,
+   junto a "Servicios", presiona el "+", busca "Google Analytics Data API",
+   y presiona "Agregar" (debe quedar con el nombre AnalyticsData).
+
+6. Guarda (ícono de disquete).
+
+7. Arriba, en la lista de funciones, elige  probarReporteAhora  y presiona
+   "Ejecutar". La primera vez Google te pedirá permisos:
+   Revisar permisos → tu cuenta → "Configuración avanzada" →
+   "Ir a ... (no seguro)" → Permitir. (Es tu propio script; el aviso es normal.)
+   Debería llegarte un correo de prueba con los datos del mes en curso.
+
+8. Elige ahora  instalarReporteMensual  y presiona "Ejecutar".
+   Con esto queda programado para el día 1 de cada mes. Listo.
+
+Notas
+-----
+- La cuenta de Google con la que instalas el script debe tener acceso a la
+  propiedad de Analytics de la página.
+- Los datos de carrito existen desde que se activaron las estadísticas en la
+  página; los meses anteriores saldrán vacíos.
+- Para dejar de recibirlo: Apps Script → Activadores (ícono de reloj) →
+  borra el activador "enviarReporteMensual".

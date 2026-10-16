@@ -265,6 +265,85 @@ h2{
 }
 
 /* ---------- TOPBAR ---------- */
+/* ---------- BANNER DE TEMPORADA (se maneja desde la planilla) ---------- */
+.season-banner{
+  --bn-a:#B98935; --bn-b:#E8C06A; --bn-text:#1F1108;
+  position:relative;
+  z-index:41;
+  background:linear-gradient(90deg, var(--bn-a), var(--bn-b), var(--bn-a));
+  background-size:200% 100%;
+  color:var(--bn-text);
+  animation:bannerFlow 8s linear infinite;
+  transition:background-color 0.4s var(--ease);
+}
+.season-banner[data-color="rojo"]{--bn-a:#9E1B1B; --bn-b:#D84040; --bn-text:#FFFCF2;}
+.season-banner[data-color="verde"]{--bn-a:#1F5E3A; --bn-b:#3E9461; --bn-text:#FFFCF2;}
+.season-banner[data-color="morado"]{--bn-a:#5E1A82; --bn-b:#A23CC2; --bn-text:#FFFCF2;}
+.season-banner[data-color="naranjo"]{--bn-a:#C2410C; --bn-b:#F57C2A; --bn-text:#FFFCF2;}
+.season-banner[data-color="rosado"]{--bn-a:#B0306A; --bn-b:#E86AA0; --bn-text:#FFFCF2;}
+.season-banner-inner{
+  display:grid;
+  max-width:1200px;
+  margin:0 auto;
+  padding:9px 48px;
+}
+.season-banner-slide{
+  grid-area:1 / 1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:6px 14px;
+  text-align:center;
+  font-size:0.9rem;
+  font-weight:600;
+  line-height:1.35;
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(6px);
+  transition:opacity 0.5s var(--ease), transform 0.5s var(--ease), visibility 0.5s;
+}
+.season-banner-slide.is-active{opacity:1; visibility:visible; transform:none;}
+.season-banner-btn{
+  display:inline-block;
+  padding:4px 14px;
+  border-radius:999px;
+  background:var(--bn-text);
+  color:var(--bn-a);
+  font-size:0.78rem;
+  font-weight:700;
+  text-decoration:none;
+  white-space:nowrap;
+  transition:transform 0.2s var(--ease);
+}
+.season-banner-btn:hover{transform:scale(1.05);}
+.season-banner-close{
+  position:absolute;
+  top:50%;
+  right:12px;
+  transform:translateY(-50%);
+  width:28px;
+  height:28px;
+  border:none;
+  border-radius:50%;
+  background:rgba(0,0,0,0.12);
+  color:inherit;
+  font-size:1.1rem;
+  line-height:1;
+  cursor:pointer;
+}
+.season-banner-close:hover{background:rgba(0,0,0,0.22);}
+@keyframes bannerFlow{
+  to{background-position:-200% 0;}
+}
+@media (max-width:600px){
+  .season-banner-inner{padding:8px 40px 8px 16px;}
+  .season-banner-slide{font-size:0.82rem;}
+}
+@media (prefers-reduced-motion: reduce){
+  .season-banner{animation:none;}
+}
+
 .topbar{
   position:sticky;
   top:0;
@@ -1015,7 +1094,234 @@ html:not(.no-splash) .hero-in{
 .scroll-arrow:active{
   transform:scale(0.95);
 }
+/* ---------- BUSCADOR Y FILTROS DE LA VITRINA ---------- */
+/* Van en la misma línea del título, con el mismo lenguaje visual que las
+   flechas y las cápsulas de la página: tonos crema, borde dorado suave. */
+.product-columns[hidden],
+.product-results[hidden],
+.filter-panel[hidden],
+.season-banner[hidden]{display:none !important;}
+
+/* El encabezado queda por encima de las filas para que el panel no quede tapado */
+.vitrina .section-head{position:relative; z-index:5;}
+.vitrina-toolbar{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.vitrina-search{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  width:230px;
+  height:44px;
+  padding:0 16px;
+  border-radius:999px;
+  background:rgba(255,252,242,0.6);
+  border:1.5px solid rgba(46,29,20,0.18);
+  color:var(--espresso-soft);
+  cursor:text;
+  transition:width 0.35s var(--ease), background 0.25s var(--ease), border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+.vitrina-search:hover{background:rgba(255,252,242,0.85);}
+.vitrina-search:focus-within{
+  width:290px;
+  background:var(--white);
+  border-color:var(--gold-deep);
+  box-shadow:0 0 0 3px rgba(217,169,79,0.3);
+}
+.vitrina-search svg{width:17px; height:17px; flex-shrink:0;}
+.vitrina-search input{
+  flex:1;
+  min-width:0;
+  border:none;
+  outline:none;
+  background:transparent;
+  font:inherit;
+  font-size:0.9rem;
+  color:var(--espresso);
+}
+.vitrina-search input::placeholder{color:rgba(79,61,44,0.65);}
+.vitrina-search input::-webkit-search-cancel-button{cursor:pointer;}
+
+.vitrina-filter-btn{
+  position:relative;
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  height:44px;
+  padding:0 18px;
+  border-radius:999px;
+  border:1.5px solid rgba(46,29,20,0.18);
+  background:rgba(255,252,242,0.6);
+  color:var(--espresso);
+  font:inherit;
+  font-size:0.9rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:background 0.25s var(--ease), border-color 0.25s var(--ease), color 0.25s var(--ease);
+}
+.vitrina-filter-btn svg{width:17px; height:17px;}
+.vitrina-filter-btn:hover{background:rgba(255,252,242,0.85);}
+.vitrina-filter-btn.is-open,
+.vitrina-filter-btn.has-filters{
+  background:var(--espresso);
+  border-color:var(--espresso);
+  color:var(--cream);
+}
+.filter-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:20px;
+  height:20px;
+  padding:0 6px;
+  border-radius:999px;
+  background:var(--gold);
+  color:var(--navy-deep);
+  font-size:0.72rem;
+  font-weight:700;
+}
+.filter-badge[hidden]{display:none;}
+
+/* Panel desplegable con las categorías y los precios */
+.filter-panel{
+  position:absolute;
+  top:calc(100% + 10px);
+  right:0;
+  z-index:30;
+  width:min(380px, calc(100vw - 32px));
+  padding:18px 18px 16px;
+  border-radius:var(--radius);
+  background:var(--white);
+  border:1px solid var(--line);
+  box-shadow:0 18px 40px rgba(46,29,20,0.22);
+  animation:filterPanelIn 0.25s var(--ease) both;
+}
+@keyframes filterPanelIn{
+  from{opacity:0; transform:translateY(-6px);}
+  to{opacity:1; transform:none;}
+}
+.filter-panel-label{
+  margin:0 0 8px;
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  letter-spacing:0.1em;
+  text-transform:uppercase;
+  color:var(--accent);
+}
+.filter-group{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-bottom:16px;
+}
+.filter-chip{
+  padding:7px 13px;
+  border-radius:999px;
+  border:1.5px solid var(--line);
+  background:transparent;
+  color:var(--espresso);
+  font:inherit;
+  font-size:0.82rem;
+  font-weight:500;
+  cursor:pointer;
+  transition:background 0.2s var(--ease), border-color 0.2s var(--ease), color 0.2s var(--ease);
+}
+.filter-chip:hover{border-color:var(--gold-deep); background:rgba(217,169,79,0.12);}
+.filter-chip.is-active{
+  background:var(--espresso);
+  border-color:var(--espresso);
+  color:var(--cream);
+}
+.filter-panel-foot{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding-top:14px;
+  border-top:1px solid var(--line);
+}
+.filter-reset{
+  border:none;
+  background:none;
+  padding:6px 0;
+  font:inherit;
+  font-size:0.85rem;
+  font-weight:600;
+  color:var(--espresso-soft);
+  text-decoration:underline;
+  text-underline-offset:3px;
+  cursor:pointer;
+}
+.filter-done{padding:10px 20px; font-size:0.85rem;}
+
+/* Mientras se busca o filtra, las flechas de las filas no aplican */
+.vitrina.is-filtering .scroll-arrows{display:none;}
+
+/* Resultados */
+.results-head{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:18px;
+}
+.results-count{
+  margin-right:6px;
+  font-family:var(--font-mono);
+  font-size:0.78rem;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--espresso-soft);
+}
+.results-tag{
+  padding:5px 12px;
+  border-radius:999px;
+  border:none;
+  background:var(--espresso);
+  color:var(--cream);
+  font:inherit;
+  font-size:0.78rem;
+  cursor:pointer;
+  transition:background 0.2s var(--ease);
+}
+.results-tag:hover{background:var(--accent);}
+.results-clear{
+  margin-left:auto;
+  border:none;
+  background:none;
+  padding:6px 0;
+  font:inherit;
+  font-size:0.85rem;
+  font-weight:600;
+  color:var(--accent);
+  cursor:pointer;
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+.results-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(240px, 1fr));
+  gap:24px;
+}
+
+@media (max-width:900px){
+  .vitrina .section-head{align-items:stretch;}
+  .vitrina-toolbar{width:100%;}
+  .vitrina-search, .vitrina-search:focus-within{flex:1; width:auto;}
+}
+@media (max-width:600px){
+  .vitrina-toolbar .scroll-arrows{display:none;} /* en celular las filas se deslizan con el dedo */
+  .vitrina-filter-btn{padding:0 14px;}
+  .results-grid{grid-template-columns:repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap:16px;}
+}
+
 /* ---------- FILAS DE CATEGORÍAS (título centrado arriba, productos desplazándose hacia los lados) ---------- */
+/* Mientras llega la planilla, la vitrina ya ocupa su espacio pero no se ve
+   (así no salta la página ni se alcanzan a ver precios desactualizados) */
+.product-columns.is-loading{visibility:hidden;}
 .product-columns{
   display:flex;
   flex-direction:column;

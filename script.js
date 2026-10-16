@@ -232,8 +232,13 @@ const clp = (n) => n.toLocaleString("es-CL", { style: "currency", currency: "CLP
 
 // ---------- Vitrina ----------
 const grid = document.getElementById("productGrid");
+// Los clics de las tarjetas (tamaño, agregar, ampliar foto) se escuchan en
+// toda la vitrina: sirven igual para las filas y para los resultados del buscador.
+const vitrinaEl = document.getElementById("vitrina");
 
-function cardHTML(p) {
+// selected: tamaño que aparece elegido al mostrar la tarjeta (por defecto el
+// primero). El buscador lo usa para mostrar el tamaño que calza con el filtro.
+function cardHTML(p, selected = 0) {
   // Tarjeta "próximamente" (p. ej. "¡Pronto, nuevo box!"): mismo formato que
   // un producto pero sin precio ni botón de compra, solo el anuncio.
   if (p.soon) {
@@ -263,7 +268,7 @@ function cardHTML(p) {
           // Texto corto en el botón (p. ej. "10 porc.") para que las 3 opciones
           // quepan en una sola fila; el carrito sigue usando data-label completo.
           const shortLabel = opt.label.replace(/^Torta\s+0*/i, "").replace(/\s*porciones/i, " porc.");
-          return `<button type="button" class="price-chip${i === 0 ? " active" : ""}" data-price="${opt.price}" data-label="${opt.label}">${shortLabel}</button>`;
+          return `<button type="button" class="price-chip${i === selected ? " active" : ""}" data-price="${opt.price}" data-label="${opt.label}">${shortLabel}</button>`;
         }).join("")}
       </div>`
     : "";
@@ -290,7 +295,7 @@ function cardHTML(p) {
         <p class="product-desc">${p.desc}</p>
         ${priceOptions}
         <div class="product-footer">
-          <span class="product-price">${clp(p.prices[0].price)}</span>
+          <span class="product-price">${clp(p.prices[selected].price)}</span>
           <button class="add-btn${isAgotado ? " add-btn--agotado" : ""}" data-id="${p.id}"${isAgotado ? " disabled" : ""}>${isAgotado ? "Agotado" : "Agregar"}</button>
         </div>
       </div>
@@ -322,7 +327,7 @@ function renderGrid() {
       </h3>
       <div class="product-grid">
         ${items.length
-          ? `<div class="product-track">${items.map(cardHTML).join("")}</div>`
+          ? `<div class="product-track">${items.map(p => cardHTML(p)).join("")}</div>`
           : `<p class="product-empty">Muy pronto vamos a<br>sumar productos acá.</p>`}
       </div>
     `;
@@ -524,7 +529,7 @@ function initProductRows() {
 }
 
 // ---------- Selección de tamaño/precio ----------
-grid.addEventListener("click", (e) => {
+vitrinaEl.addEventListener("click", (e) => {
   const chip = e.target.closest(".price-chip");
   if (!chip) return;
   const card = chip.closest(".product-card");
@@ -598,7 +603,7 @@ function renderCart() {
   cartTotal.textContent = clp(total);
 }
 
-grid.addEventListener("click", (e) => {
+vitrinaEl.addEventListener("click", (e) => {
   const btn = e.target.closest(".add-btn");
   if (!btn) return;
   const card = btn.closest(".product-card");
@@ -653,7 +658,7 @@ function closeLightbox() {
   lightboxClose.classList.remove("open");
 }
 
-grid.addEventListener("click", (e) => {
+vitrinaEl.addEventListener("click", (e) => {
   const photo = e.target.closest(".product-photo");
   if (!photo || photo.style.display === "none") return;
   const card = photo.closest(".product-card");
@@ -889,6 +894,34 @@ function initHeroSlider() {
   }
 
   syncVideos();
+
+  // Cada texto (etiqueta, título y párrafo) reserva el alto del más largo de
+  // todos los slides. Así la portada mide siempre lo mismo al rotar y no
+  // empuja la página hacia arriba o abajo (se notaba en celulares, donde un
+  // texto ocupaba una línea más que otro). Se recalcula al cambiar el ancho
+  // de la pantalla y cuando terminan de cargar las tipografías.
+  const textFields = [
+    [eyebrow, (s) => { eyebrow.textContent = s.eyebrow; }],
+    [title,   (s) => { title.innerHTML = s.titleHTML; }],
+    [text,    (s) => { text.textContent = s.text; }],
+  ];
+  function lockTextHeights() {
+    textFields.forEach(([el, set]) => {
+      const saved = el.innerHTML;
+      el.style.minHeight = "";
+      let max = el.offsetHeight;
+      HERO_SLIDES.forEach((s) => { set(s); max = Math.max(max, el.offsetHeight); });
+      el.innerHTML = saved;
+      el.style.minHeight = max + "px";
+    });
+  }
+  lockTextHeights();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(lockTextHeights);
+  let lockTimer;
+  window.addEventListener("resize", () => {
+    clearTimeout(lockTimer);
+    lockTimer = setTimeout(lockTextHeights, 150);
+  });
 
   // El slide del video se muestra medio segundo más que los de foto.
   const DWELL = 4500;
@@ -1151,6 +1184,243 @@ function renderTestimonios() {
   setTimeout(remove, 3900); // respaldo por si no dispara animationend
 })();
 
+// ---------- Banner de temporada (desde la planilla) ----------
+// Se maneja desde la pestaña "anuncios" de la planilla, publicada como CSV.
+// Columnas: activo | texto | boton | enlace | desde | hasta | color
+//  - activo: "si" para mostrarlo.
+//  - desde / hasta (opcionales): fechas dd/mm/aaaa; fuera de ese rango no se muestra.
+//  - boton + enlace (opcionales): texto del botón y a dónde lleva (ej. #vitrina o un link).
+//  - color (opcional): dorado, rojo, verde, morado, naranjo o rosado.
+// Si hay varios anuncios activos, van rotando. Si queda vacío, no se muestra nada.
+const ANNOUNCEMENT_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTfpLLzVDhyd1qpwdR8iY_Il7QmbC7cegz5YgQltEQCCL5_w2eHrHusu3BxZbSdGjB4k6GR8oPEue-S/pub?gid=1980818935&single=true&output=csv";
+const BANNER_COLORS = ["dorado", "rojo", "verde", "morado", "naranjo", "rosado"];
+
+function parseSheetDate(v, endOfDay) {
+  const s = (v || "").trim();
+  if (!s) return null;
+  let d, m, y;
+  let match = s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})$/);   // dd/mm/aaaa
+  if (match) [, d, m, y] = match;
+  else if ((match = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/))) [, y, m, d] = match; // aaaa-mm-dd
+  else return null;
+  y = Number(y) < 100 ? 2000 + Number(y) : Number(y);
+  return endOfDay ? new Date(y, m - 1, d, 23, 59, 59) : new Date(y, m - 1, d);
+}
+
+async function loadAnnouncements() {
+  if (!ANNOUNCEMENT_SHEET_URL) return [];
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 5000);
+    const res = await fetch(ANNOUNCEMENT_SHEET_URL, { signal: controller.signal, cache: "no-store" });
+    clearTimeout(timer);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const [header, ...rows] = parseCSV((await res.text()).replace(/^﻿/, ""));
+    const col = (name) => header.findIndex(h => h.trim().toLowerCase() === name);
+    const get = (r, n) => (col(n) >= 0 ? (r[col(n)] || "").trim() : "");
+    const now = new Date();
+    return rows.map(r => {
+      const text = get(r, "texto");
+      if (!text || !/^s[ií]$/i.test(get(r, "activo"))) return null;
+      const from = parseSheetDate(get(r, "desde"), false);
+      const until = parseSheetDate(get(r, "hasta"), true);
+      if ((from && now < from) || (until && now > until)) return null;
+      const color = get(r, "color").toLowerCase();
+      return {
+        text,
+        button: get(r, "boton"),
+        link: get(r, "enlace"),
+        color: BANNER_COLORS.includes(color) ? color : "dorado",
+      };
+    }).filter(Boolean);
+  } catch (err) {
+    console.warn("No se pudo leer la pestaña de anuncios.", err);
+    return null; // null = no se pudo leer (distinto de "no hay anuncios")
+  }
+}
+
+function escapeHTML(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+function renderSeasonBanner(list) {
+  const banner = document.getElementById("seasonBanner");
+  if (!banner) return;
+  clearInterval(banner._timer); // por si ya se había dibujado antes (caché)
+  if (!Array.isArray(list) || !list.length) { banner.hidden = true; return; }
+  // Si la persona lo cerró, no vuelve a aparecer en esta visita (salvo que cambie el texto).
+  const key = "gc_banner_" + list.map(a => a.text).join("|");
+  try { if (sessionStorage.getItem(key)) { banner.hidden = true; return; } } catch (_) { /* sin almacenamiento */ }
+
+  const slides = list.map((a, i) => {
+    const safeLink = /^(https?:\/\/|#)/i.test(a.link) ? a.link : "";
+    const external = /^https?:\/\//i.test(safeLink);
+    const cta = a.button && safeLink
+      ? `<a class="season-banner-btn" href="${escapeHTML(safeLink)}"${external ? ' target="_blank" rel="noopener"' : ""}>${escapeHTML(a.button)}</a>`
+      : "";
+    return `<div class="season-banner-slide${i === 0 ? " is-active" : ""}" data-color="${a.color}">
+              <span class="season-banner-text">${escapeHTML(a.text)}</span>${cta}
+            </div>`;
+  }).join("");
+  banner.innerHTML = `
+    <div class="season-banner-inner">${slides}</div>
+    <button type="button" class="season-banner-close" aria-label="Cerrar anuncio">×</button>`;
+  banner.dataset.color = list[0].color;
+  banner.hidden = false;
+
+  const items = [...banner.querySelectorAll(".season-banner-slide")];
+  let current = 0;
+  let timer = null;
+  if (items.length > 1) {
+    banner._timer = timer = setInterval(() => {
+      items[current].classList.remove("is-active");
+      current = (current + 1) % items.length;
+      items[current].classList.add("is-active");
+      banner.dataset.color = items[current].dataset.color;
+    }, 6000);
+  }
+  banner.querySelector(".season-banner-close").addEventListener("click", () => {
+    banner.hidden = true;
+    clearInterval(timer);
+    try { sessionStorage.setItem(key, "1"); } catch (_) { /* sin almacenamiento */ }
+  });
+}
+
+// ---------- Buscador y filtros de la vitrina ----------
+// El buscador y el botón "Filtrar" van en la misma línea del título. Los
+// filtros (categoría y precio) se eligen en un panel desplegable y se aplican
+// al instante. Mientras no hay búsqueda ni filtros, se ven las filas en
+// movimiento; al usarlos, las filas se cambian por una grilla de resultados.
+const PRICE_RANGES = {
+  "todos":      { label: "",                 test: () => true },
+  "hasta-5000": { label: "Hasta $5.000",     test: (p) => p <= 5000 },
+  "5000-20000": { label: "$5.000 a $20.000", test: (p) => p > 5000 && p <= 20000 },
+  "mas-20000":  { label: "Más de $20.000",   test: (p) => p > 20000 },
+};
+const normalizeText = (s) => (s || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
+
+function initVitrinaFilters() {
+  const vitrina = document.getElementById("vitrina");
+  const search = document.getElementById("productSearch");
+  const toggle = document.getElementById("filterToggle");
+  const panel = document.getElementById("filterPanel");
+  const badge = document.getElementById("filterBadge");
+  const catWrap = document.getElementById("productFilters");
+  const priceWrap = document.getElementById("priceFilter");
+  const results = document.getElementById("productResults");
+  if (!vitrina || !search || !toggle || !panel || !catWrap || !priceWrap || !results) return;
+
+  // Categorías: "Todo", una por categoría con productos y, si existen
+  // productos con esas etiquetas, "Nuevos" y "Edición limitada".
+  const chips = [{ key: "todo", label: "Todo" }]
+    .concat(CATEGORY_ORDER
+      .filter(cat => PRODUCTS.some(p => p.category === cat))
+      .map(cat => ({ key: "cat:" + cat, label: cat === "premium" ? "Dulce variedad 🍭" : (CATEGORY_LABELS[cat] || cat) })));
+  if (PRODUCTS.some(p => p.tagVariant === "nuevo")) chips.push({ key: "tag:nuevo", label: "✨ Nuevos" });
+  if (PRODUCTS.some(p => p.tagVariant === "limitada")) chips.push({ key: "tag:limitada", label: "⏳ Edición limitada" });
+  catWrap.innerHTML = chips.map((c, i) =>
+    `<button type="button" class="filter-chip${i === 0 ? " is-active" : ""}" data-filter="${c.key}" aria-pressed="${i === 0}">${c.label}</button>`
+  ).join("");
+
+  let category = "todo";
+  let price = "todos";
+
+  const selectChip = (wrap, chip) => wrap.querySelectorAll(".filter-chip").forEach(b => {
+    b.classList.toggle("is-active", b === chip);
+    b.setAttribute("aria-pressed", String(b === chip));
+  });
+
+  function apply() {
+    const q = normalizeText(search.value.trim());
+    const activeCount = (category !== "todo") + (price !== "todos");
+    badge.hidden = !activeCount;
+    badge.textContent = activeCount;
+    toggle.classList.toggle("has-filters", activeCount > 0);
+
+    const filtering = Boolean(q || activeCount);
+    vitrina.classList.toggle("is-filtering", filtering);
+    grid.hidden = filtering;
+    results.hidden = !filtering;
+    if (!filtering) { results.innerHTML = ""; return; }
+
+    const words = q.split(/\s+/).filter(Boolean);
+    // Un producto entra si CUALQUIERA de sus tamaños está en el rango de precio
+    // (ej. "Más de $20.000" incluye las tortas de 10 y 20 porciones). En la
+    // tarjeta queda elegido el primer tamaño que calza, con su precio.
+    const list = PRODUCTS.map(p => {
+      if (category.startsWith("cat:") && p.category !== category.slice(4)) return null;
+      if (category.startsWith("tag:") && p.tagVariant !== category.slice(4)) return null;
+      const selected = p.prices.findIndex(x => PRICE_RANGES[price].test(x.price));
+      if (selected < 0) return null;
+      const haystack = normalizeText(`${p.name} ${p.desc} ${CATEGORY_LABELS[p.category] || ""} ${p.tag || ""}`);
+      if (!words.every(w => haystack.includes(w))) return null;
+      return { p, selected };
+    }).filter(Boolean)
+      .sort((a, b) => a.p.prices[a.selected].price - b.p.prices[b.selected].price);
+
+    // Resumen de lo que se está viendo, con cada filtro removible por separado.
+    const tags = [];
+    if (q) tags.push(`<button type="button" class="results-tag" data-clear="search">“${escapeHTML(search.value.trim())}” ✕</button>`);
+    if (category !== "todo") tags.push(`<button type="button" class="results-tag" data-clear="category">${catWrap.querySelector(".is-active").textContent} ✕</button>`);
+    if (price !== "todos") tags.push(`<button type="button" class="results-tag" data-clear="price">${PRICE_RANGES[price].label} ✕</button>`);
+
+    results.innerHTML = `
+      <div class="results-head">
+        <span class="results-count">${list.length} ${list.length === 1 ? "producto" : "productos"}</span>
+        ${tags.join("")}
+        <button type="button" class="results-clear" data-clear="all">Ver todo</button>
+      </div>
+      ${list.length
+        ? `<div class="results-grid">${list.map(r => cardHTML(r.p, r.selected)).join("")}</div>`
+        : `<p class="product-empty">No encontramos productos con esa búsqueda.<br>Prueba con otra palabra o quita algún filtro.</p>`}`;
+  }
+
+  function clear(what) {
+    if (what === "search" || what === "all") search.value = "";
+    if (what === "category" || what === "all") { category = "todo"; selectChip(catWrap, catWrap.querySelector(".filter-chip")); }
+    if (what === "price" || what === "all") { price = "todos"; selectChip(priceWrap, priceWrap.querySelector(".filter-chip")); }
+    apply();
+  }
+
+  // Panel desplegable
+  function openPanel(open) {
+    panel.hidden = !open;
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.classList.toggle("is-open", open);
+  }
+  toggle.addEventListener("click", () => openPanel(panel.hidden));
+  document.getElementById("filterDone").addEventListener("click", () => openPanel(false));
+  document.getElementById("filterReset").addEventListener("click", () => { clear("category"); clear("price"); });
+  document.addEventListener("click", (e) => {
+    if (!panel.hidden && !panel.contains(e.target) && !toggle.contains(e.target)) openPanel(false);
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !panel.hidden) { openPanel(false); toggle.focus(); }
+  });
+
+  catWrap.addEventListener("click", (e) => {
+    const chip = e.target.closest(".filter-chip");
+    if (!chip) return;
+    category = chip.dataset.filter;
+    selectChip(catWrap, chip);
+    apply();
+  });
+  priceWrap.addEventListener("click", (e) => {
+    const chip = e.target.closest(".filter-chip");
+    if (!chip) return;
+    price = chip.dataset.price;
+    selectChip(priceWrap, chip);
+    apply();
+  });
+
+  let typing;
+  search.addEventListener("input", () => { clearTimeout(typing); typing = setTimeout(apply, 150); });
+  results.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-clear]");
+    if (btn) clear(btn.dataset.clear);
+  });
+}
+
 // ---------- Init ----------
 document.getElementById("year").textContent = new Date().getFullYear();
 initPageTransitions();
@@ -1158,8 +1428,27 @@ renderCart();
 renderTestimonios();
 initScrollReveal();
 initHeroSlider();
-// La vitrina espera a la planilla de productos (si hay una configurada).
+// La vitrina se dibuja de inmediato (invisible) con la lista del código, para
+// que ya ocupe su espacio y la página no salte cuando llegue la planilla.
+// Al responder la planilla se rellena con los productos actualizados.
+renderGrid();
+grid.classList.add("is-loading");
 loadProductsFromSheet().finally(() => {
   renderGrid();
+  grid.classList.remove("is-loading");
   initProductRows();
+  initVitrinaFilters();
+});
+// Banner: se muestra al tiro el último anuncio conocido (guardado en este
+// navegador) y luego se actualiza con la planilla; así no empuja la página
+// hacia abajo en cada visita.
+const BANNER_CACHE_KEY = "gc_banner_cache";
+let cachedBanner = "[]";
+try { cachedBanner = localStorage.getItem(BANNER_CACHE_KEY) || "[]"; } catch (_) { /* sin almacenamiento */ }
+try { renderSeasonBanner(JSON.parse(cachedBanner)); } catch (_) { /* caché dañado */ }
+loadAnnouncements().then((list) => {
+  if (list === null) return; // la planilla no respondió: se deja lo que haya
+  const fresh = JSON.stringify(list);
+  try { localStorage.setItem(BANNER_CACHE_KEY, fresh); } catch (_) { /* sin almacenamiento */ }
+  if (fresh !== cachedBanner) renderSeasonBanner(list);
 });
