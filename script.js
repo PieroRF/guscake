@@ -1174,26 +1174,49 @@ function renderTestimonios() {
 
 // ---------- Splash de bienvenida ----------
 // El overlay se desvanece por CSS; aquí solo se quita del DOM al terminar.
+// Al terminar avisa con el evento "gc:splashdone" (lo usa el anuncio emergente).
 (function initSplash() {
   const splash = document.getElementById("splash");
-  if (!splash) return;
-  const remove = () => splash.remove();
+  const done = () => {
+    if (window.__splashDone) return;
+    window.__splashDone = true;
+    window.dispatchEvent(new Event("gc:splashdone"));
+  };
+  // Sin splash (ya se vio en esta visita): se avisa de inmediato.
+  if (!splash || document.documentElement.classList.contains("no-splash")) {
+    if (splash) splash.remove();
+    done();
+    return;
+  }
+  const remove = () => { splash.remove(); done(); };
   splash.addEventListener("animationend", (e) => {
     if (e.target === splash && e.animationName === "splashOut") remove();
   });
   setTimeout(remove, 3900); // respaldo por si no dispara animationend
 })();
 
-// ---------- Banner de temporada (desde la planilla) ----------
-// Se maneja desde la pestaña "anuncios" de la planilla, publicada como CSV.
-// Columnas: activo | texto | boton | enlace | desde | hasta | color
+// ---------- Anuncio emergente (desde la planilla) ----------
+// Ventana que aparece al entrar a la página, justo después de la animación del
+// logo. Se maneja desde la pestaña "anuncios" de la planilla, publicada como CSV.
+// Columnas: activo | titulo | texto | detalle | boton | enlace | desde | hasta | color | redes
 //  - activo: "si" para mostrarlo.
-//  - desde / hasta (opcionales): fechas dd/mm/aaaa; fuera de ese rango no se muestra.
+//  - titulo: el encabezado grande y llamativo (ej. "¡MEGASORTEO!").
+//  - texto: el mensaje que va debajo del título (ej. "Gana una torta para 4 personas").
+//    Si no hay título, el texto se muestra como título.
+//  - detalle (opcional): una segunda línea más pequeña con la explicación.
 //  - boton + enlace (opcionales): texto del botón y a dónde lleva (ej. #vitrina o un link).
+//  - desde / hasta (opcionales): fechas dd/mm/aaaa; fuera de ese rango no se muestra.
 //  - color (opcional): dorado, rojo, verde, morado, naranjo o rosado.
-// Si hay varios anuncios activos, van rotando. Si queda vacío, no se muestra nada.
+//  - redes (opcional): "si" para agregar los botones "Seguir en Instagram" y
+//    "Seguir en TikTok" (ideal para sorteos que piden seguir las cuentas).
+// Se muestra el primer anuncio activo, una vez por visita. Si no hay ninguno
+// activo, no aparece nada.
 const ANNOUNCEMENT_SHEET_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTfpLLzVDhyd1qpwdR8iY_Il7QmbC7cegz5YgQltEQCCL5_w2eHrHusu3BxZbSdGjB4k6GR8oPEue-S/pub?gid=1980818935&single=true&output=csv";
 const BANNER_COLORS = ["dorado", "rojo", "verde", "morado", "naranjo", "rosado"];
+const SOCIAL_LINKS = {
+  instagram: { url: "https://www.instagram.com/guscake_cl/", label: "Instagram", handle: "@guscake_cl" },
+  tiktok:    { url: "https://www.tiktok.com/@gustaavojrf", label: "TikTok", handle: "@gustaavojrf" },
+};
 
 function parseSheetDate(v, endOfDay) {
   const s = (v || "").trim();
@@ -1211,7 +1234,7 @@ async function loadAnnouncements() {
   if (!ANNOUNCEMENT_SHEET_URL) return [];
   try {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 5000);
+    const timer = setTimeout(() => controller.abort(), 6000);
     const res = await fetch(ANNOUNCEMENT_SHEET_URL, { signal: controller.signal, cache: "no-store" });
     clearTimeout(timer);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -1220,22 +1243,26 @@ async function loadAnnouncements() {
     const get = (r, n) => (col(n) >= 0 ? (r[col(n)] || "").trim() : "");
     const now = new Date();
     return rows.map(r => {
+      const title = get(r, "titulo");
       const text = get(r, "texto");
-      if (!text || !/^s[ií]$/i.test(get(r, "activo"))) return null;
+      if ((!title && !text) || !/^s[ií]$/i.test(get(r, "activo"))) return null;
       const from = parseSheetDate(get(r, "desde"), false);
       const until = parseSheetDate(get(r, "hasta"), true);
       if ((from && now < from) || (until && now > until)) return null;
       const color = get(r, "color").toLowerCase();
       return {
+        title,
         text,
+        detail: get(r, "detalle"),
         button: get(r, "boton"),
         link: get(r, "enlace"),
         color: BANNER_COLORS.includes(color) ? color : "dorado",
+        social: /^s[ií]$/i.test(get(r, "redes")),
       };
     }).filter(Boolean);
   } catch (err) {
     console.warn("No se pudo leer la pestaña de anuncios.", err);
-    return null; // null = no se pudo leer (distinto de "no hay anuncios")
+    return [];
   }
 }
 
@@ -1243,47 +1270,114 @@ function escapeHTML(s) {
   return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 
-function renderSeasonBanner(list) {
-  const banner = document.getElementById("seasonBanner");
-  if (!banner) return;
-  clearInterval(banner._timer); // por si ya se había dibujado antes (caché)
-  if (!Array.isArray(list) || !list.length) { banner.hidden = true; return; }
-  // Si la persona lo cerró, no vuelve a aparecer en esta visita (salvo que cambie el texto).
-  const key = "gc_banner_" + list.map(a => a.text).join("|");
-  try { if (sessionStorage.getItem(key)) { banner.hidden = true; return; } } catch (_) { /* sin almacenamiento */ }
+// Espera a que termine la animación del logo (o resuelve al tiro si esta
+// visita no la muestra).
+const splashDone = new Promise((resolve) => {
+  if (window.__splashDone) return resolve();
+  window.addEventListener("gc:splashdone", () => resolve(), { once: true });
+});
 
-  const slides = list.map((a, i) => {
-    const safeLink = /^(https?:\/\/|#)/i.test(a.link) ? a.link : "";
-    const external = /^https?:\/\//i.test(safeLink);
-    const cta = a.button && safeLink
-      ? `<a class="season-banner-btn" href="${escapeHTML(safeLink)}"${external ? ' target="_blank" rel="noopener"' : ""}>${escapeHTML(a.button)}</a>`
-      : "";
-    return `<div class="season-banner-slide${i === 0 ? " is-active" : ""}" data-color="${a.color}">
-              <span class="season-banner-text">${escapeHTML(a.text)}</span>${cta}
-            </div>`;
+function showAnnouncementPopup(list) {
+  if (!Array.isArray(list) || !list.length) return;
+  const a = list[0];
+  // Una vez por visita: si la persona ya lo cerró, no vuelve a aparecer
+  // (salvo que cambies el texto en la planilla).
+  const key = "gc_popup_" + a.title + "|" + a.text;
+  try { if (sessionStorage.getItem(key)) return; } catch (_) { /* sin almacenamiento */ }
+
+  const safeLink = /^(https?:\/\/|#)/i.test(a.link) ? a.link : "";
+  const external = /^https?:\/\//i.test(safeLink);
+  const social = a.social
+    ? `<div class="promo-follow">
+         ${Object.entries(SOCIAL_LINKS).map(([red, s]) => `
+           <a class="promo-follow-btn promo-follow-btn--${red}" href="${s.url}" target="_blank" rel="noopener" data-red="${red}">
+             ${RESENA_ICONOS[red] || ""}
+             <span class="promo-follow-text"><b>Seguir en ${s.label}</b><small>${s.handle}</small></span>
+           </a>`).join("")}
+       </div>`
+    : "";
+  const cta = a.button && safeLink
+    ? `<a class="btn btn-primary promo-cta" href="${escapeHTML(safeLink)}"${external ? ' target="_blank" rel="noopener"' : ""}>${escapeHTML(a.button)}</a>`
+    : "";
+  const detail = a.detail || (a.social ? "Síguenos en nuestras redes 👇" : "");
+
+  // Insignia grande de arriba: el primer emoji del mensaje (o 🎁 si no tiene).
+  const badge = (`${a.title} ${a.text}`.match(/\p{Extended_Pictographic}/u) || ["🎁"])[0];
+  // Confeti que cae dentro del cuadro (posición, color, tamaño y ritmo al azar).
+  const confettiColors = ["#F4C24A", "#E1306C", "#25F4EE", "#FF7A3D", "#A23CC2", "#FFFFFF"];
+  const confetti = Array.from({ length: 18 }, (_, i) => {
+    const left = Math.round(Math.random() * 100);
+    const delay = (Math.random() * 4).toFixed(2);
+    const dur = (3.2 + Math.random() * 2.6).toFixed(2);
+    const size = 5 + Math.round(Math.random() * 5);
+    const color = confettiColors[i % confettiColors.length];
+    return `<i style="left:${left}%;--d:${delay}s;--t:${dur}s;--s:${size}px;background:${color}"></i>`;
   }).join("");
-  banner.innerHTML = `
-    <div class="season-banner-inner">${slides}</div>
-    <button type="button" class="season-banner-close" aria-label="Cerrar anuncio">×</button>`;
-  banner.dataset.color = list[0].color;
-  banner.hidden = false;
 
-  const items = [...banner.querySelectorAll(".season-banner-slide")];
-  let current = 0;
-  let timer = null;
-  if (items.length > 1) {
-    banner._timer = timer = setInterval(() => {
-      items[current].classList.remove("is-active");
-      current = (current + 1) % items.length;
-      items[current].classList.add("is-active");
-      banner.dataset.color = items[current].dataset.color;
-    }, 6000);
-  }
-  banner.querySelector(".season-banner-close").addEventListener("click", () => {
-    banner.hidden = true;
-    clearInterval(timer);
+  const overlay = document.createElement("div");
+  overlay.className = "promo-overlay";
+  overlay.innerHTML = `
+    <div class="promo-card" data-color="${a.color}" role="dialog" aria-modal="true" aria-labelledby="promoTitle">
+      <div class="promo-badge" aria-hidden="true"><span>${badge}</span></div>
+      <div class="promo-inner">
+        <div class="promo-confetti" aria-hidden="true">${confetti}</div>
+        <button type="button" class="promo-close" aria-label="Cerrar">×</button>
+        <div class="promo-band" aria-hidden="true"><span>✦</span><span>✦</span><span>✦</span></div>
+        <div class="promo-content">
+          ${a.title
+            ? `<h2 class="promo-heading" id="promoTitle">${escapeHTML(a.title).replace(/(\p{Extended_Pictographic}️?)/gu, '<span class="promo-emoji">$1</span>')}</h2>
+               ${a.text ? `<p class="promo-title">${escapeHTML(a.text)}</p>` : ""}`
+            : `<h2 class="promo-title" id="promoTitle">${escapeHTML(a.text)}</h2>`}
+          ${detail ? `<p class="promo-detail">${escapeHTML(detail)}</p>` : ""}
+          ${social}
+          ${cta}
+          <button type="button" class="promo-later">Ahora no</button>
+        </div>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  requestAnimationFrame(() => overlay.classList.add("is-open"));
+
+  // El título va siempre en una sola línea: si no cabe con su tamaño normal,
+  // la letra se achica en proporción exacta al espacio disponible.
+  const heading = overlay.querySelector(".promo-heading");
+  const fitHeading = () => {
+    if (!heading) return;
+    heading.style.fontSize = "";
+    let size = parseFloat(getComputedStyle(heading).fontSize);
+    for (let i = 0; i < 6 && heading.scrollWidth > heading.clientWidth; i++) {
+      size = Math.floor(size * (heading.clientWidth / heading.scrollWidth) * 2) / 2; // en pasos de 0,5px
+      heading.style.fontSize = size + "px";
+    }
+  };
+  fitHeading();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitHeading);
+  window.addEventListener("resize", fitHeading);
+
+  const lastFocus = document.activeElement;
+  const close = () => {
+    overlay.classList.remove("is-open");
+    window.removeEventListener("resize", fitHeading);
+    document.removeEventListener("keydown", onKey);
     try { sessionStorage.setItem(key, "1"); } catch (_) { /* sin almacenamiento */ }
+    setTimeout(() => overlay.remove(), 350);
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  };
+  const onKey = (e) => { if (e.key === "Escape") close(); };
+  document.addEventListener("keydown", onKey);
+  overlay.addEventListener("click", (e) => {
+    if (e.target === overlay || e.target.closest(".promo-close, .promo-later")) close();
+    // Un enlace interno (ej. #vitrina) cierra la ventana para que se vea a dónde lleva.
+    if (e.target.closest('.promo-cta[href^="#"]')) close();
   });
+  // Cuenta en Analytics cuántas personas tocan "Seguir" desde la ventana.
+  overlay.querySelectorAll(".promo-follow-btn").forEach((link) => {
+    link.addEventListener("click", () => trackEvent("follow_click", { red: link.dataset.red, origen: "anuncio" }));
+  });
+  setTimeout(() => {
+    const first = overlay.querySelector(".promo-follow-btn, .promo-cta, .promo-close");
+    if (first) first.focus({ preventScroll: true });
+  }, 400);
 }
 
 // ---------- Buscador y filtros de la vitrina ----------
@@ -1439,16 +1533,9 @@ loadProductsFromSheet().finally(() => {
   initProductRows();
   initVitrinaFilters();
 });
-// Banner: se muestra al tiro el último anuncio conocido (guardado en este
-// navegador) y luego se actualiza con la planilla; así no empuja la página
-// hacia abajo en cada visita.
-const BANNER_CACHE_KEY = "gc_banner_cache";
-let cachedBanner = "[]";
-try { cachedBanner = localStorage.getItem(BANNER_CACHE_KEY) || "[]"; } catch (_) { /* sin almacenamiento */ }
-try { renderSeasonBanner(JSON.parse(cachedBanner)); } catch (_) { /* caché dañado */ }
-loadAnnouncements().then((list) => {
-  if (list === null) return; // la planilla no respondió: se deja lo que haya
-  const fresh = JSON.stringify(list);
-  try { localStorage.setItem(BANNER_CACHE_KEY, fresh); } catch (_) { /* sin almacenamiento */ }
-  if (fresh !== cachedBanner) renderSeasonBanner(list);
+// Anuncio emergente: aparece cuando ya terminó la animación del logo y llegó
+// la planilla (lo que ocurra último), con una pequeña pausa para no tapar
+// la entrada de la portada.
+Promise.all([loadAnnouncements(), splashDone]).then(([list]) => {
+  setTimeout(() => showAnnouncementPopup(list), 700);
 });

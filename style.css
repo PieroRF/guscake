@@ -265,83 +265,324 @@ h2{
 }
 
 /* ---------- TOPBAR ---------- */
-/* ---------- BANNER DE TEMPORADA (se maneja desde la planilla) ---------- */
-.season-banner{
-  --bn-a:#B98935; --bn-b:#E8C06A; --bn-text:#1F1108;
-  position:relative;
-  z-index:41;
-  background:linear-gradient(90deg, var(--bn-a), var(--bn-b), var(--bn-a));
-  background-size:200% 100%;
-  color:var(--bn-text);
-  animation:bannerFlow 8s linear infinite;
-  transition:background-color 0.4s var(--ease);
+/* ---------- ANUNCIO EMERGENTE (se maneja desde la planilla) ---------- */
+/* Aparece después de la animación del logo. Colores según la columna "color".
+   Piezas: borde de colores que gira, insignia con el emoji del mensaje,
+   franja con glaseado que chorrea, confeti cayendo y entrada con rebote. */
+@property --promo-angle{
+  syntax:"<angle>";
+  initial-value:0deg;
+  inherits:false;
 }
-.season-banner[data-color="rojo"]{--bn-a:#9E1B1B; --bn-b:#D84040; --bn-text:#FFFCF2;}
-.season-banner[data-color="verde"]{--bn-a:#1F5E3A; --bn-b:#3E9461; --bn-text:#FFFCF2;}
-.season-banner[data-color="morado"]{--bn-a:#5E1A82; --bn-b:#A23CC2; --bn-text:#FFFCF2;}
-.season-banner[data-color="naranjo"]{--bn-a:#C2410C; --bn-b:#F57C2A; --bn-text:#FFFCF2;}
-.season-banner[data-color="rosado"]{--bn-a:#B0306A; --bn-b:#E86AA0; --bn-text:#FFFCF2;}
-.season-banner-inner{
-  display:grid;
-  max-width:1200px;
-  margin:0 auto;
-  padding:9px 48px;
-}
-.season-banner-slide{
-  grid-area:1 / 1;
+.promo-overlay{
+  position:fixed;
+  inset:0;
+  z-index:9000;
   display:flex;
   align-items:center;
   justify-content:center;
-  flex-wrap:wrap;
-  gap:6px 14px;
-  text-align:center;
-  font-size:0.9rem;
-  font-weight:600;
-  line-height:1.35;
+  padding:64px 20px 20px; /* espacio arriba para la insignia que sobresale */
+  background:
+    radial-gradient(520px 420px at 50% 45%, rgba(244,194,74,0.22), transparent 70%),
+    rgba(31,17,8,0.66);
+  -webkit-backdrop-filter:blur(6px);
+          backdrop-filter:blur(6px);
   opacity:0;
-  visibility:hidden;
-  transform:translateY(6px);
-  transition:opacity 0.5s var(--ease), transform 0.5s var(--ease), visibility 0.5s;
+  transition:opacity 0.35s var(--ease);
 }
-.season-banner-slide.is-active{opacity:1; visibility:visible; transform:none;}
-.season-banner-btn{
-  display:inline-block;
-  padding:4px 14px;
-  border-radius:999px;
-  background:var(--bn-text);
-  color:var(--bn-a);
-  font-size:0.78rem;
-  font-weight:700;
-  text-decoration:none;
-  white-space:nowrap;
-  transition:transform 0.2s var(--ease);
+.promo-overlay.is-open{opacity:1;}
+
+.promo-card{
+  --pc-a:#B98935; --pc-b:#E8C06A;
+  position:relative;
+  width:100%;
+  max-width:420px;
+  padding:4px; /* grosor del borde de colores */
+  border-radius:30px;
+  background:conic-gradient(from var(--promo-angle), #F4C24A, #E1306C, #A23CC2, #25F4EE, #FF7A3D, #F4C24A);
+  box-shadow:0 30px 70px rgba(0,0,0,0.5), 0 0 40px rgba(244,194,74,0.35);
+  transform:translateY(40px) scale(0.8) rotate(-4deg);
+  opacity:0;
+  transition:transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease;
+  animation:promoBorder 4s linear infinite, promoFloat 4.5s ease-in-out 0.8s infinite;
 }
-.season-banner-btn:hover{transform:scale(1.05);}
-.season-banner-close{
+.promo-overlay.is-open .promo-card{transform:none; opacity:1;}
+.promo-card[data-color="rojo"]{--pc-a:#9E1B1B; --pc-b:#D84040;}
+.promo-card[data-color="verde"]{--pc-a:#1F5E3A; --pc-b:#3E9461;}
+.promo-card[data-color="morado"]{--pc-a:#5E1A82; --pc-b:#A23CC2;}
+.promo-card[data-color="naranjo"]{--pc-a:#C2410C; --pc-b:#F57C2A;}
+.promo-card[data-color="rosado"]{--pc-a:#B0306A; --pc-b:#E86AA0;}
+@keyframes promoBorder{
+  to{--promo-angle:360deg;}
+}
+@keyframes promoFloat{
+  0%, 100%{translate:0 0;}
+  50%{translate:0 -7px;}
+}
+
+/* Insignia redonda que sobresale arriba, con el emoji del mensaje */
+.promo-badge{
   position:absolute;
-  top:50%;
-  right:12px;
-  transform:translateY(-50%);
-  width:28px;
-  height:28px;
-  border:none;
+  z-index:5;
+  top:-46px;
+  left:50%;
+  width:92px;
+  height:92px;
+  margin-left:-46px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   border-radius:50%;
-  background:rgba(0,0,0,0.12);
-  color:inherit;
-  font-size:1.1rem;
-  line-height:1;
-  cursor:pointer;
+  background:radial-gradient(circle at 35% 30%, #FFFDF4 0%, #FFE9A8 70%, #F4C24A 100%);
+  border:4px solid var(--white);
+  box-shadow:0 0 0 3px var(--gold), 0 10px 26px rgba(0,0,0,0.35), 0 0 30px rgba(244,194,74,0.7);
+  animation:promoBadge 2.2s ease-in-out infinite;
 }
-.season-banner-close:hover{background:rgba(0,0,0,0.22);}
+.promo-badge span{
+  font-size:2.7rem;
+  line-height:1;
+  display:inline-block;
+  animation:promoWiggle 2.2s ease-in-out infinite;
+}
+@keyframes promoBadge{
+  0%, 100%{transform:translateY(0) scale(1);}
+  45%{transform:translateY(-8px) scale(1.06);}
+  60%{transform:translateY(0) scale(0.98);}
+}
+@keyframes promoWiggle{
+  0%, 30%, 100%{transform:rotate(0);}
+  40%{transform:rotate(-14deg);}
+  50%{transform:rotate(12deg);}
+  60%{transform:rotate(-6deg);}
+}
+
+.promo-inner{
+  position:relative;
+  overflow:hidden;
+  max-height:calc(100vh - 100px);
+  overflow-y:auto;
+  border-radius:26px;
+  background:
+    radial-gradient(circle at 15% 85%, rgba(244,194,74,0.14), transparent 40%),
+    radial-gradient(circle at 90% 70%, rgba(225,48,108,0.08), transparent 40%),
+    var(--white);
+  text-align:center;
+}
+/* Franja de color con borde de glaseado que chorrea */
+.promo-band{
+  position:relative;
+  z-index:1;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  gap:120px;
+  height:96px;
+  padding-top:22px;
+  background:linear-gradient(120deg, var(--pc-a), var(--pc-b), var(--pc-a));
+  background-size:200% 100%;
+  color:#FFF6D6;
+  font-size:1.1rem;
+  animation:bannerFlow 6s linear infinite;
+  --drip:url("data:image/svg+xml,%3Csvg xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27 viewBox%3D%270 0 400 42%27 preserveAspectRatio%3D%27none%27%3E%3Cpath d%3D%27M0 0H400V10C394.4 10 393.2 20 384.5 20C375.9 20 374.7 10 369.1 10C364.8 10 363.9 34 357.3 34C350.7 34 349.7 10 345.5 10C338.9 10 337.5 18 327.3 18C317.1 18 315.6 10 309.1 10C304.2 10 303.1 40 295.5 40C287.8 40 286.7 10 281.8 10C278.2 10 277.4 22 271.8 22C266.2 22 265.4 10 261.8 10C255.6 10 254.2 30 244.5 30C234.9 30 233.5 10 227.3 10C222.7 10 221.7 16 214.5 16C207.4 16 206.4 10 201.8 10C196.3 10 195.0 36 186.4 36C177.7 36 176.5 10 170.9 10C167.0 10 166.1 24 160.0 24C153.9 24 153.0 10 149.1 10C143.2 10 141.9 19 132.7 19C123.6 19 122.3 10 116.4 10C111.5 10 110.4 32 102.7 32C95.1 32 94.0 10 89.1 10C84.8 10 83.9 21 77.3 21C70.7 21 69.7 10 65.5 10C60.2 10 59.1 38 50.9 38C42.8 38 41.6 10 36.4 10C29.8 10 28.4 20 18.2 20C8.0 20 6.5 10 0.0 10Z%27%2F%3E%3C%2Fsvg%3E");
+  -webkit-mask:linear-gradient(#000 0 0) top / 100% calc(100% - 40px) no-repeat, var(--drip) bottom / 100% 42px no-repeat;
+          mask:linear-gradient(#000 0 0) top / 100% calc(100% - 40px) no-repeat, var(--drip) bottom / 100% 42px no-repeat;
+}
+.promo-band span{animation:promoTwinkle 1.6s ease-in-out infinite;}
+.promo-band span:nth-child(2){display:none;}
+.promo-band span:nth-child(3){animation-delay:0.6s;}
+@keyframes promoTwinkle{
+  0%, 100%{opacity:0.45; transform:scale(0.85) rotate(0);}
+  50%{opacity:1; transform:scale(1.2) rotate(20deg);}
+}
 @keyframes bannerFlow{
   to{background-position:-200% 0;}
 }
+
+/* Confeti cayendo por todo el cuadro, detrás del texto */
+.promo-confetti{
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  overflow:hidden;
+}
+.promo-confetti i{
+  position:absolute;
+  top:-14px;
+  width:var(--s);
+  height:calc(var(--s) * 0.45);
+  border-radius:2px;
+  opacity:0.85;
+  animation:confettiFall var(--t) linear var(--d) infinite;
+}
+.promo-confetti i:nth-child(3n){border-radius:50%; height:var(--s);}
+@keyframes confettiFall{
+  0%{transform:translate(0, 0) rotate(0);}
+  25%{transform:translate(12px, 140px) rotate(180deg);}
+  50%{transform:translate(-10px, 290px) rotate(360deg);}
+  75%{transform:translate(10px, 440px) rotate(540deg);}
+  100%{transform:translate(0, 600px) rotate(720deg);}
+}
+
+.promo-content{
+  position:relative;
+  z-index:3;
+  padding:6px 26px 22px;
+}
+.promo-close{
+  position:absolute;
+  z-index:4;
+  top:12px;
+  right:12px;
+  width:34px;
+  height:34px;
+  border:none;
+  border-radius:50%;
+  background:rgba(0,0,0,0.25);
+  color:#ffffff;
+  font-size:1.25rem;
+  line-height:1;
+  cursor:pointer;
+  transition:background 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.promo-close:hover{background:rgba(0,0,0,0.4); transform:rotate(90deg);}
+/* Título (columna "titulo"): grande, en mayúsculas y con el degradado del color del anuncio */
+.promo-heading{
+  max-width:100%;
+  margin:0 auto 6px;
+  /* siempre en una sola línea: si no cabe, el JS achica la letra (ver fitHeading) */
+  white-space:nowrap;
+  font-family:var(--font-display);
+  font-style:normal;
+  font-weight:900;
+  font-size:2.2rem;
+  line-height:1.05;
+  letter-spacing:0.01em;
+  text-transform:uppercase;
+  background:linear-gradient(100deg, var(--pc-a) 0%, var(--pc-b) 40%, #F4C24A 50%, var(--pc-b) 60%, var(--pc-a) 100%);
+  background-size:220% 100%;
+  -webkit-background-clip:text;
+          background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:var(--pc-a);
+  filter:drop-shadow(0 2px 0 rgba(46,29,20,0.18));
+  animation:promoHeadingShine 3.5s linear infinite;
+}
+/* los emojis del título conservan sus colores (el degradado los dejaría transparentes) */
+.promo-heading .promo-emoji{
+  -webkit-text-fill-color:initial;
+  color:initial;
+  font-size:0.85em;
+}
+@keyframes promoHeadingShine{
+  to{background-position:-220% 0;}
+}
+/* Texto bajo el título (columna "texto"): cursiva elegante, más pequeña */
+.promo-heading + .promo-title{
+  font-size:1.3rem;
+  font-style:italic;
+  font-weight:600;
+  margin-bottom:12px;
+}
+.promo-title{
+  max-width:340px;
+  margin:0 auto 10px;
+  /* líneas parejas y centradas, sin una palabra suelta al final */
+  text-wrap:balance;
+  font-family:var(--font-display);
+  font-size:1.65rem;
+  line-height:1.22;
+  color:var(--espresso);
+  text-shadow:0 2px 0 rgba(244,194,74,0.35);
+}
+.promo-detail{
+  max-width:320px;
+  margin:0 auto 18px;
+  text-wrap:balance;
+  font-size:0.95rem;
+  line-height:1.5;
+  color:var(--espresso-soft);
+}
+/* Botones para seguir las cuentas */
+.promo-follow{
+  display:grid;
+  gap:10px;
+  max-width:290px;
+  margin:0 auto 14px;
+}
+.promo-follow-btn{
+  position:relative;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding:8px 16px;
+  border-radius:13px;
+  color:#ffffff;
+  text-decoration:none;
+  text-align:center;
+  box-shadow:0 6px 16px rgba(0,0,0,0.2);
+  transition:transform 0.2s var(--ease), filter 0.2s var(--ease);
+  animation:followPulse 2.4s ease-in-out infinite;
+}
+/* destello que cruza los botones */
+.promo-follow-btn::after{
+  content:"";
+  position:absolute;
+  top:0; bottom:0;
+  left:-60%;
+  width:40%;
+  background:linear-gradient(100deg, transparent, rgba(255,255,255,0.45), transparent);
+  transform:skewX(-20deg);
+  animation:nuevoShine 2.8s ease-in-out infinite;
+}
+.promo-follow-btn:nth-child(2){animation-delay:-1.2s;}
+.promo-follow-btn:nth-child(2)::after{animation-delay:1.4s;}
+.promo-follow-btn:hover{transform:scale(1.03); filter:brightness(1.08);}
+.promo-follow-btn svg{width:21px; height:21px; flex-shrink:0;}
+.promo-follow-text{display:flex; flex-direction:column; align-items:flex-start; line-height:1.25; text-align:left;}
+.promo-follow-text b{font-size:0.88rem;}
+.promo-follow-text small{font-size:0.72rem; opacity:0.85;}
+.promo-follow-btn--instagram{
+  background:linear-gradient(45deg, #F9A43A 0%, #E1306C 50%, #833AB4 100%);
+}
+.promo-follow-btn--tiktok{
+  background:#111111;
+  box-shadow:-3px -2px 0 #25F4EE, 3px 2px 0 #FE2C55, 0 6px 16px rgba(0,0,0,0.2);
+}
+@keyframes followPulse{
+  0%, 100%{transform:scale(1);}
+  50%{transform:scale(1.03);}
+}
+.promo-cta{display:inline-block; margin:2px 0 6px;}
+.promo-later{
+  display:block;
+  margin:6px auto 0;
+  padding:6px 10px;
+  border:none;
+  background:none;
+  font:inherit;
+  font-size:0.85rem;
+  color:var(--espresso-soft);
+  text-decoration:underline;
+  text-underline-offset:3px;
+  cursor:pointer;
+}
 @media (max-width:600px){
-  .season-banner-inner{padding:8px 40px 8px 16px;}
-  .season-banner-slide{font-size:0.82rem;}
+  .promo-content{padding:4px 20px 18px;}
+  .promo-title{font-size:1.4rem;}
+  .promo-heading{font-size:1.85rem;}
+  .promo-heading + .promo-title{font-size:1.15rem;}
+  .promo-badge{width:80px; height:80px; top:-40px; margin-left:-40px;}
+  .promo-badge span{font-size:2.3rem;}
+  .promo-band{height:86px;}
 }
 @media (prefers-reduced-motion: reduce){
-  .season-banner{animation:none;}
+  .promo-card, .promo-badge, .promo-badge span, .promo-band, .promo-band span,
+  .promo-follow-btn, .promo-follow-btn::after, .promo-heading{animation:none;}
+  .promo-confetti{display:none;}
+  .promo-card{transition:opacity 0.3s ease;}
 }
 
 .topbar{
@@ -1099,8 +1340,7 @@ html:not(.no-splash) .hero-in{
    flechas y las cápsulas de la página: tonos crema, borde dorado suave. */
 .product-columns[hidden],
 .product-results[hidden],
-.filter-panel[hidden],
-.season-banner[hidden]{display:none !important;}
+.filter-panel[hidden]{display:none !important;}
 
 /* El encabezado queda por encima de las filas para que el panel no quede tapado */
 .vitrina .section-head{position:relative; z-index:5;}

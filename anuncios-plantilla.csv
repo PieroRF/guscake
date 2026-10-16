@@ -1,4 +1,5 @@
-activo,texto,boton,enlace,desde,hasta,color
-no,"🎃 Halloween en GusCake: pide tus dulces terroríficos antes del 31 de octubre",Ver catálogo,#vitrina,20/10/2026,31/10/2026,naranjo
-no,"🎄 Pedidos de Navidad abiertos hasta el 20 de diciembre",Pedir ahora,#pedidos,01/12/2026,20/12/2026,rojo
-no,🚚 Delivery gratis en San Pedro de la Paz por compras sobre $30.000,,,,,dorado
+activo,titulo,texto,detalle,boton,enlace,desde,hasta,color,redes
+no,🎃 Halloween,Dulces terroríficos en GusCake,Pide los tuyos antes del 31 de octubre,Ver catálogo,#vitrina,20/10/2026,31/10/2026,naranjo,
+no,🎄 Navidad,Pedidos navideños abiertos,Reserva tu torta hasta el 20 de diciembre,Pedir ahora,#pedidos,01/12/2026,20/12/2026,rojo,
+no,🚚 Delivery gratis,En San Pedro de la Paz,Por compras sobre $30.000,,,,,dorado,
+no,🎉 ¡Megasorteo!,Gana una deliciosa torta para 4 personas 🎂,"Para participar, sigue nuestras cuentas de Instagram y TikTok 👇",,,15/10/2026,20/10/2026,naranjo,si
