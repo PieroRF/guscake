@@ -1301,8 +1301,6 @@ function showAnnouncementPopup(list) {
     : "";
   const detail = a.detail || (a.social ? "Síguenos en nuestras redes 👇" : "");
 
-  // Insignia grande de arriba: el primer emoji del mensaje (o 🎁 si no tiene).
-  const badge = (`${a.title} ${a.text}`.match(/\p{Extended_Pictographic}/u) || ["🎁"])[0];
   // Confeti que cae dentro del cuadro (posición, color, tamaño y ritmo al azar).
   const confettiColors = ["#F4C24A", "#E1306C", "#25F4EE", "#FF7A3D", "#A23CC2", "#FFFFFF"];
   const confetti = Array.from({ length: 18 }, (_, i) => {
@@ -1314,15 +1312,80 @@ function showAnnouncementPopup(list) {
     return `<i style="left:${left}%;--d:${delay}s;--t:${dur}s;--s:${size}px;background:${color}"></i>`;
   }).join("");
 
+  // Chorreo de chocolate "líquido": todas las formas se dibujan juntas con un
+  // filtro que las funde entre sí (efecto gooey). Así, cuando una gota baja se
+  // estira desde el borde, se le forma un cuello delgado y la gotita se
+  // desprende sola, como chocolate de verdad.
+  const reduceMotionPopup = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Todo el chocolate (la franja de arriba y las gotas) es UN solo dibujo, así
+  // el color es exactamente el mismo y no se ve ninguna unión.
+  const BASE = 64; // alto de la parte lisa de arriba (coincide con la franja)
+  // Borde irregular fijo: "ondas" de distinto tamaño a lo largo del borde
+  const edge = [
+    [10, 16, 8], [40, 14, 12], [70, 18, 7], [104, 13, 15], [134, 17, 9], [168, 15, 13],
+    [200, 19, 8], [232, 14, 14], [264, 17, 9], [296, 13, 12], [328, 18, 8], [360, 15, 13], [392, 16, 9],
+  ].map(([cx, rx, ry]) => `<ellipse cx="${cx}" cy="${BASE}" rx="${rx}" ry="${ry}"/>`).join("");
+  // Gotas que caen: [posición, grosor, largo, duración (s), retraso (s)]
+  const drops = [
+    [54, 7, 20, 5.2, 0], [122, 6, 16, 4.4, 1.9], [186, 8, 24, 6.0, 0.8],
+    [250, 6.5, 17, 4.8, 3.0], [316, 7.5, 22, 5.6, 1.3], [374, 6, 15, 4.2, 2.5],
+  ].map(([cx, rx, len, dur, delay]) => {
+    if (reduceMotionPopup) return `<ellipse cx="${cx}" cy="${BASE + len / 2}" rx="${rx}" ry="${len / 2}"/>`;
+    const t = `dur="${dur}s" begin="${delay}s" repeatCount="indefinite"`;
+    const spline = `calcMode="spline" keySplines="0 0 1 1; .45 0 .55 1; .4 0 .6 1; .45 0 .55 1"`;
+    const ryMin = 5, ryMax = len;
+    const peak = BASE + ryMax * 2 - 2; // punta de la gota en su punto más largo
+    return `
+      <ellipse cx="${cx}" rx="${rx}">
+        <animate attributeName="ry" values="${ryMin};${ryMin};${ryMax};${ryMax - 3};${ryMin}" keyTimes="0;0.12;0.6;0.68;1" ${spline} ${t}/>
+        <animate attributeName="cy" values="${BASE + ryMin};${BASE + ryMin};${BASE + ryMax};${BASE + ryMax - 3};${BASE + ryMin}" keyTimes="0;0.12;0.6;0.68;1" ${spline} ${t}/>
+      </ellipse>
+      <circle cx="${cx}" r="${rx * 0.85}">
+        <animate attributeName="cy" values="${peak};${peak};${peak + 2};${peak + 46};${peak + 46}" keyTimes="0;0.56;0.6;0.9;1" calcMode="spline" keySplines="0 0 1 1; 0 0 1 1; .6 0 1 1; 0 0 1 1" ${t}/>
+        <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.55;0.58;0.76;0.86;1" ${t}/>
+      </circle>`;
+  }).join("");
+  const dripSVG = `
+    <svg class="promo-drip" viewBox="0 0 400 150" preserveAspectRatio="none" aria-hidden="true">
+      <defs>
+        <!-- El filtro solo da la FORMA del líquido (funde las gotas con el borde).
+             El color se pinta aparte con un degradado limpio que no pasa por el
+             filtro, así no aparecen escalones de color. -->
+        <filter id="promoGoo" x="-5%" y="-10%" width="110%" height="130%" color-interpolation-filters="sRGB">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="4.5" result="blur"/>
+          <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 14 -6"/>
+        </filter>
+        <mask id="promoMask" maskUnits="userSpaceOnUse" x="0" y="0" width="400" height="150">
+          <g filter="url(#promoGoo)" fill="#ffffff">
+            <rect x="-10" y="-10" width="420" height="${BASE + 10}"/>
+            ${edge}
+            ${drops}
+          </g>
+        </mask>
+        <!-- Degradado suave del chocolate: más claro arriba (brillo) y cada vez
+             más profundo hacia las puntas de las gotas, con muchos pasos intermedios. -->
+        <linearGradient id="promoChoco" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="${BASE + 50}">
+          <stop offset="0"    stop-color="#4C2513"/>
+          <stop offset="0.2"  stop-color="#452111"/>
+          <stop offset="0.4"  stop-color="#3D1D0E"/>
+          <stop offset="0.6"  stop-color="#36190C"/>
+          <stop offset="0.8"  stop-color="#31160B"/>
+          <stop offset="1"    stop-color="#2E140A"/>
+        </linearGradient>
+      </defs>
+      <rect x="0" y="0" width="400" height="150" fill="url(#promoChoco)" mask="url(#promoMask)"/>
+    </svg>`;
+
   const overlay = document.createElement("div");
   overlay.className = "promo-overlay";
   overlay.innerHTML = `
     <div class="promo-card" data-color="${a.color}" role="dialog" aria-modal="true" aria-labelledby="promoTitle">
-      <div class="promo-badge" aria-hidden="true"><span>${badge}</span></div>
+      <div class="promo-badge" aria-hidden="true"><img src="img/logo.svg" alt="" class="promo-badge-logo" onerror="this.onerror=null; this.src='img/logo-icon.png';"></div>
       <div class="promo-inner">
         <div class="promo-confetti" aria-hidden="true">${confetti}</div>
         <button type="button" class="promo-close" aria-label="Cerrar">×</button>
         <div class="promo-band" aria-hidden="true"><span>✦</span><span>✦</span><span>✦</span></div>
+        ${dripSVG}
         <div class="promo-content">
           ${a.title
             ? `<h2 class="promo-heading" id="promoTitle">${escapeHTML(a.title).replace(/(\p{Extended_Pictographic}️?)/gu, '<span class="promo-emoji">$1</span>')}</h2>

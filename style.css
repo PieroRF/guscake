@@ -333,21 +333,32 @@ h2{
   align-items:center;
   justify-content:center;
   border-radius:50%;
-  background:radial-gradient(circle at 35% 30%, #FFFDF4 0%, #FFE9A8 70%, #F4C24A 100%);
+  overflow:hidden;
+  background:var(--navy-deep);
   border:4px solid var(--white);
   box-shadow:0 0 0 3px var(--gold), 0 10px 26px rgba(0,0,0,0.35), 0 0 30px rgba(244,194,74,0.7);
   animation:promoBadge 2.2s ease-in-out infinite;
 }
-.promo-badge span{
-  font-size:2.7rem;
-  line-height:1;
-  display:inline-block;
-  animation:promoWiggle 2.2s ease-in-out infinite;
+/* Logo de GusCake dentro del círculo, con un leve balanceo */
+.promo-badge-logo{
+  width:100%;
+  height:100%;
+  display:block;
+  border-radius:50%;
+  object-fit:cover;
+  object-position:center 38%;
+  animation:promoLogoWiggle 2.2s ease-in-out infinite;
 }
 @keyframes promoBadge{
   0%, 100%{transform:translateY(0) scale(1);}
   45%{transform:translateY(-8px) scale(1.06);}
   60%{transform:translateY(0) scale(0.98);}
+}
+@keyframes promoLogoWiggle{
+  0%, 30%, 100%{transform:rotate(0);}
+  40%{transform:rotate(-6deg);}
+  50%{transform:rotate(5deg);}
+  60%{transform:rotate(-2deg);}
 }
 @keyframes promoWiggle{
   0%, 30%, 100%{transform:rotate(0);}
@@ -368,26 +379,32 @@ h2{
     var(--white);
   text-align:center;
 }
-/* Franja de color con borde de glaseado que chorrea */
+/* Franja de arriba: solo los destellos; el chocolate lo dibuja .promo-drip */
 .promo-band{
   position:relative;
-  z-index:1;
+  z-index:2; /* encima del chocolate: solo lleva los destellos y el brillo */
   display:flex;
   justify-content:center;
   align-items:flex-start;
   gap:120px;
-  height:96px;
-  padding-top:22px;
-  background:linear-gradient(120deg, var(--pc-a), var(--pc-b), var(--pc-a));
-  background-size:200% 100%;
-  color:#FFF6D6;
+  height:64px;
+  padding-top:20px;
+  overflow:hidden;
+  background:transparent; /* el chocolate lo dibuja el SVG de abajo, en una sola pieza */
+  color:#F4C24A;
   font-size:1.1rem;
-  animation:bannerFlow 6s linear infinite;
-  --drip:url("data:image/svg+xml,%3Csvg xmlns%3D%27http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%27 viewBox%3D%270 0 400 42%27 preserveAspectRatio%3D%27none%27%3E%3Cpath d%3D%27M0 0H400V10C394.4 10 393.2 20 384.5 20C375.9 20 374.7 10 369.1 10C364.8 10 363.9 34 357.3 34C350.7 34 349.7 10 345.5 10C338.9 10 337.5 18 327.3 18C317.1 18 315.6 10 309.1 10C304.2 10 303.1 40 295.5 40C287.8 40 286.7 10 281.8 10C278.2 10 277.4 22 271.8 22C266.2 22 265.4 10 261.8 10C255.6 10 254.2 30 244.5 30C234.9 30 233.5 10 227.3 10C222.7 10 221.7 16 214.5 16C207.4 16 206.4 10 201.8 10C196.3 10 195.0 36 186.4 36C177.7 36 176.5 10 170.9 10C167.0 10 166.1 24 160.0 24C153.9 24 153.0 10 149.1 10C143.2 10 141.9 19 132.7 19C123.6 19 122.3 10 116.4 10C111.5 10 110.4 32 102.7 32C95.1 32 94.0 10 89.1 10C84.8 10 83.9 21 77.3 21C70.7 21 69.7 10 65.5 10C60.2 10 59.1 38 50.9 38C42.8 38 41.6 10 36.4 10C29.8 10 28.4 20 18.2 20C8.0 20 6.5 10 0.0 10Z%27%2F%3E%3C%2Fsvg%3E");
-  -webkit-mask:linear-gradient(#000 0 0) top / 100% calc(100% - 40px) no-repeat, var(--drip) bottom / 100% 42px no-repeat;
-          mask:linear-gradient(#000 0 0) top / 100% calc(100% - 40px) no-repeat, var(--drip) bottom / 100% 42px no-repeat;
 }
-.promo-band span{animation:promoTwinkle 1.6s ease-in-out infinite;}
+/* Chocolate líquido que chorrea desde la franja (dibujo SVG con efecto gooey) */
+.promo-drip{
+  position:absolute;
+  z-index:1;
+  left:0;
+  top:0; /* cubre la franja y las gotas: todo el chocolate es una sola pieza */
+  width:100%;
+  height:150px;
+  pointer-events:none;
+}
+.promo-band span{animation:promoTwinkle 1.6s ease-in-out infinite; text-shadow:0 0 8px rgba(244,194,74,0.8);}
 .promo-band span:nth-child(2){display:none;}
 .promo-band span:nth-child(3){animation-delay:0.6s;}
 @keyframes promoTwinkle{
@@ -427,7 +444,7 @@ h2{
 .promo-content{
   position:relative;
   z-index:3;
-  padding:6px 26px 22px;
+  padding:52px 26px 22px; /* espacio para que el chocolate chorree sin tapar el texto */
 }
 .promo-close{
   position:absolute;
@@ -570,16 +587,16 @@ h2{
   cursor:pointer;
 }
 @media (max-width:600px){
-  .promo-content{padding:4px 20px 18px;}
+  .promo-content{padding:46px 20px 18px;}
   .promo-title{font-size:1.4rem;}
   .promo-heading{font-size:1.85rem;}
   .promo-heading + .promo-title{font-size:1.15rem;}
   .promo-badge{width:80px; height:80px; top:-40px; margin-left:-40px;}
-  .promo-badge span{font-size:2.3rem;}
-  .promo-band{height:86px;}
+
+  .promo-band{padding-top:16px;}
 }
 @media (prefers-reduced-motion: reduce){
-  .promo-card, .promo-badge, .promo-badge span, .promo-band, .promo-band span,
+  .promo-card, .promo-badge, .promo-badge-logo, .promo-band, .promo-band span,
   .promo-follow-btn, .promo-follow-btn::after, .promo-heading{animation:none;}
   .promo-confetti{display:none;}
   .promo-card{transition:opacity 0.3s ease;}
