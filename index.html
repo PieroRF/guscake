@@ -165,7 +165,7 @@
     <nav class="nav">
       <a href="#vitrina">Catálogo</a>
       <a href="#nosotros">Historia</a>
-      <a href="#" class="js-soon" data-soon="Cursos online">Cursos online</a>
+      <a href="cursos-online/">Cursos online</a>
       <a href="#pedidos">Encargos</a>
       <a href="#ubicacion">Ubicación</a>
       <a href="mayoristas.html" class="nav-stack">Precios<br>Mayoristas</a>
@@ -183,7 +183,7 @@
   <nav class="mobile-nav" id="mobileNav">
     <a href="#vitrina">Catálogo</a>
     <a href="#nosotros">Historia</a>
-    <a href="#" class="js-soon" data-soon="Cursos online">Cursos online</a>
+    <a href="cursos-online/">Cursos online</a>
     <a href="#pedidos">Encargos</a>
     <a href="#ubicacion">Ubicación</a>
     <a href="mayoristas.html" class="nav-stack">Precios Mayoristas</a>
@@ -284,28 +284,50 @@
   </section>
 
   <!-- NOSOTROS / HISTORIA -->
-  <section class="nosotros" id="nosotros">
-    <div class="wrap nosotros-grid">
-      <div class="nosotros-copy reveal">
-        <p class="eyebrow">Desde Marzo, 2026</p>
-        <h2>Un sueño detrás de cada receta.</h2>
-        <p>GusCake nació de un sueño claro: transformar la vocación y el oficio de la pastelería en un proyecto con identidad propia. Desde nuestra fabrica ubicada en San Pedro de la Paz, creamos productos artesanales premium donde no existen los atajos. Cuidamos la técnica, la selección de ingredientes y cada detalle del acabado para que cada bocado cuente una historia. Crecemos con la misma premisa del primer día: hacer de nuestra pasión un motivo para compartir y endulzar momentos inolvidables.</p>
-        <ul class="nosotros-list">
-          <li><strong>Lunes a sábado</strong> — Estamos disponibles de 09:00 a 19:00 horas.</li>
-          <li><strong>Realizamos Delivery</strong> — Con un costo adicional.</li>
-          <li><strong>Diariamente</strong> — Fabricamos productos con cariño y mucho amor.</li>
+  <section class="nosotros historia" id="nosotros">
+    <span class="historia-marca" aria-hidden="true">GusCake</span>
+    <div class="wrap historia-grid">
+      <div class="historia-copy reveal">
+        <p class="eyebrow">Nuestra historia · Desde marzo, 2026</p>
+        <h2 class="historia-titulo">Un sueño detrás de <em>cada receta.<svg class="historia-trazo" viewBox="0 0 200 14" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M3 9 C 40 3, 80 12, 120 7 S 175 3, 197 6"/></svg></em></h2>
+        <p class="historia-texto"><span class="historia-marca-texto">GusCake</span> nació de un sueño claro: transformar la vocación y el oficio de la pastelería en un proyecto con identidad propia. Desde nuestra fábrica ubicada en San Pedro de la Paz, creamos productos artesanales premium donde <mark>no existen los atajos</mark>. Cuidamos la técnica, la selección de ingredientes y cada detalle del acabado para que <mark>cada bocado cuente una historia</mark>. Crecemos con la misma premisa del primer día: hacer de nuestra pasión un motivo para compartir y endulzar momentos inolvidables.</p>
+
+        <ul class="historia-pilares">
+          <li>
+            <span class="pilar-icono" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span>
+            <strong>Lunes a sábado</strong>
+            <span>Disponibles de 09:00 a 19:00 horas</span>
+          </li>
+          <li>
+            <span class="pilar-icono" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17.5" cy="17.5" r="1.8"/></svg></span>
+            <strong>Realizamos delivery</strong>
+            <span>Con un costo adicional</span>
+          </li>
+          <li>
+            <span class="pilar-icono" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg></span>
+            <strong>Diariamente</strong>
+            <span>Fabricamos con cariño y mucho amor</span>
+          </li>
         </ul>
-      </div>
-      <div class="nosotros-badge reveal reveal-delay-1">
-        <div class="badge-circle">
-          <img src="img/chef.jpg" alt="Nuestro chef pastelero" class="badge-photo"
-               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div class="badge-fallback">
-            <span>100%</span>
-            <small>artesanal</small>
-          </div>
+
+        <div class="historia-acciones">
+          <a class="btn btn-primary" href="#vitrina">Ver catálogo</a>
+          <a class="btn btn-outline-light" href="cursos-online/">Aprende con Gustavo</a>
         </div>
-        <span class="badge-tag">Gustavo Riquelme Flores<br>Chef Internacional</span>
+      </div>
+
+      <div class="historia-visual reveal reveal-delay-1">
+        <figure class="historia-foto">
+          <img src="img/chef.jpg" alt="Gustavo Riquelme Flores, chef pastelero de GusCake">
+        </figure>
+        <div class="historia-sello" aria-hidden="true">
+          <svg viewBox="0 0 120 120">
+            <defs><path id="historiaCirculo" d="M60,60 m-45,0 a45,45 0 1,1 90,0 a45,45 0 1,1 -90,0"/></defs>
+            <text><textPath href="#historiaCirculo" textLength="280" lengthAdjust="spacing">HECHO A MANO • DESDE 2026 • SAN PEDRO DE LA PAZ •</textPath></text>
+          </svg>
+          <img src="img/logo.svg" alt="" onerror="this.onerror=null; this.src='img/logo-icon.png';">
+        </div>
+        <p class="historia-credencial"><strong>Gustavo Riquelme Flores</strong><span>Chef Internacional</span></p>
       </div>
     </div>
   </section>

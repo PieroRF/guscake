@@ -1,0 +1,746 @@
+/* Estilos propios de la página de cursos online (cursos-online/index.html).
+   Los estilos generales del sitio (cabecera, botones, pie, colores) vienen de ../style.css. */
+
+/* ---------- Presentación del chef ---------- */
+.chef{
+  position:relative;
+  overflow:hidden;
+  padding:72px 0 80px;
+  color:var(--cream);
+  background:
+    radial-gradient(520px 380px at 78% 45%, rgba(217,169,79,0.16), transparent 70%),
+    linear-gradient(160deg, var(--navy) 0%, var(--navy-deep) 100%);
+}
+.chef-grid{
+  display:grid;
+  grid-template-columns:minmax(0, 1.15fr) minmax(0, 0.85fr);
+  gap:64px;
+  align-items:center;
+}
+.chef .eyebrow{color:var(--gold);margin-bottom:18px;}
+.chef-hola{
+  font-family:"Great Vibes", cursive;
+  font-size:1.9rem;
+  line-height:1;
+  color:var(--gold);
+  margin:0 0 2px;
+}
+.chef-nombre{
+  font-size:clamp(1.9rem, 3.6vw, 2.75rem);
+  font-weight:600;
+  font-style:italic;
+  line-height:1.08;
+  color:var(--white);
+  margin:0 0 18px;
+}
+/* biografía, datos y cita comparten el mismo ancho para que sus bordes queden alineados */
+.chef-bio,
+.chef-datos,
+.chef-invita{max-width:540px;}
+.chef-bio{
+  color:rgba(246,241,231,0.78);
+  margin:0 0 26px;
+  line-height:1.7;
+  text-align:justify;   /* bordes izquierdo y derecho parejos */
+  hyphens:none;         /* palabras siempre completas, sin cortes con guion */
+  -webkit-hyphens:none;
+  text-wrap:pretty;     /* reparte mejor las palabras entre líneas y evita huecos grandes */
+}
+
+/* tres datos destacados separados por líneas doradas */
+.chef-datos{
+  list-style:none;
+  margin:0 0 26px;
+  padding:18px 0;
+  display:grid;
+  grid-template-columns:repeat(3, minmax(0, 1fr));
+  border-top:1px solid var(--line-navy);
+  border-bottom:1px solid var(--line-navy);
+}
+.chef-datos li{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  padding:0 16px;
+  border-left:1px solid var(--line-navy);
+}
+.chef-datos li:first-child{border-left:0;padding-left:0;}
+.chef-datos strong{
+  font-family:var(--font-display);
+  font-size:1.5rem;
+  font-weight:700;
+  color:var(--gold);
+  line-height:1;
+}
+.chef-datos span{
+  font-size:0.78rem;
+  line-height:1.3;
+  color:rgba(246,241,231,0.7);
+}
+
+/* invitación con firma */
+.chef-invita{
+  margin:0 0 28px;
+  padding-left:16px;
+  border-left:2px solid var(--gold);
+}
+.chef-invita p{
+  font-family:var(--font-display);
+  font-style:italic;
+  font-size:1.12rem;
+  line-height:1.55;
+  color:var(--gold-pale);
+  margin:0;
+  text-align:justify;
+  hyphens:none;
+  -webkit-hyphens:none;
+  text-wrap:pretty;
+}
+.chef-firma{
+  display:inline-flex;
+  flex-direction:column;
+  align-items:flex-start;
+  margin-top:16px; /* separación respecto de la frase de arriba */
+  font-family:"Great Vibes", cursive;
+  font-size:2.2rem;
+  color:var(--gold);
+  line-height:1.1;
+}
+/* la firma es un bloque del ancho del texto, así el trazo (100 %) mide lo mismo que "Gustavo Riquelme." */
+.firma-trazo{
+  width:100%;
+  height:28px;
+  margin-top:-8px;
+  overflow:visible;
+}
+.firma-trazo path{
+  fill:none;
+  stroke:var(--gold);
+  stroke-width:1.7;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+  vector-effect:non-scaling-stroke; /* grosor parejo aunque el trazo se estire */
+}
+
+/* ---------- Firma animada "Gustavo" ----------
+   1) Una máscara con borde suave recorre la palabra de izquierda a derecha, como una pluma.
+   2) Se dibuja el trazo curvo de abajo.
+   3) Un destello dorado claro cruza la palabra y queda un brillo suave.
+   El relleno lateral deja espacio a los rasgos de la letra para que no se recorten. */
+.escritura{
+  display:inline-block;
+  padding:0.08em 0.25em 0.12em;
+  margin-left:-0.25em;
+  /* texto con degradado dorado: la franja clara central es el destello final */
+  color:transparent;
+  background:linear-gradient(100deg, var(--gold) 0%, var(--gold) 42%, #FFF4C9 50%, var(--gold) 58%, var(--gold) 100%);
+  background-size:300% 100%;
+  background-position:100% 0;
+  -webkit-background-clip:text;
+          background-clip:text;
+}
+.js .escritura{
+  -webkit-mask-image:linear-gradient(90deg, #000 42%, transparent 58%);
+          mask-image:linear-gradient(90deg, #000 42%, transparent 58%);
+  -webkit-mask-size:260% 100%;
+          mask-size:260% 100%;
+  -webkit-mask-repeat:no-repeat;
+          mask-repeat:no-repeat;
+  -webkit-mask-position:100% 0;
+          mask-position:100% 0;
+}
+/* escritura (3 s) → trazo con rulos (2,2 s) → destello y brillo (1,6 s) */
+.js .escritura.is-visible{
+  animation:
+    escribir 3s cubic-bezier(0.45, 0.05, 0.35, 1) 0.5s forwards,
+    destello 1.6s ease-in-out 5.6s forwards;
+}
+@keyframes escribir{
+  to{-webkit-mask-position:0 0;mask-position:0 0;}
+}
+@keyframes destello{
+  0%  {background-position:100% 0;filter:drop-shadow(0 0 0 rgba(240,217,160,0));}
+  50% {filter:drop-shadow(0 0 12px rgba(240,217,160,0.75));}
+  100%{background-position:0 0;filter:drop-shadow(0 0 5px rgba(217,169,79,0.45));}
+}
+/* el trazo bajo la firma se dibuja cuando termina de escribirse "Gustavo" */
+.js .firma-trazo path{stroke-dasharray:1;stroke-dashoffset:1;}
+.js .chef-firma.is-visible .firma-trazo path{
+  animation:trazar 2.2s cubic-bezier(0.55, 0.1, 0.35, 1) 3.3s forwards;
+}
+@keyframes trazar{to{stroke-dashoffset:0;}}
+@media (prefers-reduced-motion: reduce){
+  .js .escritura{-webkit-mask-image:none;mask-image:none;}
+  .js .escritura.is-visible{animation:none;}
+  .js .firma-trazo path{stroke-dashoffset:0;}
+  .js .chef-firma.is-visible .firma-trazo path{animation:none;}
+}
+.chef-acciones{display:flex;flex-wrap:wrap;gap:12px;}
+
+/* retrato en forma de arco con marco dorado desplazado */
+.chef-retrato{
+  position:relative;
+  margin:0;
+  width:100%;
+  max-width:330px;
+  justify-self:center;
+}
+.chef-retrato::before{
+  content:"";
+  position:absolute;
+  inset:18px -18px -18px 18px;
+  border:2px solid var(--gold);
+  border-radius:999px 999px 20px 20px;
+}
+/* carrusel: todas las fotos apiladas en el arco, se cambia con un fundido */
+.chef-fotos{
+  position:relative;
+  width:100%;
+  aspect-ratio:4 / 5;
+  border-radius:999px 999px 20px 20px;
+  overflow:hidden;
+  box-shadow:var(--shadow-navy);
+  background:var(--navy-deep);
+}
+.chef-fotos img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:50% 30%;
+  opacity:0;
+  transform:scale(1.06);
+  transition:opacity 1.2s var(--ease), transform 6s linear;
+}
+.chef-fotos img.is-activa{opacity:1;transform:scale(1);}
+.chef-puntos{
+  position:absolute;
+  left:0; right:0; bottom:14px;
+  z-index:1;
+  display:flex;
+  justify-content:center;
+  gap:8px;
+}
+.chef-puntos[hidden]{display:none;}
+.chef-puntos button{
+  width:9px;
+  height:9px;
+  padding:0;
+  border-radius:999px;
+  border:1px solid var(--gold-pale);
+  background:rgba(31,17,8,0.45);
+  cursor:pointer;
+  transition:width 0.3s var(--ease), background 0.3s;
+}
+.chef-puntos button.is-activa{width:22px;background:var(--gold);border-color:var(--gold);}
+.chef-puntos button:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+@media (prefers-reduced-motion: reduce){
+  .chef-fotos img{transition:opacity 0.3s;transform:none;}
+  .chef-fotos img.is-activa{transform:none;}
+}
+
+/* ---------- Mis trabajos ----------
+   Mosaico de 4 columnas con filas de alto fijo: cursos.js decide qué fotos agrandar
+   (trabajo--grande 2×2, trabajo--ancho 2×1, trabajo--completo todo el ancho) para que
+   no queden huecos con ninguna cantidad de fotos. */
+.trabajos{padding:88px 0 40px;}
+.trabajos-grid{
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+  grid-auto-rows:clamp(130px, 15vw, 200px);
+  grid-auto-flow:dense;
+  gap:14px;
+}
+
+/* separador sutil entre secciones: línea dorada que se desvanece a los lados y un rombo al centro */
+.separador{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding-top:24px;
+  padding-bottom:8px;
+}
+.separador::before,
+.separador::after{
+  content:"";
+  flex:1;
+  max-width:280px;
+  height:1px;
+}
+.separador::before{background:linear-gradient(to right, rgba(185,137,53,0), rgba(185,137,53,0.45));}
+.separador::after{background:linear-gradient(to left, rgba(185,137,53,0), rgba(185,137,53,0.45));}
+.separador span{
+  width:7px;
+  height:7px;
+  margin:0 14px;
+  transform:rotate(45deg);
+  border:1px solid rgba(185,137,53,0.6);
+}
+.trabajo{
+  position:relative;
+  margin:0;
+  border-radius:var(--radius);
+  overflow:hidden;
+  background:var(--navy-deep);
+  box-shadow:var(--shadow-soft);
+  cursor:zoom-in;
+  opacity:0; /* entra con animación cuando la galería aparece en pantalla */
+  transition:transform 0.45s var(--ease), box-shadow 0.45s var(--ease);
+}
+.trabajo--grande{grid-column:span 2;grid-row:span 2;}
+.trabajo--ancho{grid-column:span 2;}
+.trabajo--completo{grid-column:1 / -1;grid-row:span 2;}
+.trabajo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  transition:transform 0.9s var(--ease), filter 0.6s var(--ease);
+}
+
+/* entrada en cascada: cada foto aparece un poco después que la anterior */
+.trabajos-grid.is-visible .trabajo{
+  animation:trabajo-entra 0.9s var(--ease) calc(var(--i, 0) * 120ms) both;
+}
+@keyframes trabajo-entra{
+  from{opacity:0;translate:0 34px;scale:0.94;filter:blur(4px);}
+  to{opacity:1;translate:0 0;scale:1;filter:blur(0);}
+}
+
+/* la foto destacada tiene un movimiento lento y continuo (efecto cámara) */
+.trabajo--grande:first-child img,
+.trabajo--completo img{animation:camara-lenta 16s ease-in-out infinite alternate;}
+@keyframes camara-lenta{
+  from{transform:scale(1) translate(0, 0);}
+  to{transform:scale(1.1) translate(-2%, -2%);}
+}
+
+/* marco dorado y destello al pasar el cursor */
+.trabajo::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:2;
+  border-radius:inherit;
+  box-shadow:inset 0 0 0 0 var(--gold);
+  transition:box-shadow 0.4s var(--ease);
+  pointer-events:none;
+}
+.trabajo::after{
+  content:"";
+  position:absolute;
+  top:0; bottom:0;
+  left:-60%;
+  width:45%;
+  z-index:1;
+  background:linear-gradient(105deg, rgba(255,244,201,0) 0%, rgba(255,244,201,0.35) 50%, rgba(255,244,201,0) 100%);
+  transform:skewX(-18deg);
+  pointer-events:none;
+}
+.trabajo:hover,
+.trabajo:focus-visible{
+  transform:translateY(-6px);
+  box-shadow:0 22px 40px rgba(46,29,20,0.28);
+  outline:none;
+}
+.trabajo:hover::before,
+.trabajo:focus-visible::before{box-shadow:inset 0 0 0 2px var(--gold);}
+.trabajo:hover::after{animation:destello-foto 0.9s ease-out;}
+@keyframes destello-foto{to{left:130%;}}
+.trabajo:hover img{transform:scale(1.08);filter:saturate(1.12) contrast(1.04);}
+.trabajo--grande:first-child:hover img,
+.trabajo--completo:hover img{animation-play-state:paused;}
+
+/* descripción: línea dorada que crece y texto que sube al pasar el cursor */
+.trabajo figcaption{
+  position:absolute;
+  left:0; right:0; bottom:0;
+  z-index:2;
+  padding:42px 16px 14px;
+  background:linear-gradient(to top, rgba(31,17,8,0.88), rgba(31,17,8,0));
+  color:var(--white);
+  font-family:var(--font-display);
+  font-style:italic;
+  font-size:1.02rem;
+  transform:translateY(6px);
+  transition:transform 0.45s var(--ease);
+}
+.trabajo figcaption::before{
+  content:"";
+  display:block;
+  width:26px;
+  height:2px;
+  margin-bottom:8px;
+  background:var(--gold);
+  transition:width 0.45s var(--ease);
+}
+.trabajo:hover figcaption{transform:translateY(0);}
+.trabajo:hover figcaption::before{width:56px;}
+.trabajo--grande figcaption,
+.trabajo--completo figcaption{font-size:1.3rem;padding:56px 22px 20px;}
+
+/* visor de foto ampliada */
+.trabajo-visor{
+  position:fixed;
+  inset:0;
+  z-index:200;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  padding:24px 16px;
+  background:rgba(15,8,4,0.9);
+  backdrop-filter:blur(6px);
+  opacity:0;
+  transition:opacity 0.3s var(--ease);
+}
+.trabajo-visor[hidden]{display:none;}
+.trabajo-visor.is-abierto{opacity:1;}
+.trabajo-visor figure{
+  margin:0;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+  transform:scale(0.94);
+  transition:transform 0.35s var(--ease);
+}
+.trabajo-visor.is-abierto figure{transform:scale(1);}
+.trabajo-visor img{
+  max-width:min(88vw, 1000px);
+  max-height:78vh;
+  border-radius:var(--radius);
+  box-shadow:0 30px 60px rgba(0,0,0,0.5);
+}
+.trabajo-visor figcaption{font-family:var(--font-display);font-style:italic;color:var(--gold-pale);font-size:1.15rem;}
+.trabajo-visor-cerrar,
+.trabajo-visor-flecha{
+  border:1px solid var(--gold);
+  background:rgba(31,17,8,0.8);
+  color:var(--gold-pale);
+  border-radius:50%;
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+}
+.trabajo-visor-cerrar{position:absolute;top:18px;right:18px;width:42px;height:42px;font-size:1rem;}
+.trabajo-visor-flecha{width:46px;height:46px;font-size:1.6rem;flex:none;}
+.trabajo-visor-flecha[hidden]{display:none;}
+.trabajo-visor-cerrar:hover,
+.trabajo-visor-flecha:hover{background:var(--gold);color:var(--navy-deep);}
+
+/* ---------- Cursos ---------- */
+.cursos-lista{padding:64px 0 96px;}
+.cursos-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+  gap:24px;
+}
+.curso-card{
+  background:var(--white);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow-soft);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+}
+.curso-body{
+  padding:22px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  flex:1;
+  text-align:center; /* nombre del curso, datos y precio centrados */
+}
+.curso-meta{
+  font-family:var(--font-mono);
+  font-size:0.72rem;
+  text-transform:uppercase;
+  letter-spacing:0.12em;
+  color:var(--accent);
+  margin:0;
+}
+.curso-nombre{
+  font-family:var(--font-display);
+  font-size:1.35rem;
+  color:var(--espresso);
+  margin:0;
+}
+.curso-desc{color:var(--espresso-soft);margin:0;}
+.curso-precio{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-size:1.25rem;
+  color:var(--espresso);
+  margin:0;
+}
+.curso-cta{align-self:stretch;justify-content:center;margin-top:auto;text-align:center;}
+
+/* Vista previa: carrusel con las primeras láminas del PDF y una lámina final bloqueada */
+.curso-preview{
+  position:relative;
+  aspect-ratio:3 / 4;
+  overflow:hidden;
+  background:var(--cream-deep);
+  border-bottom:1px solid var(--line);
+  user-select:none;
+  -webkit-user-select:none;
+  -webkit-touch-callout:none;
+  touch-action:pan-y;
+}
+.curso-laminas{position:absolute;inset:14px 14px 36px;}
+.curso-lamina{
+  position:absolute;
+  inset:0;
+  display:flex; /* flex (no grid) para que max-height:100% del canvas respete la altura */
+  align-items:center;
+  justify-content:center;
+  opacity:0;
+  visibility:hidden;
+  transition:opacity 0.35s var(--ease), visibility 0.35s;
+}
+.curso-lamina.is-activa{opacity:1;visibility:visible;}
+.curso-lamina canvas{
+  max-width:100%;
+  max-height:100%;
+  width:auto;
+  height:auto;
+  display:block;
+  background:#fff;
+  box-shadow:0 6px 18px rgba(46,29,20,0.22);
+  pointer-events:none; /* no se puede seleccionar, arrastrar ni abrir la imagen */
+}
+.curso-cargando{
+  font-family:var(--font-mono);
+  font-size:0.75rem;
+  color:var(--espresso-soft);
+  padding:16px;
+  text-align:center;
+}
+
+/* lámina final bloqueada */
+.curso-lamina--fin{
+  background:linear-gradient(160deg, var(--navy) 0%, var(--navy-deep) 100%);
+  border-radius:6px;
+  box-shadow:0 6px 18px rgba(46,29,20,0.22);
+}
+.curso-fin{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  padding:22px;
+  text-align:center;
+  color:var(--cream);
+}
+.curso-fin-icono{
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  border:1.5px solid var(--gold);
+  color:var(--gold);
+}
+.curso-fin-icono svg{width:24px;height:24px;}
+.curso-fin-titulo{
+  font-family:var(--font-display);
+  font-style:italic;
+  font-size:1.25rem;
+  color:var(--white);
+  margin:0;
+}
+.curso-fin-texto{font-size:0.85rem;color:rgba(246,241,231,0.75);margin:0 0 6px;max-width:26ch;}
+
+/* etiqueta "Vista previa" */
+.curso-etiqueta{
+  position:absolute;
+  top:22px;
+  left:22px;
+  z-index:2;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:var(--navy-deep);
+  color:var(--gold-pale);
+  border:1px solid var(--gold);
+  border-radius:999px;
+  padding:5px 11px;
+  font-family:var(--font-mono);
+  font-size:0.66rem;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  box-shadow:0 6px 16px rgba(31,17,8,0.3);
+  pointer-events:none;
+}
+.curso-etiqueta svg{width:14px;height:14px;color:var(--gold);}
+
+/* flechas y marcadores */
+.curso-flecha{
+  position:absolute;
+  top:calc(50% - 30px);
+  z-index:2;
+  width:36px;
+  height:36px;
+  border-radius:50%;
+  border:1px solid var(--gold);
+  background:rgba(31,17,8,0.82);
+  color:var(--gold-pale);
+  font-size:1.4rem;
+  line-height:1;
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+  transition:background 0.2s, transform 0.2s;
+}
+.curso-flecha[hidden]{display:none;}
+.curso-flecha:hover{background:var(--gold);color:var(--navy-deep);}
+.curso-flecha:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+.curso-flecha--prev{left:8px;}
+.curso-flecha--next{right:8px;}
+.curso-puntos{
+  position:absolute;
+  left:0; right:0; bottom:9px;
+  display:flex;
+  justify-content:center;
+  gap:6px;
+}
+.curso-puntos span{
+  min-width:20px;
+  height:20px;
+  border-radius:999px;
+  display:grid;
+  place-items:center;
+  font-family:var(--font-mono);
+  font-size:0.62rem;
+  color:var(--espresso-soft);
+  border:1px solid var(--gold-deep);
+}
+.curso-puntos span.is-activa{background:var(--navy-deep);color:var(--gold-pale);border-color:var(--navy-deep);}
+.curso-puntos span.es-fin{font-size:0;}
+.curso-puntos span.es-fin::before{content:"🔒";font-size:0.6rem;}
+@media (prefers-reduced-motion: reduce){
+  .curso-lamina{transition:none;}
+}
+
+/* Tarjeta "Próximamente": mismo formato que un curso publicado, con portada de espera */
+.curso-portada-proxima{
+  width:100%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  text-align:center;
+  border-radius:6px;
+  background:
+    radial-gradient(220px 160px at 50% 38%, rgba(217,169,79,0.14), transparent 70%),
+    linear-gradient(160deg, var(--navy) 0%, var(--navy-deep) 100%);
+  outline:1px dashed rgba(217,169,79,0.45);
+  outline-offset:-10px;
+  box-shadow:0 6px 18px rgba(46,29,20,0.22);
+}
+.curso-proxima-icono{
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  border:1.5px solid var(--gold);
+  color:var(--gold);
+  margin-bottom:6px;
+}
+.curso-proxima-icono svg{width:22px;height:22px;}
+.curso-proxima-numero{
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  text-transform:uppercase;
+  letter-spacing:0.16em;
+  color:rgba(246,241,231,0.6);
+}
+.curso-proxima-texto{
+  font-family:"Great Vibes", cursive;
+  font-size:2.3rem;
+  line-height:1;
+  color:var(--gold);
+}
+.curso-proxima-linea{width:44px;height:1px;background:var(--gold);opacity:0.6;}
+.curso-proxima-sub{font-size:0.8rem;color:rgba(246,241,231,0.7);}
+.curso-card--proximo .curso-desc{font-size:0.92rem;}
+.curso-cta--proximo{
+  background:transparent;
+  border:1.5px dashed var(--gold-deep);
+  color:var(--gold-deep);
+  cursor:default;
+  box-shadow:none;
+}
+
+/* Cuadro reservado para un curso que aún no se publica (solo si no carga cursos.js) */
+.curso-card--soon{
+  border:1.5px dashed var(--gold-deep);
+  background:rgba(255,252,242,0.45);
+  box-shadow:none;
+}
+.curso-slot{
+  aspect-ratio:4 / 3;
+  display:grid;
+  place-items:center;
+  background:repeating-linear-gradient(135deg, rgba(185,137,53,0.10) 0 12px, rgba(185,137,53,0.04) 12px 24px);
+  border-bottom:1.5px dashed var(--gold-deep);
+  font-family:var(--font-mono);
+  font-size:0.8rem;
+  text-transform:uppercase;
+  letter-spacing:0.14em;
+  color:var(--gold-deep);
+}
+
+/* Tablet: presentación en dos columnas más compactas, galería en 4 columnas
+   y tres tarjetas de curso por fila */
+@media (max-width: 1024px){
+  .chef-grid{gap:40px;}
+  .chef-retrato{max-width:280px;}
+  .cursos-grid{grid-template-columns:repeat(auto-fill, minmax(min(220px, 100%), 1fr));gap:18px;}
+}
+/* Tablet vertical angosta y celular: presentación en una columna, foto centrada arriba */
+@media (max-width: 760px){
+  .chef-grid{grid-template-columns:minmax(0, 1fr);gap:40px;}
+  .chef-retrato{order:-1;max-width:240px;justify-self:center;}
+}
+@media (max-width: 640px){
+  .chef{padding:48px 0 56px;}
+  .chef-retrato{max-width:210px;}
+  .trabajos-grid{grid-template-columns:repeat(2, minmax(0, 1fr));}
+  .chef-datos li{padding:0 10px;}
+  .chef-datos strong{font-size:1.25rem;}
+  .trabajos{padding:64px 0 24px;}
+  .trabajos-grid{gap:10px;}
+  .cursos-lista{padding:48px 0 72px;}
+}
+/* Celular: sin guiones, el texto justificado deja huecos grandes en una columna tan angosta;
+   por eso en pantallas de menos de 480 px la biografía y la cita se alinean a la izquierda. */
+@media (max-width: 480px){
+  .chef-bio,
+  .chef-invita p{text-align:left;}
+}
+@media (max-width: 640px){
+  .trabajos-grid{grid-auto-rows:36vw;}
+  .trabajo figcaption{font-size:0.9rem;padding:34px 12px 10px;}
+  .trabajo--grande figcaption,
+  .trabajo--completo figcaption{font-size:1.1rem;padding:44px 16px 14px;}
+  .trabajo-visor-flecha{position:absolute;bottom:22px;}
+  .trabajo-visor-flecha--prev{left:calc(50% - 56px);}
+  .trabajo-visor-flecha--next{right:calc(50% - 56px);}
+}
+@media (prefers-reduced-motion: reduce){
+  .trabajo{opacity:1;}
+  .trabajos-grid.is-visible .trabajo{animation:none;}
+  .trabajo img,
+  .trabajo--grande:first-child img,
+  .trabajo--completo img{animation:none;transition:none;}
+  .trabajo:hover{transform:none;}
+  .trabajo:hover img{transform:none;}
+  .trabajo:hover::after{animation:none;}
+}

@@ -209,6 +209,8 @@ function productsFromCSV(text) {
       ...(/^agotado$/i.test(tag) && { tagVariant: "agotado" }),
       ...(/^nuevo$/i.test(tag) && { tagVariant: "nuevo" }),
       ...(/^edici[oó]n limitada$/i.test(tag) && { tagVariant: "limitada" }),
+      // "Por encargo" o "Solo por encargo": foto en gris y botón "Encargar" en vez de "Agregar".
+      ...(/^(solo )?por encargo$/i.test(tag) && { tagVariant: "encargo" }),
     };
   }).filter(Boolean);
 }
@@ -276,9 +278,15 @@ function cardHTML(p, selected = 0) {
   // Producto agotado (misma etiqueta roja "Agotado"): se ve igual que
   // cualquier tarjeta pero con el botón de compra deshabilitado.
   const isAgotado = p.tagVariant === "agotado";
+  // Producto "Por encargo": no se vende en el día a día. Foto en gris y, en vez de
+  // "Agregar", un botón "Encargar" que lleva al formulario de pedidos especiales.
+  const isEncargo = p.tagVariant === "encargo";
+  const actionBtn = isEncargo
+    ? `<a href="#pedidos" class="encargo-btn" data-encargo="${p.name}">Encargar</a>`
+    : `<button class="add-btn${isAgotado ? " add-btn--agotado" : ""}" data-id="${p.id}"${isAgotado ? " disabled" : ""}>${isAgotado ? "Agotado" : "Agregar"}</button>`;
 
   return `
-    <article class="product-card${isAgotado ? " product-card--agotado" : ""}" data-id="${p.id}">
+    <article class="product-card${isAgotado ? " product-card--agotado" : ""}${isEncargo ? " product-card--encargo" : ""}" data-id="${p.id}">
       <div class="product-media">
         ${p.tag ? `<span class="product-tag${p.tagVariant ? ` product-tag--${p.tagVariant}` : ""}">${p.tag}</span>` : ""}
         <img src="${p.img}" alt="${p.name}" class="product-photo"
@@ -296,7 +304,7 @@ function cardHTML(p, selected = 0) {
         ${priceOptions}
         <div class="product-footer">
           <span class="product-price">${clp(p.prices[selected].price)}</span>
-          <button class="add-btn${isAgotado ? " add-btn--agotado" : ""}" data-id="${p.id}"${isAgotado ? " disabled" : ""}>${isAgotado ? "Agotado" : "Agregar"}</button>
+          ${actionBtn}
         </div>
       </div>
     </article>
@@ -602,6 +610,19 @@ function renderCart() {
   }).join("");
   cartTotal.textContent = clp(total);
 }
+
+// Botón "Encargar" (productos por encargo): baja al formulario de pedidos
+// especiales y deja escrito el producto con el tamaño elegido.
+vitrinaEl.addEventListener("click", (e) => {
+  const link = e.target.closest(".encargo-btn");
+  if (!link) return;
+  const detalle = document.querySelector('#orderForm textarea[name="detalle"]');
+  if (!detalle) return;
+  const chip = link.closest(".product-card").querySelector(".price-chip.active");
+  const texto = `Quiero encargar: ${link.dataset.encargo}${chip ? ` (${chip.dataset.label})` : ""}. `;
+  if (!detalle.value.includes(texto.trim())) detalle.value = (texto + detalle.value).trim() + " ";
+  setTimeout(() => detalle.focus({ preventScroll: true }), 700);
+});
 
 vitrinaEl.addEventListener("click", (e) => {
   const btn = e.target.closest(".add-btn");
