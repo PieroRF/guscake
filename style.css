@@ -613,8 +613,8 @@ h2{
 .topbar-inner{
   display:flex;
   align-items:center;
-  padding-top:14px;
-  padding-bottom:14px;
+  padding-top:9px;  /* menos relleno: el logo giratorio es más alto que el anterior */
+  padding-bottom:9px;
   gap:24px;
 }
 /* La marca y las acciones ocupan el mismo ancho a cada lado, así el menú
@@ -643,11 +643,51 @@ h2{
   background:var(--navy-deep);
   box-shadow:0 0 10px rgba(244,194,74,0.55);
 }
+/* Logo de la barra superior: el mismo sello giratorio de la sección de historia
+   (logo fijo al centro y el texto "HECHO A MANO • DESDE 2026 • ..." girando alrededor). */
+.brand-sello{
+  position:relative;
+  flex:none;
+  width:60px;
+  height:60px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:var(--navy-deep);
+  border:1px solid var(--gold);
+  box-shadow:0 0 12px rgba(244,194,74,0.35);
+}
+.brand-sello svg{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  animation:historiaGira 22s linear infinite;
+}
+.brand-sello text{
+  font-family:var(--font-mono);
+  font-size:9px;
+  font-weight:700;
+  letter-spacing:1px;
+  fill:var(--gold-pale);
+}
+.brand-sello-logo{
+  width:30px;
+  height:30px;
+  border-radius:50%;
+  object-fit:cover;
+}
+@media (prefers-reduced-motion: reduce){
+  .brand-sello svg{animation:none;}
+}
 .brand-text{
   display:flex;
   flex-direction:column;
   line-height:1.15;
+  white-space:nowrap; /* "Gus Cake" y "Pastelería de autor" siempre en una línea */
 }
+/* el lado del logo nunca se angosta más que el propio logo: así el menú no se monta encima */
+.topbar-inner > .brand{min-width:max-content;}
 .brand-name{
   font-family:var(--font-display);
   font-style:italic;
@@ -871,15 +911,21 @@ h2{
   background:linear-gradient(135deg, #7a7a7a 0%, #5c5c5c 55%, #474747 100%);
 }
 
-@media (max-width:900px){
+/* Con 7 pestañas el menú se compacta en pantallas medianas... */
+@media (max-width:1240px){
+  .nav{gap:20px;}
+  .nav a{font-size:0.86rem;}
+}
+/* ...y bajo 1080 px pasa al menú hamburguesa para que no se monte sobre el logo */
+@media (max-width:1080px){
   .nav{display:none;}
   .nav-toggle{display:flex;}
   .mobile-nav{display:flex;}
   .btn-cta{display:none;}
   /* En móvil la barra superior queda más alta y con más aire entre elementos */
   .topbar-inner{
-    padding-top:21px;
-    padding-bottom:21px;
+    padding-top:14px;
+    padding-bottom:14px;
     gap:18px;
   }
   .brand{gap:14px;}
@@ -889,7 +935,10 @@ h2{
 
 @media (max-width:480px){
   .wrap{padding:0 20px;}
-  .topbar-inner{gap:14px;}
+  /* .wrap quita el relleno vertical: se repone para que el logo giratorio no toque los bordes */
+  .topbar-inner{gap:14px;padding-top:10px;padding-bottom:10px;}
+  .brand-sello{width:54px;height:54px;}
+  .brand-sello-logo{width:27px;height:27px;}
   .brand-sub{display:none;}
   .brand-name{font-size:1.08rem;}
   .cart-btn{padding:9px 13px; font-size:0.82rem;}
@@ -2254,11 +2303,11 @@ html:not(.no-splash) .hero-in{
   stroke-width:2;
   stroke-linecap:round;
   vector-effect:non-scaling-stroke;
-  stroke-dasharray:1;
-  stroke-dashoffset:1;
 }
-.historia-copy.in-view .historia-trazo path{animation:historiaTrazo 1.4s cubic-bezier(0.55,0.1,0.35,1) 0.7s forwards;}
-@keyframes historiaTrazo{to{stroke-dashoffset:0;}}
+/* oculto (recortado) hasta que la sección aparece; luego se descubre de izquierda a derecha */
+.historia-trazo{clip-path:inset(-50% 100% -50% 0);}
+.historia-copy.in-view .historia-trazo{animation:historiaTrazo 1.4s cubic-bezier(0.55,0.1,0.35,1) 0.7s forwards;}
+@keyframes historiaTrazo{to{clip-path:inset(-50% 0 -50% 0);}}
 
 .historia-texto{
   color:rgba(246,241,231,0.8);
@@ -2417,12 +2466,12 @@ html:not(.no-splash) .hero-in{
   .historia-pilares li{flex-direction:row;flex-wrap:wrap;align-items:center;column-gap:12px;}
   .historia-pilares .pilar-icono{margin:0;}
   .historia-pilares li > span:last-child{flex-basis:100%;padding-left:50px;margin-top:-6px;}
-  .historia-texto{text-align:left;}
+  .historia-texto{font-size:0.95rem;} /* justificado igual que en computador; letra un poco menor = menos huecos */
 }
 @media (prefers-reduced-motion: reduce){
   .historia-sello svg{animation:none;}
-  .historia-trazo path{stroke-dashoffset:0;}
-  .historia-copy.in-view .historia-trazo path{animation:none;}
+  .historia-trazo{clip-path:none;}
+  .historia-copy.in-view .historia-trazo{animation:none;}
   .historia-texto mark{background-size:100% 38%;transition:none;}
 }
 

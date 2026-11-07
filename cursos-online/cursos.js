@@ -25,19 +25,23 @@ const DESCRIPCIONES_TRABAJOS = [
    (1 = curso1.pdf, 2 = curso2.pdf, ...). El nombre es el que se muestra
    y el que se envía por WhatsApp al presionar "¡Me interesa!". Precio y
    descripción son opcionales: si quedan vacíos ("") no se muestran.
+   "etiqueta" (opcional) aparece como sello destacado en el centro de la
+   vista previa, por ejemplo "Preventa" o "Nuevo". Vacía ("") = sin sello.
    ===================================================================== */
 const CURSOS = {
-  1: { nombre: "El Merengue perfecto", descripcion: "", precio: "" },
-  2: { nombre: "Curso 2", descripcion: "", precio: "" },
-  3: { nombre: "Curso 3", descripcion: "", precio: "" },
+  1: { nombre: "El Merengue perfecto", descripcion: "", precio: "", etiqueta: "" },
+  2: { nombre: "Recetario Tartas", descripcion: "", precio: "", etiqueta: "Preventa" },
+  3: { nombre: "Curso 3", descripcion: "", precio: "", etiqueta: "" },
 };
 
 // Cantidad de láminas (páginas) del PDF que se pueden ver antes del bloqueo.
 const PAGINAS_VISTA_PREVIA = 2;
 
-// Cantidad de tarjetas "Próximamente" que se muestran después de los cursos publicados.
-// Si en CURSOS el número siguiente ya tiene un nombre propio, la tarjeta lo anuncia.
-const CURSOS_PROXIMOS = 2;
+// Cantidad total de tarjetas en la sección de cursos. Los cursos publicados (PDF) van primero
+// y los espacios que sobran se completan con tarjetas "Próximamente". Si hay más cursos
+// publicados que este número, se muestran todos igual (sin tarjetas "Próximamente").
+// Si en CURSOS el número de una tarjeta "Próximamente" ya tiene nombre propio, la tarjeta lo anuncia.
+const TOTAL_TARJETAS_CURSOS = 3;
 
 // Segundos que se muestra cada foto del chef (img/chef/fotochef1, fotochef2, ...).
 const SEGUNDOS_POR_FOTO_CHEF = 5;
@@ -272,7 +276,7 @@ async function buscarSerie(base) {
     '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 12s3.5-6.5 9.5-6.5 9.5 6.5 9.5 6.5-3.5 6.5-9.5 6.5S2.5 12 2.5 12z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>';
 
   function crearTarjeta(n) {
-    const datos = { nombre: `Curso ${n}`, descripcion: "", precio: "", ...(CURSOS[n] || {}) };
+    const datos = { nombre: `Curso ${n}`, descripcion: "", precio: "", etiqueta: "", ...(CURSOS[n] || {}) };
     const wa = enlaceWhatsApp(n, datos);
     const card = document.createElement("article");
     card.className = "curso-card";
@@ -306,6 +310,13 @@ async function buscarSerie(base) {
     }
     card.querySelector(".curso-cta").href = wa;
     card.dataset.wa = wa;
+    // Sello destacado en el centro de la vista previa (p. ej. "Preventa").
+    if (datos.etiqueta) {
+      const sello = document.createElement("span");
+      sello.className = "curso-sello-centro";
+      sello.textContent = datos.etiqueta;
+      card.querySelector(".curso-preview").appendChild(sello);
+    }
     // Las láminas no se pueden arrastrar ni abrir con clic derecho.
     const preview = card.querySelector(".curso-preview");
     preview.addEventListener("contextmenu", (e) => e.preventDefault());
@@ -339,11 +350,27 @@ async function buscarSerie(base) {
       <div class="curso-body">
         <p class="curso-meta">Curso ${n} · Muy pronto</p>
         <h3 class="curso-nombre"></h3>
-        <p class="curso-desc">Estamos preparando este curso. ¡Pronto podrás verlo aquí!</p>
         <span class="btn curso-cta curso-cta--proximo" aria-disabled="true">Muy pronto</span>
       </div>`;
     card.querySelector(".curso-nombre").textContent = propio || "Nuevo curso";
     return card;
+  }
+
+  // Nombres de curso: se muestran grandes y centrados; si alguno ocupa más de 2 líneas,
+  // su letra se achica de a poco hasta caber, así todas las tarjetas quedan parejas.
+  function ajustarTitulos() {
+    grid.querySelectorAll(".curso-nombre").forEach((h) => {
+      h.style.fontSize = "";
+      const estilo = getComputedStyle(h);
+      let tam = parseFloat(estilo.fontSize);
+      const proporcion = (parseFloat(estilo.lineHeight) || tam * 1.15) / tam;
+      const texto = document.createRange();
+      texto.selectNodeContents(h);
+      while (tam > 15 && texto.getBoundingClientRect().height > tam * proporcion * 2 + 2) {
+        tam -= 1;
+        h.style.fontSize = `${tam}px`;
+      }
+    });
   }
 
   // Carrusel: láminas visibles + una última lámina bloqueada que invita a comprar.
@@ -454,10 +481,14 @@ async function buscarSerie(base) {
       grid.appendChild(card);
       return [n, card];
     });
-    // Tarjetas "Próximamente" a continuación (al menos 3 si aún no hay cursos publicados).
+    // Tarjetas "Próximamente" hasta completar TOTAL_TARJETAS_CURSOS.
     const siguiente = (encontrados.at(-1) || 0) + 1;
-    const proximos = encontrados.length ? CURSOS_PROXIMOS : Math.max(CURSOS_PROXIMOS, 3);
+    const proximos = Math.max(0, TOTAL_TARJETAS_CURSOS - encontrados.length);
     for (let k = 0; k < proximos; k++) grid.appendChild(crearProximo(siguiente + k));
+    ajustarTitulos();
+    document.fonts?.ready.then(ajustarTitulos); // vuelve a medir cuando carga la tipografía del sitio
+    let espera;
+    window.addEventListener("resize", () => { clearTimeout(espera); espera = setTimeout(ajustarTitulos, 150); });
     if (!encontrados.length) return;
 
     let pdfjs;

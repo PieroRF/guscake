@@ -1,0 +1,68 @@
+/* Estilos propios de la página de banquetería y catering (banqueteria-catering/index.html).
+   Los estilos generales del sitio (cabecera, botones, pie, colores) vienen de ../style.css. */
+
+/* ---------- Presentación (banda oscura, igual que cursos online y la historia) ---------- */
+.banqueteria-intro{
+  position:relative;
+  overflow:hidden;
+  padding:96px 0 104px;
+  color:var(--cream);
+  background:
+    radial-gradient(560px 400px at 85% 30%, rgba(217,169,79,0.16), transparent 70%),
+    radial-gradient(480px 360px at 5% 95%, rgba(153,61,24,0.22), transparent 70%),
+    linear-gradient(160deg, var(--navy) 0%, var(--navy-deep) 100%);
+}
+.banqueteria-intro .eyebrow{color:var(--gold);}
+.banqueteria-titulo{
+  color:var(--white);
+  font-size:clamp(2.1rem, 4.6vw, 3.4rem);
+  font-weight:600;
+  font-style:italic;
+  line-height:1.08;
+  max-width:16ch;
+  margin:8px 0 22px;
+}
+.banqueteria-titulo em{color:var(--gold);}
+.banqueteria-texto{
+  color:rgba(246,241,231,0.8);
+  max-width:56ch;
+  line-height:1.7;
+  margin:0 0 30px;
+}
+.banqueteria-acciones{display:flex;flex-wrap:wrap;gap:12px;}
+
+/* ---------- Espacio reservado mientras se arma el contenido ---------- */
+.banqueteria-proximamente{padding:80px 0 96px;}
+.banqueteria-aviso{
+  max-width:560px;
+  margin:0 auto;
+  padding:40px 28px;
+  text-align:center;
+  border:1.5px dashed var(--gold-deep);
+  border-radius:var(--radius);
+  background:rgba(255,252,242,0.45);
+}
+.banqueteria-aviso-icono{
+  width:52px;
+  height:52px;
+  margin:0 auto 12px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  border:1.5px solid var(--gold-deep);
+  color:var(--gold-deep);
+}
+.banqueteria-aviso-icono svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.banqueteria-aviso-titulo{
+  font-family:"Great Vibes", cursive;
+  font-size:2.4rem;
+  line-height:1;
+  color:var(--gold-deep);
+  margin:0 0 8px;
+}
+.banqueteria-aviso-texto{color:var(--espresso-soft);margin:0;}
+
+@media (max-width:640px){
+  .banqueteria-intro{padding:64px 0 72px;}
+  .banqueteria-proximamente{padding:56px 0 72px;}
+}

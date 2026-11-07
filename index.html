@@ -155,8 +155,15 @@
 <header class="topbar">
   <div class="wrap topbar-inner">
     <a href="#inicio" class="brand">
-      <img src="img/logo.svg" alt="GusCake — pastelería artesanal" class="brand-mark"
-           onerror="this.onerror=null; this.src='img/logo-icon.png';">
+      <!-- Logo giratorio: el mismo sello de la sección "Un sueño detrás de cada receta" -->
+      <span class="brand-sello">
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <defs><path id="marcaCirculo" d="M60,60 m-45,0 a45,45 0 1,1 90,0 a45,45 0 1,1 -90,0"/></defs>
+          <text><textPath href="#marcaCirculo" textLength="280" lengthAdjust="spacing">HECHO A MANO • DESDE 2026 • SAN PEDRO DE LA PAZ •</textPath></text>
+        </svg>
+        <img src="img/logo.svg" alt="GusCake — pastelería artesanal" class="brand-sello-logo"
+             onerror="this.onerror=null; this.src='img/logo-icon.png';">
+      </span>
       <span class="brand-text">
         <span class="brand-name">Gus Cake</span>
         <span class="brand-sub">Pastelería de autor</span>
@@ -165,7 +172,8 @@
     <nav class="nav">
       <a href="#vitrina">Catálogo</a>
       <a href="#nosotros">Historia</a>
-      <a href="cursos-online/">Cursos online</a>
+      <a href="cursos-online/">Cursos</a>
+      <a href="banqueteria-catering/">Banquetería</a>
       <a href="#pedidos">Encargos</a>
       <a href="#ubicacion">Ubicación</a>
       <a href="mayoristas.html" class="nav-stack">Precios<br>Mayoristas</a>
@@ -174,7 +182,6 @@
       <button class="cart-btn" id="cartToggle" aria-label="Ver carrito">
         🧺 <span id="cartCount">0</span>
       </button>
-      <a href="#pedidos" class="btn btn-cta"><span class="btn-stack">Pedidos<br>Especiales</span></a>
       <button class="nav-toggle" id="navToggle" aria-label="Abrir menú" aria-expanded="false">
         <span></span><span></span><span></span>
       </button>
@@ -183,11 +190,11 @@
   <nav class="mobile-nav" id="mobileNav">
     <a href="#vitrina">Catálogo</a>
     <a href="#nosotros">Historia</a>
-    <a href="cursos-online/">Cursos online</a>
+    <a href="cursos-online/">Cursos</a>
+    <a href="banqueteria-catering/">Banquetería</a>
     <a href="#pedidos">Encargos</a>
     <a href="#ubicacion">Ubicación</a>
     <a href="mayoristas.html" class="nav-stack">Precios Mayoristas</a>
-    <a href="#pedidos" class="btn btn-primary mobile-nav-cta">Pedidos Especiales</a>
   </nav>
 </header>
 

@@ -164,16 +164,19 @@
   100%{background-position:0 0;filter:drop-shadow(0 0 5px rgba(217,169,79,0.45));}
 }
 /* el trazo bajo la firma se dibuja cuando termina de escribirse "Gustavo" */
-.js .firma-trazo path{stroke-dasharray:1;stroke-dashoffset:1;}
-.js .chef-firma.is-visible .firma-trazo path{
+/* El trazo queda totalmente oculto (recortado) hasta que la firma aparece en pantalla y
+   termina de escribirse; luego se descubre de izquierda a derecha, rulos incluidos.
+   (Antes se usaba stroke-dasharray, que con el trazo estirado dejaba ver una línea fina.) */
+.js .firma-trazo{clip-path:inset(-20% 100% -20% 0);}
+.js .chef-firma.is-visible .firma-trazo{
   animation:trazar 2.2s cubic-bezier(0.55, 0.1, 0.35, 1) 3.3s forwards;
 }
-@keyframes trazar{to{stroke-dashoffset:0;}}
+@keyframes trazar{to{clip-path:inset(-20% 0 -20% 0);}}
 @media (prefers-reduced-motion: reduce){
   .js .escritura{-webkit-mask-image:none;mask-image:none;}
   .js .escritura.is-visible{animation:none;}
-  .js .firma-trazo path{stroke-dashoffset:0;}
-  .js .chef-firma.is-visible .firma-trazo path{animation:none;}
+  .js .firma-trazo{clip-path:none;}
+  .js .chef-firma.is-visible .firma-trazo{animation:none;}
 }
 .chef-acciones{display:flex;flex-wrap:wrap;gap:12px;}
 
@@ -462,9 +465,19 @@
   color:var(--accent);
   margin:0;
 }
+/* El nombre ocupa todo el espacio libre entre los datos y el botón, centrado en ambos
+   sentidos, con altura para 2 líneas: así todas las tarjetas quedan del mismo tamaño y sin
+   espacios en blanco. Si un nombre es más largo, cursos.js achica su letra hasta que quepa. */
 .curso-nombre{
+  flex:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:2.4em;
   font-family:var(--font-display);
-  font-size:1.35rem;
+  font-size:1.6rem;
+  line-height:1.15;
+  text-wrap:balance;
   color:var(--espresso);
   margin:0;
 }
@@ -477,6 +490,63 @@
   margin:0;
 }
 .curso-cta{align-self:stretch;justify-content:center;margin-top:auto;text-align:center;}
+
+/* Sello destacado en el centro de la vista previa (campo "etiqueta" en CURSOS, p. ej. "Preventa").
+   Colores de la marca: café oscuro con letras y doble borde dorado, que resaltan sobre la lámina
+   en blanco y negro. Animación: cae y se "estampa" sobre la portada, y luego se balancea
+   suavemente como un cartel colgado mientras un brillo dorado recorre las letras. */
+.curso-sello-centro{
+  position:absolute;
+  top:46%;
+  left:50%;
+  z-index:3;
+  padding:12px 26px 13px;
+  border-radius:8px;
+  background:linear-gradient(160deg, var(--navy) 0%, var(--navy-deep) 100%);
+  border:2px solid var(--gold);
+  outline:1px solid rgba(240,217,160,0.55);
+  outline-offset:-7px;
+  font-family:var(--font-display);
+  font-style:italic;
+  font-weight:700;
+  font-size:1.7rem;
+  letter-spacing:0.03em;
+  line-height:1;
+  white-space:nowrap;
+  /* letras con degradado dorado; la franja clara se desplaza = brillo */
+  color:transparent;
+  background-image:
+    linear-gradient(100deg, var(--gold-deep) 0%, var(--gold) 35%, #FFF4C9 50%, var(--gold) 65%, var(--gold-deep) 100%),
+    linear-gradient(160deg, var(--navy) 0%, var(--navy-deep) 100%);
+  background-size:250% 100%, 100% 100%;
+  background-position:100% 0, 0 0;
+  -webkit-background-clip:text, border-box;
+          background-clip:text, border-box;
+  box-shadow:0 14px 30px rgba(31,17,8,0.55), 0 0 0 5px rgba(217,169,79,0.22);
+  transform-origin:50% -40%;
+  transform:translate(-50%, -50%) rotate(-6deg);
+  animation:
+    selloEstampa 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.25) 0.4s both,
+    selloBalanceo 4.5s ease-in-out 1.3s infinite,
+    selloBrillo 3s linear 1.3s infinite;
+  pointer-events:none;
+}
+@keyframes selloEstampa{
+  from{opacity:0;transform:translate(-50%, -50%) rotate(-18deg) scale(2.2);}
+  60%{opacity:1;}
+  to{opacity:1;transform:translate(-50%, -50%) rotate(-6deg) scale(1);}
+}
+@keyframes selloBalanceo{
+  0%,100%{transform:translate(-50%, -50%) rotate(-6deg);}
+  50%{transform:translate(-50%, -50%) rotate(3deg);}
+}
+@keyframes selloBrillo{
+  from{background-position:100% 0, 0 0;}
+  to{background-position:-150% 0, 0 0;}
+}
+@media (prefers-reduced-motion: reduce){
+  .curso-sello-centro{animation:none;}
+}
 
 /* Vista previa: carrusel con las primeras láminas del PDF y una lámina final bloqueada */
 .curso-preview{
@@ -510,6 +580,7 @@
   display:block;
   background:#fff;
   box-shadow:0 6px 18px rgba(46,29,20,0.22);
+  filter:grayscale(1); /* vista previa en blanco y negro: el curso completo es el que se compra */
   pointer-events:none; /* no se puede seleccionar, arrastrar ni abrir la imagen */
 }
 .curso-cargando{
@@ -719,11 +790,11 @@
   .trabajos-grid{gap:10px;}
   .cursos-lista{padding:48px 0 72px;}
 }
-/* Celular: sin guiones, el texto justificado deja huecos grandes en una columna tan angosta;
-   por eso en pantallas de menos de 480 px la biografía y la cita se alinean a la izquierda. */
+/* Celular: la biografía y la cita se mantienen justificadas, igual que en computador.
+   La letra baja un poco para que entren más palabras por línea y queden menos huecos. */
 @media (max-width: 480px){
-  .chef-bio,
-  .chef-invita p{text-align:left;}
+  .chef-bio{font-size:0.94rem;}
+  .chef-invita p{font-size:1.02rem;}
 }
 @media (max-width: 640px){
   .trabajos-grid{grid-auto-rows:36vw;}
