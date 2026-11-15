@@ -29,8 +29,8 @@ const DESCRIPCIONES_TRABAJOS = [
    vista previa, por ejemplo "Preventa" o "Nuevo". Vacía ("") = sin sello.
    ===================================================================== */
 const CURSOS = {
-  1: { nombre: "El Merengue perfecto", descripcion: "", precio: "", etiqueta: "" },
-  2: { nombre: "Recetario Tartas", descripcion: "", precio: "", etiqueta: "Preventa" },
+  1: { nombre: "El Merengue perfecto", descripcion: "", precio: "$5.000", etiqueta: "" },
+  2: { nombre: "Recetario Tartas", descripcion: "", precio: "$15.000", etiqueta: "" },
   3: { nombre: "Curso 3", descripcion: "", precio: "", etiqueta: "" },
 };
 
