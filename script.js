@@ -127,8 +127,13 @@ const CATEGORY_LABELS = {
   tartas: "Tartas 🍰",
   "peque-dulces": "Peque-Dulces 🍪",
   premium: "Dulce variedad",
+  navidad: "Navidad 🎄",
 };
-const CATEGORY_ORDER = ["tortas", "tartas", "premium", "peque-dulces"];
+// "navidad" va primero (temporada). En la planilla se usa la categoría "Navidad".
+// Las categorías opcionales solo aparecen si tienen productos visibles:
+// al terminar la temporada basta con poner visible = no en esas filas.
+const CATEGORY_ORDER = ["navidad", "tortas", "tartas", "premium", "peque-dulces"];
+const OPTIONAL_CATEGORIES = ["navidad"];
 
 // ---------- Productos desde Google Sheets ----------
 // Para editar productos y precios sin tocar código: pega aquí el enlace CSV
@@ -143,8 +148,11 @@ const SHEET_CATEGORIES = {
   "peque dulces": "peque-dulces",
   "dulce variedad": "premium",
   "premium": "premium",
+  "navidad": "navidad",
+  "navideño": "navidad",
+  "navideña": "navidad",
 };
-const CATEGORY_EMOJI = { tortas: "🎂", tartas: "🍰", "peque-dulces": "🍪", premium: "⭐" };
+const CATEGORY_EMOJI = { tortas: "🎂", tartas: "🍰", "peque-dulces": "🍪", premium: "⭐", navidad: "🎄" };
 
 // Lector de CSV que respeta comillas (descripciones con comas o saltos de línea).
 function parseCSV(text) {
@@ -320,14 +328,17 @@ function renderGrid() {
     // (se usa el precio base, es decir la primera opción de cada uno).
     const items = PRODUCTS.filter(p => p.category === cat)
       .sort((a, b) => a.prices[0].price - b.prices[0].price);
+    if (!items.length && OPTIONAL_CATEGORIES.includes(cat)) return;
     const section = document.createElement("div");
-    section.className = "product-section";
+    section.className = "product-section product-section--" + cat;
     // Todos los títulos llevan la misma animación: el texto "late" y el
     // emoji se balancea. "Dulce variedad" lleva un dulce a cada lado (🍭 y 🍬).
     const [, label, emoji] = (CATEGORY_LABELS[cat] || cat).match(/^(.*?)\s*(\p{Extended_Pictographic}*)$/u);
     const text = `<span class="section-title-text">${label}</span>`;
     const titleContent = cat === "premium"
       ? `<span class="section-title-gem">🍭</span> ${text} <span class="section-title-gem">🍬</span>`
+      : cat === "navidad"
+      ? `<span class="section-title-gem">🎄</span> ${text} <span class="section-title-gem">🎁</span>`
       : `${text}${emoji ? ` <span class="section-title-gem">${emoji}</span>` : ""}`;
     section.innerHTML = `
       <h3 class="product-section-title">

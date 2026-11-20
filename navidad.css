@@ -1,0 +1,288 @@
+/* ==========================================================
+   DECORACIÓN NAVIDEÑA (temporal)
+   Todo va dentro de html.navidad, clase que pone navidad.js solo
+   durante la temporada. Para quitarla: borra las líneas de
+   navidad.css y navidad.js en index.html.
+   ========================================================== */
+:root{
+  --xmas-red: #B3202A;
+  --xmas-red-deep: #7E141B;
+  --xmas-green: #1F6B3A;
+  --xmas-green-deep: #124526;
+}
+
+/* ---------- Nieve ---------- */
+.navidad-nieve{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  pointer-events:none;
+  z-index:35; /* bajo la barra superior (40), el carrito y los modales */
+}
+
+/* ---------- Guirnalda de luces ---------- */
+html.navidad .topbar{
+  border-bottom-color:var(--xmas-red);
+}
+.navidad-luces{
+  position:absolute;
+  left:0; right:0;
+  bottom:-15px;
+  height:16px;
+  display:flex;
+  justify-content:space-around;
+  pointer-events:none;
+  overflow:hidden;
+}
+/* el cable */
+.navidad-luces::before{
+  content:"";
+  position:absolute;
+  left:0; right:0; top:0;
+  height:2px;
+  background:var(--xmas-green-deep);
+}
+.navidad-luces span{
+  position:relative;
+  width:7px;
+  height:11px;
+  margin-top:3px;
+  border-radius:50% 50% 50% 50% / 40% 40% 60% 60%;
+  background:var(--c);
+  box-shadow:0 2px 10px 1px var(--c);
+  animation:navidadBrillo 1.6s ease-in-out infinite;
+}
+/* casquillo de la ampolleta */
+.navidad-luces span::before{
+  content:"";
+  position:absolute;
+  top:-3px; left:1px;
+  width:5px; height:4px;
+  border-radius:1px;
+  background:#2b3a2e;
+}
+.navidad-luces span:nth-child(4n+1){--c:#FF4D4D;}
+.navidad-luces span:nth-child(4n+2){--c:#FFD54A; animation-delay:-0.4s;}
+.navidad-luces span:nth-child(4n+3){--c:#4CD07D; animation-delay:-0.8s;}
+.navidad-luces span:nth-child(4n){--c:#5BB8FF; animation-delay:-1.2s;}
+@media (max-width:700px){
+  .navidad-luces span:nth-child(n+19){display:none;}
+}
+@keyframes navidadBrillo{
+  0%, 100%{opacity:1; filter:brightness(1.15);}
+  50%{opacity:0.35; box-shadow:none; filter:brightness(0.7);}
+}
+
+/* ---------- Gorro navideño en el logo ---------- */
+.navidad-gorro{
+  position:absolute;
+  top:-14px;
+  right:-12px;
+  width:38px;
+  height:34px;
+  transform:rotate(22deg);
+  pointer-events:none;
+  z-index:2;
+  background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 56'%3E%3Cpath d='M8 44 C 14 22, 30 6, 48 8 C 56 9, 60 16, 58 24 L 52 30 C 50 22, 44 18, 38 20 C 30 24, 28 36, 30 44 Z' fill='%23C62632'/%3E%3Cpath d='M38 20 C 44 18, 50 22, 52 30' stroke='%238E1A22' stroke-width='2' fill='none'/%3E%3Crect x='4' y='40' width='32' height='11' rx='5.5' fill='%23FFFCF2'/%3E%3Ccircle cx='55' cy='30' r='6' fill='%23FFFCF2'/%3E%3C/svg%3E");
+  filter:drop-shadow(0 2px 2px rgba(0,0,0,0.35));
+}
+
+/* ---------- Letrero colgante "Feliz Navidad" en la portada ---------- */
+/* espacio extra arriba de la portada para que el letrero no tape el texto */
+html.navidad .hero{padding-top:200px;}
+@media (max-width:900px){ html.navidad .hero{padding-top:184px;} }
+@media (max-width:600px){ html.navidad .hero{padding-top:164px;} }
+
+.navidad-letrero{
+  position:absolute;
+  top:0;
+  left:50%;
+  z-index:3;
+  transform:translateX(-50%);
+  pointer-events:none;
+  /* baja desde arriba cuando termina la animación del logo de entrada */
+  animation:navidadCae 1.3s cubic-bezier(.3,1.5,.5,1) 0.3s both;
+}
+html:not(.no-splash) .navidad-letrero{animation-delay:2.1s;}
+@keyframes navidadCae{
+  0%{transform:translate(-50%, -110%);}
+  100%{transform:translate(-50%, 0);}
+}
+/* balanceo continuo, colgando de las dos cuerdas */
+.navidad-letrero-swing{
+  position:relative;
+  padding-top:30px;
+  transform-origin:50% 0;
+  animation:navidadBalanceo 4.5s ease-in-out 1.6s infinite;
+}
+html:not(.no-splash) .navidad-letrero-swing{animation-delay:3.4s;}
+@keyframes navidadBalanceo{
+  0%, 100%{transform:rotate(0deg);}
+  25%{transform:rotate(2.6deg);}
+  75%{transform:rotate(-2.6deg);}
+}
+.navidad-cuerda{
+  position:absolute;
+  top:0;
+  width:2px;
+  height:34px;
+  background:linear-gradient(var(--gold-deep), var(--gold-pale));
+}
+.navidad-cuerda--izq{left:22%; transform:rotate(14deg); transform-origin:top;}
+.navidad-cuerda--der{right:22%; transform:rotate(-14deg); transform-origin:top;}
+
+.navidad-letrero-cartel{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:10px 46px 14px;
+  border-radius:18px;
+  background:
+    radial-gradient(120% 140% at 50% 0%, rgba(255,255,255,0.14), transparent 60%),
+    linear-gradient(180deg, var(--xmas-red) 0%, var(--xmas-red-deep) 100%);
+  border:2px solid var(--gold);
+  outline:1px dashed rgba(240,217,160,0.55);
+  outline-offset:-7px;
+  box-shadow:
+    0 14px 34px rgba(0,0,0,0.45),
+    0 0 0 4px rgba(126,20,27,0.35),
+    0 0 40px rgba(255,77,77,0.35);
+  overflow:hidden;
+  white-space:nowrap;
+  animation:navidadResplandor 3s ease-in-out infinite;
+}
+@keyframes navidadResplandor{
+  0%, 100%{box-shadow:0 14px 34px rgba(0,0,0,0.45), 0 0 0 4px rgba(126,20,27,0.35), 0 0 30px rgba(255,77,77,0.25);}
+  50%{box-shadow:0 14px 34px rgba(0,0,0,0.45), 0 0 0 4px rgba(126,20,27,0.35), 0 0 60px rgba(255,120,90,0.6);}
+}
+/* nieve acumulada sobre el borde superior */
+.navidad-letrero-cartel::before{
+  content:"";
+  position:absolute;
+  top:-2px; left:6px; right:6px;
+  height:10px;
+  background:
+    radial-gradient(circle at 10px 0, #fff 9px, transparent 10px) 0 0/34px 10px repeat-x;
+  opacity:0.95;
+  z-index:1;
+}
+/* brillo que cruza el letrero cada pocos segundos */
+.navidad-letrero-cartel::after{
+  content:"";
+  position:absolute;
+  top:0; bottom:0;
+  left:-60%;
+  width:40%;
+  background:linear-gradient(100deg, transparent, rgba(255,240,200,0.45), transparent);
+  transform:skewX(-20deg);
+  animation:navidadBrilloCruza 4.5s ease-in-out 3s infinite;
+}
+@keyframes navidadBrilloCruza{
+  0%, 55%{left:-60%;}
+  85%, 100%{left:130%;}
+}
+.navidad-letrero-titulo{
+  position:relative;
+  z-index:1;
+  font-family:"Great Vibes", cursive;
+  font-weight:400;
+  font-size:2.6rem;
+  line-height:1.1;
+  color:var(--gold-pale);
+  text-shadow:0 2px 0 rgba(0,0,0,0.35), 0 0 18px rgba(255,215,120,0.7);
+  animation:premiumBeat 2.4s ease-in-out infinite;
+}
+.navidad-letrero-sub{
+  position:relative;
+  z-index:1;
+  margin-top:2px;
+  font-family:var(--font-mono);
+  font-size:0.68rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--white);
+}
+/* ramitas de acebo (hojas verdes + bayas rojas) en las esquinas */
+.navidad-acebo{
+  position:absolute;
+  top:50%;
+  width:30px; height:30px;
+  margin-top:-15px;
+  z-index:1;
+  background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cpath d='M20 20 C 12 10, 4 12, 2 6 C 8 8, 10 4, 14 6 C 14 10, 18 12, 20 20Z' fill='%232E8B4E'/%3E%3Cpath d='M20 20 C 28 10, 36 12, 38 6 C 32 8, 30 4, 26 6 C 26 10, 22 12, 20 20Z' fill='%23247A42'/%3E%3Ccircle cx='17' cy='22' r='4' fill='%23E0313B'/%3E%3Ccircle cx='23' cy='22' r='4' fill='%23C62632'/%3E%3Ccircle cx='20' cy='27' r='4' fill='%23E0313B'/%3E%3C/svg%3E");
+}
+.navidad-acebo--izq{left:8px; transform:rotate(-20deg);}
+.navidad-acebo--der{right:8px; transform:rotate(20deg) scaleX(-1);}
+/* destellos que titilan sobre el letrero */
+.navidad-destello{
+  position:absolute;
+  left:var(--x); top:var(--y);
+  width:10px; height:10px;
+  z-index:2;
+  background:radial-gradient(circle, #fff 0 1.5px, transparent 2px),
+             linear-gradient(transparent 45%, #fff 45% 55%, transparent 55%),
+             linear-gradient(90deg, transparent 45%, #fff 45% 55%, transparent 55%);
+  animation:navidadTitila 2.8s ease-in-out var(--d) infinite;
+}
+@keyframes navidadTitila{
+  0%, 100%{opacity:0; transform:scale(0.3) rotate(0deg);}
+  50%{opacity:1; transform:scale(1.2) rotate(45deg);}
+}
+/* esferas colgando bajo el letrero */
+.navidad-esfera{
+  position:absolute;
+  bottom:-30px;
+  width:2px;
+  height:20px;
+  background:var(--gold-deep);
+  transform-origin:top;
+  animation:navidadBalanceo 2.6s ease-in-out infinite;
+}
+.navidad-esfera::after{
+  content:"";
+  position:absolute;
+  top:18px; left:-7px;
+  width:16px; height:16px;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #fff 0 2px, var(--c) 3px, var(--cd) 100%);
+  box-shadow:0 3px 8px rgba(0,0,0,0.35);
+}
+.navidad-esfera--izq{left:16%; --c:#FFD54A; --cd:#B98935;}
+.navidad-esfera--der{right:16%; --c:#4CD07D; --cd:#1F6B3A; animation-delay:-1.3s;}
+
+@media (max-width:600px){
+  .navidad-letrero-cartel{padding:8px 38px 12px;}
+  .navidad-letrero-titulo{font-size:2.1rem;}
+  .navidad-letrero-sub{font-size:0.56rem; letter-spacing:0.1em;}
+  .navidad-acebo{width:24px; height:24px; margin-top:-12px;}
+}
+
+/* ---------- Fila "Navidad" de la vitrina ---------- */
+.product-section--navidad .section-title-pill{
+  background:linear-gradient(180deg, var(--xmas-red) 0%, var(--xmas-red-deep) 100%);
+  border-color:var(--gold);
+  color:var(--white);
+}
+.product-section--navidad .product-section-title::before{
+  background:linear-gradient(to left, var(--xmas-green), rgba(31,107,58,0));
+}
+.product-section--navidad .product-section-title::after{
+  background:linear-gradient(to right, var(--xmas-green), rgba(31,107,58,0));
+}
+.product-section--navidad .product-card{
+  border-color:var(--xmas-red);
+}
+
+@media (prefers-reduced-motion: reduce){
+  .navidad-luces span,
+  .navidad-letrero,
+  .navidad-letrero-swing,
+  .navidad-letrero-cartel,
+  .navidad-letrero-cartel::after,
+  .navidad-letrero-titulo,
+  .navidad-destello,
+  .navidad-esfera{animation:none;}
+  .navidad-destello{display:none;}
+}
