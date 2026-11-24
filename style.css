@@ -3353,8 +3353,8 @@ a.resena-autor:hover{color:var(--gold-deep);}
   left:18px;
   bottom:18px;
   z-index:120;
-  width:min(300px, calc(100vw - 36px));
-  padding:11px 13px 10px;
+  width:min(320px, calc(100vw - 36px));
+  padding:10px 12px 9px;
   border-radius:12px;
   background:rgba(31,17,8,0.82);
   backdrop-filter:blur(8px);
@@ -3369,16 +3369,11 @@ a.resena-autor:hover{color:var(--gold-deep);}
   to{opacity:1; transform:translateY(0);}
 }
 .cookie-banner-text{
-  margin:0 0 10px;
+  margin:0 0 8px;
   font-size:0.74rem;
-  line-height:1.5;
-  text-align:justify;
-  text-justify:inter-word;
-  hyphens:auto;
-  -webkit-hyphens:auto;
+  line-height:1.4;
+  text-align:center;
 }
-.cookie-banner-text strong{color:var(--gold-pale); font-weight:600;}
-.cookie-banner-text a{color:var(--gold-pale); text-decoration:underline; text-underline-offset:2px;}
 .cookie-banner-actions{
   display:flex;
   gap:8px;
@@ -3386,23 +3381,23 @@ a.resena-autor:hover{color:var(--gold-deep);}
 }
 .cookie-banner .cookie-btn--mini{
   flex:1;
-  padding:6px 12px;
-  font-size:0.74rem;
+  padding:5px 10px;
+  font-size:0.72rem;
   background:transparent;
   color:var(--gold-pale);
   border:1px solid rgba(217,169,79,0.45);
 }
 .cookie-banner .cookie-btn--mini:hover{background:var(--gold); color:var(--navy-deep); border-color:var(--gold);}
-.cookie-banner .cookie-btn--text{
-  padding:6px 4px;
-  font-size:0.72rem;
-  font-weight:500;
-  background:none;
+.cookie-banner-more{
+  flex:none;
+  padding:5px 2px;
+  font-size:0.7rem;
   color:rgba(246,241,231,0.65);
   text-decoration:underline;
   text-underline-offset:2px;
+  white-space:nowrap;
 }
-.cookie-banner .cookie-btn--text:hover{color:var(--gold-pale);}
+.cookie-banner-more:hover{color:var(--gold-pale);}
 .cookie-modal-actions{
   display:flex;
   flex-wrap:wrap;
@@ -3522,9 +3517,10 @@ html.cookie-modal-open{overflow:hidden;}
 .cookie-modal-foot a{color:var(--gold);}
 
 @media (max-width:600px){
-  /* En celulares el aviso va sobre el botón de WhatsApp (16px + 52px + gorro navideño + margen),
-     ocupando el ancho con margen a los lados, para no quedar pegado a él. */
-  .cookie-banner{left:12px; right:12px; bottom:96px; width:auto; padding:11px 14px 10px;}
+  /* Celulares: tarjeta compacta y centrada sobre el botón de WhatsApp
+     (16px + 52px + gorro navideño + margen), sin ocupar todo el ancho. */
+  .cookie-banner{left:12px; right:12px; bottom:96px; width:auto; max-width:320px; margin:0 auto; padding:9px 12px 8px;}
+  .cookie-banner-text{font-size:0.72rem;}
   .cookie-modal{padding:16px;}
   .cookie-modal-card{max-height:80vh; max-height:80dvh; padding:24px 18px 18px;}
   .cookie-modal-actions .cookie-btn{flex:1 1 auto; padding:9px 12px; font-size:0.8rem;}

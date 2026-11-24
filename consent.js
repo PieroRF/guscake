@@ -105,13 +105,13 @@
       role: "region",
       "aria-label": "Aviso de cookies"
     },
-      '<p class="cookie-banner-text">🍪 Usamos cookies analíticas solo si las aceptas. ' +
-      '<a href="' + COOKIES_URL + '">Más información</a></p>' +
+      '<p class="cookie-banner-text">🍪 Usamos cookies analíticas solo si las aceptas.</p>' +
       '<div class="cookie-banner-actions">' +
         // "Aceptar" y "Rechazar" con el mismo peso visual: la elección debe ser libre.
+        // El panel "Configurar" se abre desde la Política de cookies ("Más info").
         '<button type="button" class="cookie-btn cookie-btn--mini" data-cookie-action="accept">Aceptar</button>' +
         '<button type="button" class="cookie-btn cookie-btn--mini" data-cookie-action="reject">Rechazar</button>' +
-        '<button type="button" class="cookie-btn cookie-btn--text" data-cookie-action="configure">Configurar</button>' +
+        '<a class="cookie-banner-more" href="' + COOKIES_URL + '">Más info</a>' +
       '</div>'
     );
     banner.addEventListener("click", function (e) {
