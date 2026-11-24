@@ -132,7 +132,7 @@
         '<p class="cookie-modal-eyebrow">Privacidad</p>' +
         '<h2 class="cookie-modal-title" id="cookieModalTitle">Configuración de cookies</h2>' +
         '<p class="cookie-modal-text">Elige qué permites. Puedes volver a este panel desde el enlace ' +
-        '“Configurar cookies” al pie de cada página.</p>' +
+        '“Política de cookies” al pie de cada página.</p>' +
         '<div class="cookie-option">' +
           '<div><p class="cookie-option-name">Necesarias</p>' +
           '<p class="cookie-option-desc">Recuerdan tu elección de cookies y evitan repetir avisos durante tu visita. ' +
@@ -154,7 +154,7 @@
       '</div>'
     );
     panel.addEventListener("click", function (e) {
-      if (e.target === panel) return closePanel();
+      if (e.target === panel || e.target.closest("a[href]")) return closePanel();
       var b = e.target.closest("[data-cookie-action]");
       if (!b) return;
       var action = b.getAttribute("data-cookie-action");
@@ -233,5 +233,5 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 
-  window.GusCakeCookies = { open: openPanel };
+  window.GusCakeCookies = { open: openPanel, refresh: updateStatus };
 })();

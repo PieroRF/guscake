@@ -3523,7 +3523,9 @@ html.cookie-modal-open{overflow:hidden;}
 
 @media (max-width:600px){
   .cookie-banner{left:10px; right:84px; bottom:10px; width:auto;}
-  .cookie-modal-actions .cookie-btn{flex:1 1 100%;}
+  .cookie-modal{padding:16px;}
+  .cookie-modal-card{max-height:80vh; max-height:80dvh; padding:24px 18px 18px;}
+  .cookie-modal-actions .cookie-btn{flex:1 1 auto; padding:9px 12px; font-size:0.8rem;}
 }
 @media (prefers-reduced-motion: reduce){
   .cookie-banner{animation:none;}
@@ -3550,8 +3552,8 @@ html.legal-modal-open{overflow:hidden;}
   display:flex;
   flex-direction:column;
   width:min(900px, 100%);
-  max-height:calc(100vh - 48px);
-  max-height:calc(100dvh - 48px);
+  max-height:min(86vh, 900px);
+  max-height:min(86dvh, 900px);
   border-radius:var(--radius);
   background:var(--white);
   box-shadow:0 30px 70px rgba(31,17,8,0.45);
@@ -3629,15 +3631,27 @@ html.legal-modal-open{overflow:hidden;}
 }
 .legal-modal-ok{padding:10px 22px; font-size:0.88rem;}
 
+/* Tablets: ventana flotante más angosta y baja */
+@media (max-width:1024px){
+  .legal-modal{padding:32px;}
+  .legal-modal-card{width:min(720px, 100%); max-height:80vh; max-height:80dvh;}
+}
+/* Celulares: sigue siendo una ventana flotante, con margen alrededor */
 @media (max-width:600px){
-  .legal-modal{padding:0; align-items:flex-end;}
+  .legal-modal{padding:16px; align-items:center;}
   .legal-modal-card{
-    max-height:92vh;
-    max-height:92dvh;
-    border-radius:var(--radius) var(--radius) 0 0;
+    width:100%;
+    max-height:78vh;
+    max-height:78dvh;
+    border-radius:var(--radius);
   }
-  .legal-modal-head{padding:18px 18px 14px;}
-  .legal-modal-foot{padding:12px 18px;}
+  .legal-modal-head{padding:16px 16px 12px;}
+  .legal-modal-head > div{padding:0 36px;}
+  .legal-modal-close{top:12px; right:12px; width:32px; height:32px;}
+  .legal-modal-title{font-size:1.3rem;}
+  .legal-modal-meta{font-size:0.62rem;}
+  .legal-doc.legal-doc--modal{padding:20px 16px 22px;}
+  .legal-modal-foot{padding:10px 16px;}
 }
 @media (prefers-reduced-motion: reduce){
   .legal-modal, .legal-modal-card{animation:none;}

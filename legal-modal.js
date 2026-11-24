@@ -137,6 +137,8 @@
       });
       body.innerHTML = "";
       body.appendChild(doc);
+      // Muestra la elección de cookies actual en la Política de cookies.
+      if (window.GusCakeCookies && window.GusCakeCookies.refresh) window.GusCakeCookies.refresh();
 
       body.scrollTop = 0;
       if (hash) {
