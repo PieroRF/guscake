@@ -27,7 +27,6 @@
   var script = document.currentScript;
   var BASE = script && script.src ? new URL(".", script.src).href : "/";
   var COOKIES_URL = BASE + "cookies.html";
-  var PRIVACY_URL = BASE + "privacidad.html";
 
   // ---------- Almacenamiento de la elección ----------
   function readConsent() {
@@ -106,11 +105,8 @@
       role: "region",
       "aria-label": "Aviso de cookies"
     },
-      '<p class="cookie-banner-text"><strong>Cookies.</strong> Usamos las necesarias para que el sitio funcione y, ' +
-      'solo si las aceptas, cookies analíticas de Google Analytics para mejorar la página. ' +
-      'Puedes cambiar tu elección cuando quieras. Más información en la ' +
-      '<a href="' + COOKIES_URL + '">Política de cookies</a> y la ' +
-      '<a href="' + PRIVACY_URL + '">Política de privacidad</a>.</p>' +
+      '<p class="cookie-banner-text">🍪 Usamos cookies analíticas solo si las aceptas. ' +
+      '<a href="' + COOKIES_URL + '">Más información</a></p>' +
       '<div class="cookie-banner-actions">' +
         // "Aceptar" y "Rechazar" con el mismo peso visual: la elección debe ser libre.
         '<button type="button" class="cookie-btn cookie-btn--mini" data-cookie-action="accept">Aceptar</button>' +

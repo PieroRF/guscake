@@ -263,3 +263,15 @@
   .legal-doc .legal-id dt,
   .legal-doc .legal-id dd{text-align:center;}
 }
+
+/* Misma separación entre todas las secciones: el último elemento de cada
+   sección no suma margen extra antes de la línea divisoria. */
+.legal-doc section > :last-child{margin-bottom:0;}
+.legal-doc section > h2:first-child{margin-top:0;}
+.legal-doc section + section{margin-top:32px; padding-top:28px;}
+
+/* Teléfonos, números de ley y montos: el justificado no debe estirar sus
+   espacios internos ni cortarlos entre dos líneas. */
+.legal-doc .tel,
+.legal-doc .nowrap,
+.legal-doc a[href^="https://wa.me"]{display:inline-block; white-space:nowrap;}

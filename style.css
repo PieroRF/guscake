@@ -3362,8 +3362,8 @@ a.resena-autor:hover{color:var(--gold-deep);}
   left:18px;
   bottom:18px;
   z-index:120;
-  width:min(340px, calc(100vw - 36px));
-  padding:13px 15px 11px;
+  width:min(300px, calc(100vw - 36px));
+  padding:11px 13px 10px;
   border-radius:12px;
   background:rgba(31,17,8,0.82);
   backdrop-filter:blur(8px);
