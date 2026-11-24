@@ -154,6 +154,19 @@ const SHEET_CATEGORIES = {
 };
 const CATEGORY_EMOJI = { tortas: "🎂", tartas: "🍰", "peque-dulces": "🍪", premium: "⭐", navidad: "🎄" };
 
+// Columnas de tamaños que se leen de la planilla: opcion1/precio1 … opcion6/precio6.
+// Las que no existan o queden vacías simplemente no se muestran.
+const OPTION_NUMBERS = [1, 2, 3, 4, 5, 6];
+
+// Tamaño que aparece elegido al mostrar una tarjeta: el primero que no sea
+// un trozo (p. ej. "Torta 04 porciones"), para que la vitrina siga mostrando
+// el precio de la torta entera. El trozo queda como botón aparte.
+const isSlice = (opt) => /trozo/i.test(opt.label);
+function defaultOption(p) {
+  const i = p.prices.findIndex(opt => !isSlice(opt));
+  return i < 0 ? 0 : i;
+}
+
 // Lector de CSV que respeta comillas (descripciones con comas o saltos de línea).
 function parseCSV(text) {
   const rows = [];
@@ -183,7 +196,7 @@ function productsFromCSV(text) {
   const col = (name) => header.findIndex(h => h.trim().toLowerCase() === name);
   const idx = Object.fromEntries(
     ["id", "nombre", "descripcion", "categoria", "imagen", "etiqueta", "visible",
-     "opcion1", "precio1", "opcion2", "precio2", "opcion3", "precio3"].map(n => [n, col(n)])
+     ...OPTION_NUMBERS.flatMap(n => [`opcion${n}`, `precio${n}`])].map(n => [n, col(n)])
   );
   const get = (r, n) => (idx[n] >= 0 ? (r[idx[n]] || "").trim() : "");
   const toPrice = (v) => Number(String(v).replace(/[^\d]/g, ""));
@@ -199,9 +212,12 @@ function productsFromCSV(text) {
   };
   return rows.map((r, i) => {
     const category = SHEET_CATEGORIES[get(r, "categoria").toLowerCase()];
-    const prices = [1, 2, 3]
+    // Los tamaños se ordenan de menor a mayor precio, así "Trozo de torta"
+    // queda primero aunque esté en la columna opcion4.
+    const prices = OPTION_NUMBERS
       .map(n => ({ label: get(r, `opcion${n}`) || "Precio único", price: toPrice(get(r, `precio${n}`)) }))
-      .filter(p => p.price > 0);
+      .filter(p => p.price > 0)
+      .sort((a, b) => a.price - b.price);
     const name = get(r, "nombre");
     if (!name || !category || !prices.length || /^no$/i.test(get(r, "visible"))) return null;
     const tag = get(r, "etiqueta");
@@ -248,7 +264,7 @@ const vitrinaEl = document.getElementById("vitrina");
 
 // selected: tamaño que aparece elegido al mostrar la tarjeta (por defecto el
 // primero). El buscador lo usa para mostrar el tamaño que calza con el filtro.
-function cardHTML(p, selected = 0) {
+function cardHTML(p, selected = defaultOption(p)) {
   // Tarjeta "próximamente" (p. ej. "¡Pronto, nuevo box!"): mismo formato que
   // un producto pero sin precio ni botón de compra, solo el anuncio.
   if (p.soon) {
@@ -272,15 +288,20 @@ function cardHTML(p, selected = 0) {
   }
 
   const hasOptions = p.prices.length > 1;
+  // Botón de cada tamaño. Texto corto (p. ej. "10 porc."); el carrito y el
+  // mensaje de WhatsApp usan el nombre completo (data-label).
+  const chip = (opt, i) => {
+    const shortLabel = isSlice(opt)
+      ? "Trozo de torta"
+      : opt.label.replace(/^Torta\s+0*/i, "").replace(/\s*porciones/i, " porc.");
+    return `<button type="button" class="price-chip${isSlice(opt) ? " price-chip--slice" : ""}${i === selected ? " active" : ""}" data-price="${opt.price}" data-label="${opt.label}">${shortLabel}</button>`;
+  };
+  // El trozo va en su propia fila, sobre los tamaños de torta entera.
+  const sliceChips = p.prices.map((opt, i) => isSlice(opt) ? chip(opt, i) : "").join("");
+  const sizeChips = p.prices.map((opt, i) => isSlice(opt) ? "" : chip(opt, i)).join("");
   const priceOptions = hasOptions
-    ? `<div class="price-options">
-        ${p.prices.map((opt, i) => {
-          // Texto corto en el botón (p. ej. "10 porc.") para que las 3 opciones
-          // quepan en una sola fila; el carrito sigue usando data-label completo.
-          const shortLabel = opt.label.replace(/^Torta\s+0*/i, "").replace(/\s*porciones/i, " porc.");
-          return `<button type="button" class="price-chip${i === selected ? " active" : ""}" data-price="${opt.price}" data-label="${opt.label}">${shortLabel}</button>`;
-        }).join("")}
-      </div>`
+    ? `${sliceChips ? `<div class="price-options price-options--slice">${sliceChips}</div>` : ""}
+       ${sizeChips ? `<div class="price-options">${sizeChips}</div>` : ""}`
     : "";
 
   // Producto agotado (misma etiqueta roja "Agotado"): se ve igual que
@@ -325,9 +346,9 @@ function renderGrid() {
   // desplazándose hacia los lados (ver initProductRows).
   CATEGORY_ORDER.forEach(cat => {
     // Dentro de cada fila, los productos van de menor a mayor precio
-    // (se usa el precio base, es decir la primera opción de cada uno).
+    // (se usa el precio del tamaño que aparece elegido, sin contar el trozo).
     const items = PRODUCTS.filter(p => p.category === cat)
-      .sort((a, b) => a.prices[0].price - b.prices[0].price);
+      .sort((a, b) => a.prices[defaultOption(a)].price - b.prices[defaultOption(b)].price);
     if (!items.length && OPTIONAL_CATEGORIES.includes(cat)) return;
     const section = document.createElement("div");
     section.className = "product-section product-section--" + cat;
@@ -1539,7 +1560,9 @@ function initVitrinaFilters() {
     const list = PRODUCTS.map(p => {
       if (category.startsWith("cat:") && p.category !== category.slice(4)) return null;
       if (category.startsWith("tag:") && p.tagVariant !== category.slice(4)) return null;
-      const selected = p.prices.findIndex(x => PRICE_RANGES[price].test(x.price));
+      const selected = price === "todos"
+        ? defaultOption(p)
+        : p.prices.findIndex(x => PRICE_RANGES[price].test(x.price));
       if (selected < 0) return null;
       const haystack = normalizeText(`${p.name} ${p.desc} ${CATEGORY_LABELS[p.category] || ""} ${p.tag || ""}`);
       if (!words.every(w => haystack.includes(w))) return null;

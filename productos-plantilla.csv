@@ -1,4 +1,4 @@
-id,nombre,descripcion,categoria,imagen,etiqueta,opcion1,precio1,opcion2,precio2,opcion3,precio3,visible
+id,nombre,descripcion,categoria,imagen,etiqueta,opcion1,precio1,opcion2,precio2,opcion3,precio3,visible,opcion4,precio4
 p1,Alfajor de amor,"Finas laminas de hojarasca, rellenas de manjar tradicional, frambuesas naturales y crema chantilly de vainilla.",Tortas,img/productos/alfajordeamor.jpg,Destacado,Torta 04 porciones,15500,Torta 10 porciones,25500,Torta 20 porciones,35500,si
 p2,Choco Ganache,"Bizcocho húmedo de chocolate, relleno de manjar tradicional y ganache bitter.",Tortas,img/productos/chocoganache.jpg,,Torta 04 porciones,16500,Torta 10 porciones,26500,Torta 20 porciones,36500,si
 p3,Manjar nuez,"Finas laminas de hojarascas, rellenas de manjar artesanal y nueces molidas.",Tortas,img/productos/manjarnuez.jpg,,Torta 04 porciones,15500,Torta 10 porciones,25500,Torta 20 porciones,35500,si

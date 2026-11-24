@@ -1861,6 +1861,9 @@ html:not(.no-splash) .hero-in{
   color:var(--cream);
   transform:scale(1.04);
 }
+/* Fila del "Trozo de torta", sobre los tamaños de torta entera */
+.price-options--slice{margin-bottom:6px;}
+.price-options--slice + .price-options{margin-top:0;}
 .cart-item-label{
   font-weight:400;
   color:var(--espresso-soft);
