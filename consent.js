@@ -106,16 +106,16 @@
       role: "region",
       "aria-label": "Aviso de cookies"
     },
-      '<p class="cookie-banner-title">🍪 Usamos cookies</p>' +
-      '<p class="cookie-banner-text">Usamos almacenamiento propio indispensable para que el sitio funcione y, solo si lo aceptas, ' +
-      'cookies analíticas de Google Analytics para saber cómo se usa la página y mejorarla. ' +
-      'Puedes cambiar tu elección cuando quieras. Más información en nuestra ' +
-      '<a href="' + COOKIES_URL + '">Política de cookies</a> y ' +
+      '<p class="cookie-banner-text"><strong>Cookies.</strong> Usamos las necesarias para que el sitio funcione y, ' +
+      'solo si las aceptas, cookies analíticas de Google Analytics para mejorar la página. ' +
+      'Puedes cambiar tu elección cuando quieras. Más información en la ' +
+      '<a href="' + COOKIES_URL + '">Política de cookies</a> y la ' +
       '<a href="' + PRIVACY_URL + '">Política de privacidad</a>.</p>' +
       '<div class="cookie-banner-actions">' +
-        '<button type="button" class="cookie-btn cookie-btn--solid" data-cookie-action="accept">Aceptar todas</button>' +
-        '<button type="button" class="cookie-btn cookie-btn--solid" data-cookie-action="reject">Rechazar</button>' +
-        '<button type="button" class="cookie-btn cookie-btn--link" data-cookie-action="configure">Configurar</button>' +
+        // "Aceptar" y "Rechazar" con el mismo peso visual: la elección debe ser libre.
+        '<button type="button" class="cookie-btn cookie-btn--mini" data-cookie-action="accept">Aceptar</button>' +
+        '<button type="button" class="cookie-btn cookie-btn--mini" data-cookie-action="reject">Rechazar</button>' +
+        '<button type="button" class="cookie-btn cookie-btn--text" data-cookie-action="configure">Configurar</button>' +
       '</div>'
     );
     banner.addEventListener("click", function (e) {
