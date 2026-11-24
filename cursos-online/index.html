@@ -4,14 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Google tag (gtag.js) — Google Analytics 4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YG5K7YXBCD"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YG5K7YXBCD');
-</script>
+<!-- Aviso de cookies + Google Analytics 4: Analytics solo se carga si la
+     persona acepta las cookies analíticas (ver consent.js y cookies.html). -->
+<script src="../consent.js" defer></script>
+<!-- Ventanas emergentes de los enlaces legales (ver legal-modal.js) -->
+<script src="../legal-modal.js" defer></script>
 <!-- Marca que JavaScript está activo antes de pintar la página: así la firma
      "Gustavo" parte oculta y se anima sin parpadeo. -->
 <script>document.documentElement.classList.add("js");</script>
@@ -213,7 +210,11 @@
             <p class="curso-desc">Estamos preparando este curso.</p>
           </div>
         </article>
-      </div>    </div>
+      </div>
+
+      <!-- Información previa a la compra de contenido digital (Ley 19.496 art. 3 bis y 12 A) -->
+      <p class="cursos-legal">Los cursos y recetarios son contenido digital (PDF) para uso personal. Precios en pesos chilenos con impuestos incluidos; el pago y la entrega del archivo se coordinan por WhatsApp. <strong>Importante:</strong> por tratarse de contenido digital que se entrega de inmediato, GusCake excluye expresamente el derecho a retracto una vez enviado el archivo; si el archivo llega dañado o no corresponde a lo comprado, lo reemplazamos o te devolvemos el dinero. Al comprar aceptas los <a href="../terminos.html#cursos">Términos y condiciones</a> y la <a href="../privacidad.html">Política de privacidad</a>.</p>
+    </div>
   </section>
 
 </main>
@@ -243,6 +244,16 @@
     <address class="footer-nap">
       Pastelería artesanal en San Pedro de la Paz, Biobío · <a href="https://wa.me/56920679622">+56 9 2067 9622</a> · Lun a Sáb 09:00–19:00
     </address>
+
+    <!-- Información legal (Ley 19.496, Reglamento de Comercio Electrónico y Ley 19.628 / 21.719).
+         Datos del titular del negocio. -->
+    <nav class="footer-legal" aria-label="Información legal">
+      <a href="../terminos.html">Términos y condiciones</a>
+      <a href="../privacidad.html">Política de privacidad</a>
+      <a href="../cookies.html">Política de cookies</a>
+      <button type="button" class="footer-legal-btn" data-cookie-settings>Configurar cookies</button>
+    </nav>
+    <p class="footer-id">GUSCAKES BY GUSTAVO RIQUELME F. SPA · RUT 78.548.604-8 · 3 Norte, San Pedro de la Paz · <a href="mailto:guscakepasteleria@gmail.com">guscakepasteleria@gmail.com</a></p>
   </div>
 
   <div class="footer-credit">

@@ -3278,3 +3278,372 @@ a.resena-autor:hover{color:var(--gold-deep);}
   .lightbox img{max-height:56vh;}
   .lightbox-desc{font-size:0.86rem;}
 }
+
+/* ==========================================================
+   INFORMACIÓN LEGAL Y AVISO DE COOKIES
+   (Ley 19.496 del Consumidor, Reglamento de Comercio Electrónico,
+   Ley 19.628 / Ley 21.719 de Protección de Datos Personales)
+   ========================================================== */
+
+/* ---------- Enlaces legales del pie de página ---------- */
+.footer-legal{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:6px 18px;
+  font-family:var(--font-mono);
+  font-size:0.74rem;
+  max-width:760px;
+}
+.footer-legal a,
+.footer-legal-btn{
+  color:var(--espresso);
+  text-decoration:none;
+  border-bottom:1px solid var(--line);
+  padding-bottom:1px;
+  transition:color 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+.footer-legal-btn{
+  background:none;
+  border-top:0; border-left:0; border-right:0;
+  font:inherit;
+  cursor:pointer;
+}
+.footer-legal a:hover,
+.footer-legal-btn:hover{
+  color:var(--accent);
+  border-bottom-color:var(--accent);
+}
+.footer-legal a:focus-visible,
+.footer-legal-btn:focus-visible{outline:2px solid var(--accent); outline-offset:3px;}
+.footer-id{
+  margin:-6px 0 0;
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  line-height:1.7;
+  color:var(--espresso-soft);
+  opacity:0.8;
+}
+.footer-id a{color:inherit;}
+
+/* ---------- Avisos breves junto a formularios, boleta y cursos ---------- */
+.form-legal{
+  margin:-4px 0 0;
+  font-size:0.76rem;
+  line-height:1.5;
+  color:var(--espresso-soft);
+}
+.form-legal a,
+.cart-legal a,
+.cursos-legal a{color:var(--accent); font-weight:600;}
+.cart-legal{
+  margin:0 0 14px;
+  font-size:0.74rem;
+  line-height:1.5;
+  color:var(--espresso-soft);
+}
+.cursos-legal{
+  margin:32px auto 0;
+  max-width:80ch;
+  padding:16px 20px;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:rgba(255,252,242,0.5);
+  font-size:0.82rem;
+  line-height:1.6;
+  color:var(--espresso-soft);
+}
+
+/* ---------- Banner de cookies ---------- */
+.cookie-banner{
+  position:fixed;
+  left:24px;
+  bottom:24px;
+  z-index:120;
+  width:min(460px, calc(100vw - 48px));
+  padding:22px 22px 18px;
+  border-radius:var(--radius);
+  background:var(--navy-deep);
+  color:rgba(246,241,231,0.85);
+  border:1px solid var(--line-navy);
+  box-shadow:var(--shadow-navy);
+  animation:cookieIn 0.5s var(--ease) both;
+}
+@keyframes cookieIn{
+  from{opacity:0; transform:translateY(16px);}
+  to{opacity:1; transform:translateY(0);}
+}
+.cookie-banner-title{
+  margin:0 0 6px;
+  font-family:var(--font-display);
+  font-style:italic;
+  font-weight:600;
+  font-size:1.15rem;
+  color:var(--white);
+}
+.cookie-banner-text{
+  margin:0 0 16px;
+  font-size:0.84rem;
+  line-height:1.55;
+}
+.cookie-banner-text a{color:var(--gold); font-weight:600;}
+.cookie-banner-actions,
+.cookie-modal-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  align-items:center;
+}
+.cookie-btn{
+  font-family:var(--font-body);
+  font-weight:600;
+  font-size:0.86rem;
+  border-radius:999px;
+  padding:10px 18px;
+  cursor:pointer;
+  border:2px solid transparent;
+  transition:background 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+/* "Aceptar" y "Rechazar" con el mismo peso visual: la elección debe ser libre */
+.cookie-btn--solid{background:var(--gold); color:var(--navy-deep);}
+.cookie-btn--solid:hover{background:var(--gold-pale);}
+.cookie-btn--link{
+  background:transparent;
+  color:var(--gold);
+  border-color:var(--line-navy);
+}
+.cookie-btn--link:hover{border-color:var(--gold);}
+.cookie-btn:focus-visible,
+.cookie-modal-close:focus-visible{outline:2px solid var(--gold-pale); outline-offset:2px;}
+
+/* ---------- Panel de configuración ---------- */
+html.cookie-modal-open{overflow:hidden;}
+.cookie-modal{
+  position:fixed;
+  inset:0;
+  z-index:130;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(31,17,8,0.6);
+  backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);
+}
+.cookie-modal[hidden]{display:none;}
+.cookie-modal-card{
+  position:relative;
+  width:min(560px, 100%);
+  max-height:calc(100vh - 40px);
+  overflow-y:auto;
+  padding:30px 28px 22px;
+  border-radius:var(--radius);
+  background:var(--navy-deep);
+  color:rgba(246,241,231,0.85);
+  border:1px solid var(--line-navy);
+  box-shadow:var(--shadow-navy);
+}
+.cookie-modal-close{
+  position:absolute;
+  top:14px; right:14px;
+  width:34px; height:34px;
+  border-radius:50%;
+  border:1px solid var(--line-navy);
+  background:transparent;
+  color:var(--gold);
+  cursor:pointer;
+}
+.cookie-modal-eyebrow{
+  margin:0 0 4px;
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--gold);
+}
+.cookie-modal-title{margin:0 0 8px; color:var(--white); font-size:1.6rem;}
+.cookie-modal-text{margin:0 0 18px; font-size:0.88rem;}
+.cookie-option{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:16px;
+  padding:16px 0;
+  border-top:1px solid var(--line-navy);
+}
+.cookie-option-name{margin:0 0 4px; font-weight:600; color:var(--white);}
+.cookie-option-desc{margin:0; font-size:0.8rem; line-height:1.5;}
+.cookie-option-fixed{
+  flex:none;
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  color:var(--gold);
+  padding-top:3px;
+}
+.cookie-switch{position:relative; flex:none; width:46px; height:26px; cursor:pointer;}
+.cookie-switch input{position:absolute; opacity:0; width:100%; height:100%; margin:0; cursor:pointer;}
+.cookie-switch span{
+  position:absolute;
+  inset:0;
+  border-radius:999px;
+  background:rgba(246,241,231,0.2);
+  transition:background 0.3s var(--ease);
+  pointer-events:none;
+}
+.cookie-switch span::after{
+  content:"";
+  position:absolute;
+  top:3px; left:3px;
+  width:20px; height:20px;
+  border-radius:50%;
+  background:var(--white);
+  transition:transform 0.3s var(--ease);
+}
+.cookie-switch input:checked + span{background:var(--gold);}
+.cookie-switch input:checked + span::after{transform:translateX(20px);}
+.cookie-switch input:focus-visible + span{outline:2px solid var(--gold-pale); outline-offset:2px;}
+.cookie-modal-actions{padding-top:18px; border-top:1px solid var(--line-navy);}
+.cookie-modal-foot{margin:14px 0 0; font-size:0.78rem;}
+.cookie-modal-foot a{color:var(--gold);}
+
+@media (max-width:600px){
+  .cookie-banner{left:12px; right:12px; bottom:12px; width:auto; padding:18px 16px 14px;}
+  .cookie-banner-actions .cookie-btn--solid{flex:1;}
+  .cookie-modal-actions .cookie-btn{flex:1 1 100%;}
+}
+@media (prefers-reduced-motion: reduce){
+  .cookie-banner{animation:none;}
+}
+
+/* ---------- Ventana emergente de información legal (legal-modal.js) ---------- */
+html.legal-modal-open{overflow:hidden;}
+.legal-modal{
+  position:fixed;
+  inset:0;
+  z-index:125; /* bajo el panel de cookies (130), sobre el carrito y el banner */
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:rgba(31,17,8,0.6);
+  backdrop-filter:blur(3px);
+  -webkit-backdrop-filter:blur(3px);
+  animation:legalFade 0.25s var(--ease) both;
+}
+.legal-modal[hidden]{display:none;}
+@keyframes legalFade{from{opacity:0;} to{opacity:1;}}
+.legal-modal-card{
+  display:flex;
+  flex-direction:column;
+  width:min(900px, 100%);
+  max-height:calc(100vh - 48px);
+  max-height:calc(100dvh - 48px);
+  border-radius:var(--radius);
+  background:var(--white);
+  box-shadow:0 30px 70px rgba(31,17,8,0.45);
+  overflow:hidden;
+  animation:legalPop 0.35s var(--ease) both;
+}
+@keyframes legalPop{
+  from{opacity:0; transform:translateY(14px) scale(0.98);}
+  to{opacity:1; transform:none;}
+}
+.legal-modal-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  gap:16px;
+  padding:22px 26px 18px;
+  background:linear-gradient(160deg, var(--navy) 0%, var(--navy-deep) 100%);
+}
+.legal-modal-eyebrow{
+  margin:0 0 4px;
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--gold);
+  font-weight:700;
+}
+.legal-modal-title{
+  margin:0;
+  font-size:clamp(1.4rem, 3vw, 1.9rem);
+  line-height:1.15;
+  color:var(--white);
+}
+.legal-modal-meta{
+  margin:6px 0 0;
+  font-family:var(--font-mono);
+  font-size:0.7rem;
+  color:var(--gold-pale);
+}
+.legal-modal-close{
+  flex:none;
+  width:36px; height:36px;
+  border-radius:50%;
+  border:1px solid var(--line-navy);
+  background:transparent;
+  color:var(--gold);
+  font-size:0.95rem;
+  cursor:pointer;
+  transition:background 0.3s var(--ease), transform 0.3s var(--ease);
+}
+.legal-modal-close:hover{background:rgba(217,169,79,0.15); transform:rotate(90deg);}
+.legal-modal-close:focus-visible{outline:2px solid var(--gold-pale); outline-offset:2px;}
+.legal-modal-body{
+  flex:1;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+}
+.legal-modal-body:focus{outline:none;}
+.legal-doc.legal-doc--modal{
+  max-width:none;
+  box-shadow:none;
+  border-radius:0;
+  padding:26px clamp(18px, 3vw, 28px) 30px;
+}
+.legal-doc--modal section{scroll-margin-top:16px;}
+.legal-modal-foot{
+  display:flex;
+  justify-content:flex-end;
+  align-items:center;
+  gap:12px;
+  padding:14px 26px;
+  border-top:1px solid var(--line);
+  background:var(--cream);
+}
+.legal-modal-ok{padding:10px 22px; font-size:0.88rem;}
+
+@media (max-width:600px){
+  .legal-modal{padding:0; align-items:flex-end;}
+  .legal-modal-card{
+    max-height:92vh;
+    max-height:92dvh;
+    border-radius:var(--radius) var(--radius) 0 0;
+  }
+  .legal-modal-head{padding:18px 18px 14px;}
+  .legal-modal-foot{padding:12px 18px;}
+}
+@media (prefers-reduced-motion: reduce){
+  .legal-modal, .legal-modal-card{animation:none;}
+}
+/* Imprimir solo el documento de la ventana emergente */
+@media print{
+  html.legal-modal-open, html.legal-modal-open body{overflow:visible !important; background:#fff !important;}
+  html.legal-modal-open body > *:not(.legal-modal){display:none !important;}
+  html.legal-modal-open .legal-modal{position:static; display:block; padding:0; background:none; backdrop-filter:none; animation:none;}
+  html.legal-modal-open .legal-modal-card{max-height:none; width:auto; box-shadow:none; overflow:visible; animation:none;}
+  html.legal-modal-open .legal-modal-head{background:none; padding:0 0 12px;}
+  html.legal-modal-open .legal-modal-title,
+  html.legal-modal-open .legal-modal-eyebrow,
+  html.legal-modal-open .legal-modal-meta{color:#000;}
+  html.legal-modal-open .legal-modal-close,
+  html.legal-modal-open .legal-modal-foot{display:none !important;}
+  html.legal-modal-open .legal-modal-body{overflow:visible;}
+  html.legal-modal-open .legal-doc--modal{padding:0;}
+}
+/* Encabezado de la ventana legal centrado */
+.legal-modal-head{position:relative; justify-content:center; text-align:center;}
+.legal-modal-head > div{padding:0 44px;}
+.legal-modal-close{position:absolute; top:18px; right:18px;}

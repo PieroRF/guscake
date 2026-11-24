@@ -4,14 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- Google tag (gtag.js) — Google Analytics 4 -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-YG5K7YXBCD"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-YG5K7YXBCD');
-</script>
+<!-- Aviso de cookies + Google Analytics 4: Analytics solo se carga si la
+     persona acepta las cookies analíticas (ver consent.js y cookies.html). -->
+<script src="consent.js" defer></script>
+<!-- Ventanas emergentes de los enlaces legales (ver legal-modal.js) -->
+<script src="legal-modal.js" defer></script>
 
 <!-- ==================== SEO ====================
      Dominio del sitio: https://guscake.cl/ (ver SEO.md para conectar el
@@ -68,6 +65,9 @@
   "@context": "https://schema.org",
   "@type": "Bakery",
   "name": "GusCake",
+  "legalName": "GUSCAKES BY GUSTAVO RIQUELME F. SPA",
+  "taxID": "78.548.604-8",
+  "email": "guscakepasteleria@gmail.com",
   "description": "Pastelería artesanal premium en San Pedro de la Paz: tortas, tartas, alfajores, empolvados y box de dulces hechos con manjar de receta propia.",
   "image": "https://guscake.cl/img/og-image.png",
   "logo": "https://guscake.cl/img/logo.png",
@@ -384,6 +384,8 @@
           <textarea name="detalle" rows="3" required placeholder="Ej: Torta de mil hojas para 12 personas, sábado 14:00"></textarea>
         </label>
         <button type="submit" class="btn btn-primary">Enviar solicitud de encargo</button>
+        <!-- Información al momento de recoger los datos (Ley 19.628 / 21.719) -->
+        <p class="form-legal">Usaremos tus datos solo para responder y gestionar tu encargo. Si nos cuentas alergias o restricciones alimentarias, las usaremos únicamente para preparar tu pedido de forma segura. Puedes ejercer tus derechos de acceso, rectificación, supresión, oposición, portabilidad y bloqueo cuando quieras. Lee la <a href="privacidad.html">Política de privacidad</a> y los <a href="terminos.html">Términos y condiciones</a>.</p>
         <p class="form-note" id="formNote"></p>
       </form>
     </div>
@@ -485,6 +487,16 @@
     <address class="footer-nap">
       Pastelería artesanal en San Pedro de la Paz, Biobío · <a href="https://wa.me/56920679622">+56 9 2067 9622</a> · Lun a Sáb 09:00–19:00
     </address>
+
+    <!-- Información legal (Ley 19.496, Reglamento de Comercio Electrónico y Ley 19.628 / 21.719).
+         Datos del titular del negocio. -->
+    <nav class="footer-legal" aria-label="Información legal">
+      <a href="terminos.html">Términos y condiciones</a>
+      <a href="privacidad.html">Política de privacidad</a>
+      <a href="cookies.html">Política de cookies</a>
+      <button type="button" class="footer-legal-btn" data-cookie-settings>Configurar cookies</button>
+    </nav>
+    <p class="footer-id">GUSCAKES BY GUSTAVO RIQUELME F. SPA · RUT 78.548.604-8 · 3 Norte, San Pedro de la Paz · <a href="mailto:guscakepasteleria@gmail.com">guscakepasteleria@gmail.com</a></p>
   </div>
 
   <div class="footer-credit">
@@ -503,6 +515,8 @@
     <span>Total</span>
     <span id="cartTotal">$0</span>
   </div>
+  <!-- Información previa a la compra (Ley 19.496 art. 12 A y Reglamento de Comercio Electrónico) -->
+  <p class="cart-legal">Precios en pesos chilenos con impuestos incluidos. El costo de delivery es adicional y te lo informaremos, junto con el total a pagar, antes de confirmar el pedido. Productos perecibles y hechos a pedido: no aplica el derecho a retracto, pero sí la garantía legal. Si cancelas un pedido ya pagado, GusCake retiene el 15% y devuelve el 85%. Al continuar aceptas los <a href="terminos.html">Términos y condiciones</a> y la <a href="privacidad.html">Política de privacidad</a>.</p>
   <button class="btn btn-primary cart-checkout" id="cartCheckout">Confirmar por WhatsApp</button>
 </aside>
 <div class="cart-overlay" id="cartOverlay"></div>
