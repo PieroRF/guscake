@@ -275,3 +275,15 @@
 .legal-doc .tel,
 .legal-doc .nowrap,
 .legal-doc a[href^="https://wa.me"]{display:inline-block; white-space:nowrap;}
+
+/* Botón "Configurar cookies" dentro del texto: se ve como un enlace */
+.legal-doc .footer-legal-btn{
+  padding:0;
+  border:0;
+  background:none;
+  font:inherit;
+  font-weight:600;
+  color:var(--accent);
+  text-decoration:underline;
+  cursor:pointer;
+}

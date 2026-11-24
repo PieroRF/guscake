@@ -92,7 +92,8 @@
     if (!modal || modal.hidden) return;
     modal.hidden = true;
     document.documentElement.classList.remove("legal-modal-open");
-    if (lastFocus && lastFocus.focus) lastFocus.focus();
+    // Devuelve el foco al enlace que abrió la ventana, sin dibujar el recuadro de foco.
+    if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true, focusVisible: false });
   }
 
   // ---------- Documentos legales ----------
