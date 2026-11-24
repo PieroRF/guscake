@@ -159,9 +159,11 @@ const CATEGORY_EMOJI = { tortas: "🎂", tartas: "🍰", "peque-dulces": "🍪",
 const OPTION_NUMBERS = [1, 2, 3, 4, 5, 6];
 
 // Tamaño que aparece elegido al mostrar una tarjeta: el primero que no sea
-// un trozo (p. ej. "Torta 04 porciones"), para que la vitrina siga mostrando
-// el precio de la torta entera. El trozo queda como botón aparte.
-const isSlice = (opt) => /trozo/i.test(opt.label);
+// una porción individual (p. ej. "Torta 04 porciones"), para que la vitrina siga
+// mostrando el precio de la torta entera. La porción queda como botón aparte.
+// Se reconoce como porción individual la opción llamada "Porción" (también
+// "1 porción", "Porción de torta" o "Trozo de torta"); "Torta 04 porciones" no.
+const isSlice = (opt) => /^\s*(1\s+)?(porci[oó]n|trozo)(\s+de\s+torta)?\s*$/i.test(opt.label);
 function defaultOption(p) {
   const i = p.prices.findIndex(opt => !isSlice(opt));
   return i < 0 ? 0 : i;
@@ -212,7 +214,7 @@ function productsFromCSV(text) {
   };
   return rows.map((r, i) => {
     const category = SHEET_CATEGORIES[get(r, "categoria").toLowerCase()];
-    // Los tamaños se ordenan de menor a mayor precio, así "Trozo de torta"
+    // Los tamaños se ordenan de menor a mayor precio, así "Porción"
     // queda primero aunque esté en la columna opcion4.
     const prices = OPTION_NUMBERS
       .map(n => ({ label: get(r, `opcion${n}`) || "Precio único", price: toPrice(get(r, `precio${n}`)) }))
@@ -292,11 +294,11 @@ function cardHTML(p, selected = defaultOption(p)) {
   // mensaje de WhatsApp usan el nombre completo (data-label).
   const chip = (opt, i) => {
     const shortLabel = isSlice(opt)
-      ? "Trozo de torta"
+      ? "Porción"
       : opt.label.replace(/^Torta\s+0*/i, "").replace(/\s*porciones/i, " porc.");
     return `<button type="button" class="price-chip${isSlice(opt) ? " price-chip--slice" : ""}${i === selected ? " active" : ""}" data-price="${opt.price}" data-label="${opt.label}">${shortLabel}</button>`;
   };
-  // El trozo va en su propia fila, sobre los tamaños de torta entera.
+  // La porción va en su propia fila, sobre los tamaños de torta entera.
   const sliceChips = p.prices.map((opt, i) => isSlice(opt) ? chip(opt, i) : "").join("");
   const sizeChips = p.prices.map((opt, i) => isSlice(opt) ? "" : chip(opt, i)).join("");
   const priceOptions = hasOptions
@@ -346,7 +348,7 @@ function renderGrid() {
   // desplazándose hacia los lados (ver initProductRows).
   CATEGORY_ORDER.forEach(cat => {
     // Dentro de cada fila, los productos van de menor a mayor precio
-    // (se usa el precio del tamaño que aparece elegido, sin contar el trozo).
+    // (se usa el precio del tamaño que aparece elegido, sin contar la porción).
     const items = PRODUCTS.filter(p => p.category === cat)
       .sort((a, b) => a.prices[defaultOption(a)].price - b.prices[defaultOption(b)].price);
     if (!items.length && OPTIONAL_CATEGORIES.includes(cat)) return;

@@ -1861,8 +1861,9 @@ html:not(.no-splash) .hero-in{
   color:var(--cream);
   transform:scale(1.04);
 }
-/* Fila del "Trozo de torta", sobre los tamaños de torta entera */
-.price-options--slice{margin-bottom:6px;}
+/* Fila de la "Porción", sobre los tamaños de torta entera: un botón pequeño y centrado */
+.price-options--slice{display:flex; justify-content:center; margin-bottom:6px;}
+.price-options--slice .price-chip{flex:none; padding:5px 16px; font-size:0.6rem;}
 .price-options--slice + .price-options{margin-top:0;}
 .cart-item-label{
   font-weight:400;
