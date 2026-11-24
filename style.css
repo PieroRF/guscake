@@ -3517,10 +3517,13 @@ html.cookie-modal-open{overflow:hidden;}
 .cookie-modal-foot a{color:var(--gold);}
 
 @media (max-width:600px){
-  /* Celulares: tarjeta compacta y centrada sobre el botón de WhatsApp
-     (16px + 52px + gorro navideño + margen), sin ocupar todo el ancho. */
-  .cookie-banner{left:12px; right:12px; bottom:96px; width:auto; max-width:320px; margin:0 auto; padding:9px 12px 8px;}
-  .cookie-banner-text{font-size:0.72rem;}
+  /* Celulares: al lado del botón de WhatsApp (derecha: 16px + 52px + 10px de
+     separación), alineado con su borde inferior. */
+  .cookie-banner{left:10px; right:78px; bottom:16px; width:auto; max-width:none; margin:0; padding:8px 10px 7px;}
+  .cookie-banner-text{font-size:0.66rem; margin-bottom:6px;}
+  .cookie-banner-actions{gap:6px;}
+  .cookie-banner .cookie-btn--mini{padding:4px 6px; font-size:0.66rem;}
+  .cookie-banner-more{font-size:0.64rem;}
   .cookie-modal{padding:16px;}
   .cookie-modal-card{max-height:80vh; max-height:80dvh; padding:24px 18px 18px;}
   .cookie-modal-actions .cookie-btn{flex:1 1 auto; padding:9px 12px; font-size:0.8rem;}
@@ -3673,3 +3676,10 @@ html.legal-modal-open{overflow:hidden;}
 .legal-modal-head{position:relative; justify-content:center; text-align:center;}
 .legal-modal-head > div{padding:0 44px;}
 .legal-modal-close{position:absolute; top:18px; right:18px;}
+/* Celulares angostos (≤380px): letra un poco menor para que el aviso quepa en una línea */
+@media (max-width:380px){
+  .cookie-banner{padding:7px 8px 6px;}
+  .cookie-banner-text{font-size:0.6rem; letter-spacing:-0.01em;}
+  .cookie-banner .cookie-btn--mini{font-size:0.62rem;}
+  .cookie-banner-more{font-size:0.6rem;}
+}
