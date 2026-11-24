@@ -298,12 +298,12 @@ function cardHTML(p, selected = defaultOption(p)) {
       : opt.label.replace(/^Torta\s+0*/i, "").replace(/\s*porciones/i, " porc.");
     return `<button type="button" class="price-chip${isSlice(opt) ? " price-chip--slice" : ""}${i === selected ? " active" : ""}" data-price="${opt.price}" data-label="${opt.label}">${shortLabel}</button>`;
   };
-  // La porción va en su propia fila, sobre los tamaños de torta entera.
+  // La porción va en su propia fila, debajo de los tamaños de torta entera.
   const sliceChips = p.prices.map((opt, i) => isSlice(opt) ? chip(opt, i) : "").join("");
   const sizeChips = p.prices.map((opt, i) => isSlice(opt) ? "" : chip(opt, i)).join("");
   const priceOptions = hasOptions
-    ? `${sliceChips ? `<div class="price-options price-options--slice">${sliceChips}</div>` : ""}
-       ${sizeChips ? `<div class="price-options">${sizeChips}</div>` : ""}`
+    ? `${sizeChips ? `<div class="price-options">${sizeChips}</div>` : ""}
+       ${sliceChips ? `<div class="price-options price-options--slice">${sliceChips}</div>` : ""}`
     : "";
 
   // Producto agotado (misma etiqueta roja "Agotado"): se ve igual que

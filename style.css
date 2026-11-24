@@ -1861,10 +1861,11 @@ html:not(.no-splash) .hero-in{
   color:var(--cream);
   transform:scale(1.04);
 }
-/* Fila de la "Porción", sobre los tamaños de torta entera: un botón pequeño y centrado */
-.price-options--slice{display:flex; justify-content:center; margin-bottom:6px;}
-.price-options--slice .price-chip{flex:none; padding:5px 16px; font-size:0.6rem;}
-.price-options--slice + .price-options{margin-top:0;}
+/* Fila de la "Porción", debajo de los tamaños de torta entera. Usa la misma
+   grilla de 3 columnas que la fila de arriba y se ubica en la del medio, así el
+   botón queda exactamente del mismo tamaño que "4 porc.", "10 porc." y "20 porc.". */
+.price-options--slice{grid-auto-flow:row; grid-template-columns:repeat(3, 1fr); margin-top:-4px;}
+.price-options--slice .price-chip{grid-column:2;}
 .cart-item-label{
   font-weight:400;
   color:var(--espresso-soft);
