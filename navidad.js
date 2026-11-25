@@ -289,6 +289,55 @@
     anim = requestAnimationFrame(frame);
   }
 
+  // ---------- Pantalla de bienvenida (splash) en modo Navidad ----------
+  // Un gorro navideño cae sobre el logo, nieve suave, brillos rojo y verde
+  // en el fondo y "Feliz Navidad" bajo el logo. El splash solo aparece la
+  // primera vez de cada visita; si ya se vio, aquí no se hace nada.
+  function splashNavidad() {
+    const splash = document.getElementById("splash");
+    const logo = splash && splash.querySelector(".splash-logo");
+    if (!logo || splash.querySelector(".navidad-splash-logo")) return;
+
+    // Tiempo que ya lleva el splash: los adornos arrancan con un retraso
+    // negativo igual, para quedar sincronizados con el desvanecimiento.
+    let t = 0;
+    try {
+      const a = logo.getAnimations()[0];
+      if (a && a.currentTime) t = Math.round(a.currentTime);
+    } catch (_) { /* navegador sin Web Animations: se parte de 0 */ }
+    splash.style.setProperty("--nv-t", `-${t}ms`);
+
+    // El logo y su gorro van juntos en un envoltorio que hace la animación
+    // del logo (acercarse y desvanecerse), así el gorro crece con él.
+    const wrap = document.createElement("span");
+    wrap.className = "navidad-splash-logo";
+    logo.parentNode.insertBefore(wrap, logo);
+    wrap.appendChild(logo);
+    const gorro = document.createElement("span");
+    gorro.className = "navidad-splash-gorro";
+    wrap.appendChild(gorro);
+
+    const texto = document.createElement("p");
+    texto.className = "navidad-splash-texto";
+    texto.textContent = "Feliz Navidad";
+    splash.appendChild(texto);
+
+    if (!reduceMotion) {
+      // Copos con posiciones fijas (no aleatorias): siempre se ve igual de parejo.
+      const copos = Array.from({ length: 28 }, (_, i) =>
+        `<i style="--x:${(i * 37 + 11) % 100}%;--s:${2 + (i * 7) % 4}px;` +
+        `--t:${(2.4 + ((i * 13) % 20) / 10).toFixed(1)}s;--d:-${(((i * 29) % 30) / 10).toFixed(1)}s;` +
+        `--w:${((i % 5) - 2) * 12}px"></i>`).join("");
+      const nieve = document.createElement("div");
+      nieve.className = "navidad-splash-nieve";
+      nieve.innerHTML = copos;
+      splash.insertBefore(nieve, splash.firstChild);
+    }
+  }
+  // El splash ya está en la página cuando corre este archivo: se decora de
+  // inmediato, sin esperar al resto de los adornos.
+  splashNavidad();
+
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 })();
