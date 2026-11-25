@@ -6,7 +6,7 @@
    ========================================================== */
 (function () {
   const NAVIDAD_DESDE = new Date(2026, 10, 1);          // 1 de noviembre 2026
-  const NAVIDAD_HASTA = new Date(2027, 0, 6, 23, 59);   // 6 de enero 2027
+  const NAVIDAD_HASTA = new Date(2027, 0, 1, 23, 59, 59); // 1 de enero 2027, fin del día: desde el 2 de enero el sitio vuelve a la normalidad
   const hoy = new Date();
   if (hoy < NAVIDAD_DESDE || hoy > NAVIDAD_HASTA) return;
 
@@ -33,36 +33,52 @@
       sello.appendChild(gorro);
     }
 
-    // ---------- Letrero colgante "Feliz Navidad" en la portada ----------
-    // Baja desde la guirnalda, rebota y queda balanceándose suavemente.
+    // ---------- Letrero de neón "¡Feliz Navidad!" en la portada ----------
+    // Paño verde pino con borde de bastón de caramelo y el título en luz
+    // cálida, que se enciende parpadeando al bajar. Arriba una estrella que
+    // titila, abajo dos esferas que se balancean y a los lados dos árboles
+    // de Navidad con regalos.
     const hero = document.querySelector(".hero");
     if (hero && !hero.querySelector(".navidad-letrero")) {
       const letrero = document.createElement("div");
       letrero.className = "navidad-letrero";
       letrero.setAttribute("role", "note");
-      // cada letra del título va en su propio span para la ola de luz
+      // cada letra va en su propio span: la ola de luz y el "zumbido" del neón
       const letras = [..."¡Feliz Navidad!"]
         .map((l, i) => `<span class="l" style="--i:${i}" aria-hidden="true">${l}</span>`).join("");
+      // tira de luces de colores en el borde inferior, encendiéndose en secuencia
+      const focos = Array.from({ length: 16 }, (_, k) => `<i style="--k:${k}"></i>`).join("");
       letrero.innerHTML = `
         <div class="navidad-letrero-swing">
           <span class="navidad-cuerda navidad-cuerda--izq" aria-hidden="true"></span>
           <span class="navidad-cuerda navidad-cuerda--der" aria-hidden="true"></span>
           <div class="navidad-letrero-cartel">
             <span class="navidad-brillo" aria-hidden="true"></span>
-            <span class="navidad-marco" aria-hidden="true"></span>
-            <span class="navidad-mono" aria-hidden="true"></span>
-            <span class="navidad-acebo navidad-acebo--izq" aria-hidden="true"></span>
-            <span class="navidad-acebo navidad-acebo--der" aria-hidden="true"></span>
-            <strong class="navidad-letrero-titulo"><span class="navidad-sr">¡Feliz Navidad!</span>${letras}</strong>
-            <i class="navidad-destello" style="--x:12%;--y:22%;--d:0s" aria-hidden="true"></i>
-            <i class="navidad-destello" style="--x:86%;--y:28%;--d:-0.9s" aria-hidden="true"></i>
-            <i class="navidad-destello" style="--x:76%;--y:70%;--d:-1.7s" aria-hidden="true"></i>
-            <i class="navidad-destello" style="--x:22%;--y:72%;--d:-2.4s" aria-hidden="true"></i>
+            <span class="navidad-estrella" aria-hidden="true"></span>
+            <i class="navidad-destello" style="--x:21%;--y:24%;--d:0s" aria-hidden="true"></i>
+            <i class="navidad-destello" style="--x:80%;--y:30%;--d:-1.4s" aria-hidden="true"></i>
+            <i class="navidad-destello" style="--x:63%;--y:66%;--d:-2.7s" aria-hidden="true"></i>
+            <div class="navidad-letrero-textos">
+              <strong class="navidad-letrero-titulo"><span class="navidad-sr">¡Feliz Navidad!</span>${letras}</strong>
+              <span class="navidad-letrero-firma">Te desea GusCake</span>
+            </div>
+            <span class="navidad-bola navidad-bola--izq" aria-hidden="true"><i></i></span>
+            <span class="navidad-bola navidad-bola--der" aria-hidden="true"><i></i></span>
+            <span class="navidad-arbol navidad-arbol--izq" aria-hidden="true"></span>
+            <span class="navidad-base" aria-hidden="true"></span>
+            <span class="navidad-arbol navidad-arbol--der" aria-hidden="true"></span>
+            <span class="navidad-focos" aria-hidden="true">${focos}</span>
           </div>
-          <span class="navidad-cinta-sub">Endulza estas fiestas con GusCake</span>
         </div>`;
       hero.appendChild(letrero);
-      ampolletas(letrero.querySelector(".navidad-letrero-cartel"));
+      // Santa en su trineo con renos, cruzando la portada cada cierto tiempo
+      if (!reduceMotion) {
+        const trineo = document.createElement("div");
+        trineo.className = "navidad-trineo";
+        trineo.setAttribute("aria-hidden", "true");
+        trineo.innerHTML = "<span></span>";
+        hero.appendChild(trineo);
+      }
     }
 
     // ---------- Detalles puntuales ----------
@@ -89,53 +105,6 @@
     }
 
     if (!reduceMotion) nieve();
-  }
-
-  // ---------- Borde de ampolletas del letrero ----------
-  // Reparte las ampolletas a lo largo del borde del cartel, siguiendo las
-  // esquinas redondeadas. Se recalcula si el cartel cambia de tamaño
-  // (al cargar la tipografía o al girar el celular).
-  function ampolletas(cartel) {
-    if (!cartel) return;
-    const marco = cartel.querySelector(".navidad-marco");
-    const INSET = 7, PASO = 14;
-    function dibujar() {
-      // clientWidth/Height = área dentro del borde dorado (donde se ubica el marco)
-      const w = cartel.clientWidth, h = cartel.clientHeight;
-      if (!w || !h) return;
-      const r = Math.min(10, h / 2 - INSET);           // radio de las esquinas
-      const x0 = INSET, y0 = INSET, x1 = w - INSET, y1 = h - INSET;
-      const rectos = [(x1 - x0 - 2 * r), (y1 - y0 - 2 * r)];
-      const perimetro = 2 * rectos[0] + 2 * rectos[1] + 2 * Math.PI * r;
-      const n = Math.max(12, Math.round(perimetro / PASO / 2) * 2); // número par: la secuencia alterna bien
-      // punto a una distancia d del recorrido (sentido horario desde arriba a la izquierda)
-      function punto(d) {
-        const tramos = [
-          { l: rectos[0], f: (t) => [x0 + r + t, y0] },
-          { l: Math.PI * r / 2, f: (t) => { const a = -Math.PI / 2 + t / r; return [x1 - r + r * Math.cos(a), y0 + r + r * Math.sin(a)]; } },
-          { l: rectos[1], f: (t) => [x1, y0 + r + t] },
-          { l: Math.PI * r / 2, f: (t) => { const a = t / r; return [x1 - r + r * Math.cos(a), y1 - r + r * Math.sin(a)]; } },
-          { l: rectos[0], f: (t) => [x1 - r - t, y1] },
-          { l: Math.PI * r / 2, f: (t) => { const a = Math.PI / 2 + t / r; return [x0 + r + r * Math.cos(a), y1 - r + r * Math.sin(a)]; } },
-          { l: rectos[1], f: (t) => [x0, y1 - r - t] },
-          { l: Math.PI * r / 2, f: (t) => { const a = Math.PI + t / r; return [x0 + r + r * Math.cos(a), y0 + r + r * Math.sin(a)]; } },
-        ];
-        for (const tr of tramos) {
-          if (d <= tr.l) return tr.f(d);
-          d -= tr.l;
-        }
-        return [x0 + r, y0];
-      }
-      let html = "";
-      for (let i = 0; i < n; i++) {
-        const [x, y] = punto((perimetro / n) * i);
-        html += `<i style="left:${x.toFixed(1)}px;top:${y.toFixed(1)}px"></i>`;
-      }
-      marco.innerHTML = html;
-    }
-    dibujar();
-    if ("ResizeObserver" in window) new ResizeObserver(dibujar).observe(cartel);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(dibujar);
   }
 
   // ---------- Nieve cayendo (canvas, no bloquea clics) ----------
