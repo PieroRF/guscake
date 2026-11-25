@@ -1862,10 +1862,29 @@ html:not(.no-splash) .hero-in{
   transform:scale(1.04);
 }
 /* Fila de la "Porción", debajo de los tamaños de torta entera. Usa la misma
-   grilla de 3 columnas que la fila de arriba y se ubica en la del medio, así el
-   botón queda exactamente del mismo tamaño que "4 porc.", "10 porc." y "20 porc.". */
-.price-options--slice{grid-auto-flow:row; grid-template-columns:repeat(3, 1fr); margin-top:-4px;}
-.price-options--slice .price-chip{grid-column:2;}
+   grilla de 3 columnas que la fila de arriba (separada por una línea punteada),
+   con el botón del mismo tamaño que "4 porc.", "10 porc." y "20 porc.". */
+.price-options--slice{
+  grid-auto-flow:row;
+  grid-template-columns:repeat(3, 1fr);
+  align-items:center;
+  margin-top:-4px;
+  padding-top:6px;
+  border-top:1px dashed var(--line);
+}
+/* Indicación breve a la izquierda, alineada con la grilla de arriba */
+.price-slice-hint{
+  grid-column:1 / span 2;
+  justify-self:end;
+  padding-right:4px;
+  font-family:var(--font-mono);
+  font-size:0.6rem;
+  font-style:italic;
+  color:var(--espresso-soft);
+  white-space:nowrap;
+}
+/* "Porción" queda justo bajo "20 porc.", con el mismo tamaño */
+.price-options--slice .price-chip{grid-column:3;}
 .cart-item-label{
   font-weight:400;
   color:var(--espresso-soft);

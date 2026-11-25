@@ -303,7 +303,7 @@ function cardHTML(p, selected = defaultOption(p)) {
   const sizeChips = p.prices.map((opt, i) => isSlice(opt) ? "" : chip(opt, i)).join("");
   const priceOptions = hasOptions
     ? `${sizeChips ? `<div class="price-options">${sizeChips}</div>` : ""}
-       ${sliceChips ? `<div class="price-options price-options--slice">${sliceChips}</div>` : ""}`
+       ${sliceChips ? `<div class="price-options price-options--slice"><span class="price-slice-hint" aria-hidden="true">o individual</span>${sliceChips}</div>` : ""}`
     : "";
 
   // Producto agotado (misma etiqueta roja "Agotado"): se ve igual que
@@ -1105,81 +1105,10 @@ function initPageTransitions() {
 }
 
 // ---------- Reseñas (Instagram / TikTok) ----------
-// Comentarios y reseñas reales de clientes, copiados tal cual desde Instagram
-// o TikTok. Para agregar, cambiar o quitar una reseña solo hay que editar
-// este arreglo — no hace falta tocar el HTML ni el CSS. Mientras esté vacío
-// (como ahora) se muestra un aviso de "muy pronto" en vez de inventar reseñas.
-// Intercaladas TikTok / Instagram a propósito, para que la vitrina de
-// reseñas no se vea agrupada por red social.
-const TESTIMONIOS = [
-  {
-    autor: "@fadich_zc",
-    red: "tiktok",
-    texto: "Los mejoresss",
-    link: "",
-  },
-  {
-    autor: "@bbecitaboni",
-    red: "instagram",
-    texto: "Amooo",
-    link: "",
-  },
-  {
-    autor: "@sandrafe151",
-    red: "tiktok",
-    texto: "es una delicia 😋😋",
-    link: "",
-  },
-  {
-    autor: "@maxilr_12",
-    red: "instagram",
-    texto: "🔥🙌",
-    link: "",
-  },
-  {
-    autor: "@danidi1312",
-    red: "tiktok",
-    texto: "hay amoooo el pie de limón 💖 se ve delicioso 🤭",
-    link: "",
-  },
-  {
-    autor: "@cotralchile",
-    red: "instagram",
-    texto: "Que delicia 💜🙌🏻",
-    link: "",
-  },
-  {
-    autor: "@sofiacarvajal661",
-    red: "tiktok",
-    texto: "nooo, me muero 🤤🤤, se me antojaron las cocadas se ven 10 de 10",
-    link: "",
-  },
-  {
-    autor: "@flancita.a",
-    red: "instagram",
-    texto: "Amé!",
-    link: "",
-  },
-  {
-    autor: "@leandro_alexis_",
-    red: "tiktok",
-    texto: "Qué rico se veeeee",
-    link: "",
-  },
-  {
-    autor: "@paolapazfotografa",
-    red: "instagram",
-    texto: "👏👏👏 me encanta tu trabajo",
-    link: "",
-  },
-  // Ejemplo de cómo se agrega cada reseña real:
-  // {
-  //   autor: "Nombre tal como aparece en la red social",
-  //   red: "instagram",  // o "tiktok"
-  //   texto: "El comentario o reseña, copiado tal cual.",
-  //   link: "https://www.instagram.com/p/xxxxxxx/", // opcional: URL de la publicación
-  // },
-];
+// La lista de reseñas está en resenas.js (TESTIMONIOS): para agregar, cambiar
+// o quitar una reseña se edita solo ese archivo. Si no se pudiera cargar,
+// la sección muestra el aviso de "muy pronto" en vez de fallar.
+const LISTA_RESENAS = typeof TESTIMONIOS !== "undefined" && Array.isArray(TESTIMONIOS) ? TESTIMONIOS : [];
 
 const RESENA_ICONOS = {
   instagram: `<svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -1211,7 +1140,7 @@ function renderTestimonios() {
   const track = document.getElementById("resenasTrack");
   if (!track) return;
 
-  if (!TESTIMONIOS.length) {
+  if (!LISTA_RESENAS.length) {
     track.classList.add("resenas-track--empty");
     track.innerHTML = `<p class="resenas-empty">Muy pronto vamos a compartir aquí las reseñas de nuestra comunidad en Instagram y TikTok.</p>`;
     return;
@@ -1220,11 +1149,11 @@ function renderTestimonios() {
   // El set de tarjetas se dibuja dos veces (la segunda copia va oculta a
   // lectores de pantalla) para que el desplazamiento lateral automático sea
   // infinito y sin cortes, en vez de acumularse hacia abajo.
-  const real = TESTIMONIOS.map((t, i) => testimonioCardHTML(t, i, false)).join("");
-  const clon = TESTIMONIOS.map((t, i) => testimonioCardHTML(t, i, true)).join("");
+  const real = LISTA_RESENAS.map((t, i) => testimonioCardHTML(t, i, false)).join("");
+  const clon = LISTA_RESENAS.map((t, i) => testimonioCardHTML(t, i, true)).join("");
   track.innerHTML = real + clon;
   // La velocidad se ajusta sola según cuántas reseñas haya (~5s por tarjeta).
-  track.style.setProperty("--marquee-duration", `${TESTIMONIOS.length * 5}s`);
+  track.style.setProperty("--marquee-duration", `${LISTA_RESENAS.length * 5}s`);
 }
 
 // ---------- Splash de bienvenida ----------
